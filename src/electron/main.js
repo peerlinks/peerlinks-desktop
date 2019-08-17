@@ -5,36 +5,17 @@ import log from 'electron-log';
 import Network from './network';
 
 let window = null;
-let network = null;
 
-function createNetwork() {
-  const n = new Network({
-    db: path.join(app.getPath('userData'), 'db.sqlite'),
-  });
-  let passphraseEvent;
+const network = new Network(ipc, {
+  db: path.join(app.getPath('userData'), 'db.sqlite'),
+});
 
-  n.init().then(() => {
-    log.info('network initialized...');
-    network = n;
-
-    passphraseEvent.reply('network:ready');
-    passphraseEvent = null;
-  }).catch((e) => {
-    log.error(e.stack);
-    process.exit(1);
-  });
-
-  ipc.on('network:passphrase', (event, arg) => {
-    if (network) {
-      return event.reply('network:ready');
-    }
-
-    n.resolvePassphrase(arg);
-    passphraseEvent = event;
-  });
-}
-
-createNetwork();
+network.init().then(() => {
+  log.info('network initialized...');
+}).catch((e) => {
+  log.error(e.stack);
+  process.exit(1);
+});
 
 function createWindow() {
   if (window !== null) {

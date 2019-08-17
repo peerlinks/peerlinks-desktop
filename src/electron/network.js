@@ -4,7 +4,8 @@ import Swarm from '@vowlink/swarm';
 import WaitList from 'promise-waitlist';
 
 export default class Network {
-  constructor(options = {}) {
+  constructor(ipc, options = {}) {
+    this.ipc = ipc;
     this.options = options;
     if (!this.options.db) {
       throw new Error('Missing `options.db`');
@@ -15,10 +16,16 @@ export default class Network {
     this.swarm = null;
 
     this.waitList = new WaitList();
+    this.ready = false;
+
+    this.initIPC();
   }
 
   async init() {
-    const passphrase = await this.waitList.waitFor('passphrase').promise;
+    const {
+      event,
+      passphrase,
+    } = await this.waitList.waitFor('passphrase').promise;
 
     this.storage = new SqliteStorage({ file: this.options.db });
     await this.storage.open();
@@ -30,10 +37,20 @@ export default class Network {
     await this.vowLink.load();
 
     this.swarm = new Swarm(this.vowLink);
+    this.ready = true;
+    event.reply('network:ready');
   }
 
-  resolvePassphrase(passphrase) {
-    this.waitList.resolve('passphrase', passphrase);
+  initIPC() {
+    const ipc = this.ipc;
+
+    ipc.on('network:passphrase', (event, passphrase) => {
+      if (this.ready) {
+        return event.reply('network:ready');
+      }
+
+      this.waitList.resolve('passphrase', { event, passphrase });
+    });
   }
 
   async close() {
