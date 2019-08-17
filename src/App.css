@@ -1,33 +1,59 @@
-.App {
-  text-align: center;
+.app {
+  display: flex;
+  flex-direction: row;
+
+  height: 100%;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+.sidebar {
+  flex: 0 0 15rem;
+  overflow-y: auto;
+  border-right: 1px #222 solid;
+  padding: 0.5rem;
+
+  background: #000022;
+  color: #fff;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.sidebar .title {
+  font-variant: all-small-caps;
+}
+
+.main {
+  flex-grow: 1;
+}
+
+.main-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: 100%;
 }
 
-.App-link {
-  color: #61dafb;
+.channel-info {
+  flex: 0 0 3rem;
+  border-bottom: 1px solid #ccc;
+  padding: 0.5rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.channel-messages {
+  flex-grow: 1;
+  padding: 0.5rem;
+}
+
+.channel-compose {
+  flex: 0 0 4rem;
+  padding: 0.5rem;
+
+  border-top: 1px solid #ccc;
+}
+
+.channel-compose-text {
+  width: 100%;
+  display: block;
+
+  border-radius: 0.25rem;
+  border: 1px solid #222;
+  height: 3rem;
+  padding: 0.5rem;
+  font-size: 1rem;
 }
