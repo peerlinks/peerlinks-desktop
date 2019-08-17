@@ -15,6 +15,7 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #222;
 }
 
 code {
@@ -48,4 +49,20 @@ h5 {
 
 h6 {
   font-size: 1.25rem;
+}
+
+/* Buttons */
+
+.button {
+  border: 1px solid #233d4d;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.25rem;
+
+  cursor: pointer;
+  transition: 0.25s all;
+}
+
+.button:hover {
+  background: #233d4d;
+  color: #fbf5f3;
 }

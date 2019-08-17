@@ -1,0 +1,40 @@
+.sign-in-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sign-in {
+  display: block;
+  min-width: 24rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.sign-in .title {
+  margin-bottom: 1.0rem;
+}
+
+.sign-in .sign-in-passphrase {
+  width: 100%;
+  border: 1px solid #2d2d2a;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 0.25rem;
+
+  font-size: 2rem;
+  text-align: center;
+}
+
+.sign-in .sign-in-submit {
+  width: 100%;
+
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+
+  cursor: pointer;
+  transition: 0.25s all;
+}
