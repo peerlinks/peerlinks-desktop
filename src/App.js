@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
 import './App.css';
 
-import network from './network';
-import { addChannel, addIdentity } from './redux/actions';
+import { initNetwork } from './redux/actions';
 
 import FullScreen from './layouts/FullScreen';
 import ChannelLayout from './layouts/Channel';
@@ -14,18 +13,16 @@ import Channel from './pages/Channel';
 import SignIn from './pages/SignIn';
 import NewChannel from './pages/NewChannel';
 
-function App({ backend, channels, addChannel, addIdentity }) {
-  const [ ready, setReady ] = useState(false);
-  const [ loading, setLoading ] = useState(false);
-  const [ error, setError ] = useState(null);
+import Notifications from './components/Notifications';
 
-  if (error) {
+function App({ channels, network, initNetwork }) {
+  if (network.error) {
     return <FullScreen>
-      <p className='error'>Got error: {error.stack}</p>
+      <p className='error'>Got error: {network.error.stack}</p>
     </FullScreen>;
   }
 
-  if (ready) {
+  if (network.isReady) {
     // Select first channel if any are available
     let redirect;
     if (channels.size === 0) {
@@ -47,46 +44,26 @@ function App({ backend, channels, addChannel, addIdentity }) {
     </Router>;
   }
 
-  const init = async (passphrase) => {
-    await network.init({ passphrase });
-
-    const channels = await network.getChannels();
-    for (const channel of channels) {
-      addChannel(channel);
-    }
-
-    const identities = await network.getIdentities();
-    for (const identity of identities) {
-      addIdentity(identity);
-    }
-  };
-
   const onPassphrase = (passphrase) => {
-    setLoading(true);
-    init(passphrase).then(() => {
-      setReady(true);
-    }).catch((error) => {
-      setError(error);
-    }).finally(() => {
-      setLoading(false);
-    });
+    initNetwork({ passphrase });
   };
 
   return <FullScreen>
-    <SignIn isLoading={loading} onPassphrase={onPassphrase}/>
+    <Notifications/>
+    <SignIn isLoading={network.isLoading} onPassphrase={onPassphrase}/>
   </FullScreen>;
 }
 
 const mapStateToProps = (state) => {
   return {
+    network: state.network,
     channels: state.channels,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addChannel: (channel) => dispatch(addChannel(channel)),
-    addIdentity: (identity) => dispatch(addIdentity(identity)),
+    initNetwork: (...args) => dispatch(initNetwork(...args)),
   };
 };
 

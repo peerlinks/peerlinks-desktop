@@ -1,6 +1,6 @@
 import WaitList from 'promise-waitlist';
 
-export class Network {
+export default class Network {
   constructor() {
     window.addEventListener('message', ({ data: message }) => {
       this.onMessage(message);
@@ -33,8 +33,8 @@ export class Network {
     return await this.request('network:getMessageCount', { channelId });
   }
 
-  async getMessagesAtOffset({ channelId, offset, limit }) {
-    return await this.request('network:getMessagesAtOffset', {
+  async getReverseMessagesAtOffset({ channelId, offset, limit }) {
+    return await this.request('network:getReverseMessagesAtOffset', {
       channelId, offset, limit });
   }
 
@@ -70,5 +70,3 @@ export class Network {
     this.waitList.resolve(seq, { error, stack, payload });
   }
 }
-
-export default new Network();

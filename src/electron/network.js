@@ -110,13 +110,13 @@ export default class Network {
       return await channel.getMessageCount();
     });
 
-    handle('getMessagesAtOffset', async ({ channelId, offset, limit }) => {
+    handle('getReverseMessagesAtOffset', async ({ channelId, offset, limit }) => {
       const channel = channelById(channelId);
       if (!channel) {
         throw new Error('Channel not found: ' + channelId);
       }
 
-      const messages = await channel.getMessagesAtOffset(offset, limit);
+      const messages = await channel.getReverseMessagesAtOffset(offset, limit);
       return messages.map((message) => {
         return this.serializeMessage(message);
       });
