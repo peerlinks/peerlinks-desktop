@@ -14,7 +14,7 @@ const pad2 = (number) => {
 };
 
 function MessageList({ channelId, channels, loadMessages } ) {
-  const [ isLoading, setIsLoading ] = useState(false);
+  const [ currentChannel, setCurrentChannel ] = useState(null);
 
   const messages = channels.get(channelId).messages.map((message) => {
     let timestamp = new Date(message.timestamp * 1000);
@@ -30,10 +30,10 @@ function MessageList({ channelId, channels, loadMessages } ) {
     </div>;
   });
 
-  if (messages.length === 0 && !isLoading) {
-    setIsLoading(true);
+  if (messages.length === 0 && currentChannel !== channelId) {
+    setCurrentChannel(channelId);
 
-    loadMessages({ limit: DISPLAY_COUNT });
+    loadMessages({ channelId, limit: DISPLAY_COUNT });
   }
 
   return <div className='message-list'>
