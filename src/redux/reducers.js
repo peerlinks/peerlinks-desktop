@@ -2,15 +2,6 @@ import { combineReducers } from 'redux';
 
 import { appendMessage } from './utils';
 
-export const view = (state = 'passphrase', action) => {
-  switch (action.type) {
-    case 'SET_CURRENT_VIEW':
-      return action.view;
-    default:
-      return state;
-  }
-};
-
 export const backend = (state, action) => {
   if (!state) {
     state = { ready: false, loading: false, error: null };
@@ -18,11 +9,17 @@ export const backend = (state, action) => {
 
   switch (action.type) {
     case 'SET_BACKEND_READY':
-      return Object.assign({}, state, { ready: action.ready });
+      return Object.assign({}, state, {
+        ready: action.ready,
+        loading: false,
+      });
     case 'SET_BACKEND_LOADING':
       return Object.assign({}, state, { loading: action.loading });
     case 'SET_BACKEND_ERROR':
-      return Object.assign({}, state, { error: action.error });
+      return Object.assign({}, state, {
+        loading: false,
+        error: action.error,
+      });
     default:
       return state;
   }
@@ -100,7 +97,6 @@ export const channels = (state = {}, action) => {
 };
 
 export default combineReducers({
-  view,
   backend,
   currentChannel,
   identities,

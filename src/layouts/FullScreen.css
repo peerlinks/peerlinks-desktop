@@ -1,0 +1,13 @@
+.full-screen-layout-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  flex-direction: column;
+  justify-content: center;
+}
+
+.full-screen-layout-container .full-screen-layout {
+  display: block;
+  margin: 0 auto;
+}

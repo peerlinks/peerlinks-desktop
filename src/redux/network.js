@@ -1,7 +1,5 @@
 import WaitList from 'promise-waitlist';
 
-const MAX_DISPLAYED_MESSAGES = 1000;
-
 export default class Network {
   constructor() {
     window.addEventListener('message', ({ data: message }) => {
@@ -15,7 +13,7 @@ export default class Network {
     this.messages = new Map();
   }
 
-  async init(passphrase) {
+  async init({ passphrase }) {
     await this.request('network:init', { passphrase });
   }
 

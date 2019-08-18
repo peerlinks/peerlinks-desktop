@@ -14,7 +14,7 @@ export default function SignIn({ isLoading, onPassphrase }) {
     onPassphrase(passphrase);
   };
 
-  const form = (<form onSubmit={onSubmit}>
+  const form = <form onSubmit={onSubmit}>
     <div className='sign-in-row'>
       <h3 className='title'>Decrypt private keys</h3>
     </div>
@@ -30,11 +30,9 @@ export default function SignIn({ isLoading, onPassphrase }) {
     <div className='sign-in-row'>
       <input className='sign-in-submit button' type='submit' value='Sign In'/>
     </div>
-  </form>);
+  </form>;
 
-  return (<div className='sign-in-container'>
-    <div className='sign-in'>
-      {isLoading ? <h3>Decrypting...</h3> : form}
-    </div>
-  </div>);
+  return <div className='sign-in'>
+    {isLoading ? <h3>Decrypting...</h3> : form}
+  </div>;
 }

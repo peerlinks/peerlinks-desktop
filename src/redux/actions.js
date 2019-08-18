@@ -3,18 +3,33 @@ import Network from './network';
 const network = new Network();
 
 //
-// view
-//
-
-export function setCurrentView({ view }) {
-  return { type: 'SET_CURRENT_VIEW', view };
-}
-
-//
 // backend
 //
 
 export function initBackend({ passphrase }) {
+  const load = async (dispatch) => {
+    await network.init({ passphrase });
+
+    const channels = await network.getChannels();
+    for (const channel of channels) {
+      dispatch(addChannel(channel));
+    }
+
+    const identities = await network.getIdentities();
+    for (const identity of identities) {
+      dispatch(addIdentity({ identity }));
+    }
+  };
+
+  return (dispatch) => {
+    dispatch(setBackendLoading({ loading: true }));
+
+    load(dispatch).then(() => {
+      dispatch(setBackendReady({ ready: true }));
+    }).catch((error) => {
+      dispatch(setBackendError({ error }));
+    });
+  };
 }
 
 export function setBackendReady({ ready }) {

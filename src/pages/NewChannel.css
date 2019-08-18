@@ -1,20 +1,7 @@
-.new-channel-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-}
-
-.new-channel-container .new-channel {
-  margin: 0 auto;
-}
-
 .new-channel .title {
   text-align: center;
   margin-bottom: 0.5rem;
 }
-
 
 .new-channel .new-channel-name {
   width: 100%;

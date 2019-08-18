@@ -1,9 +1,12 @@
 .channel-list-elem {
+  display: block;
   height: 2rem;
   padding: 0.5rem;
   margin-bottom: 0.25rem;
   border: 1px solid #afafaf;
   border-radius: 0.25rem;
+  text-decoration: none;
+  color: #fbf5f3;
 
   cursor: pointer;
   line-height: 1rem;
@@ -19,4 +22,5 @@
 
 .channel-list .button {
   width: 100%;
+  display: block;
 }

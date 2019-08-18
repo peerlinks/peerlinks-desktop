@@ -1,11 +1,11 @@
-.channel {
+.channel-layout {
   display: flex;
   flex-direction: row;
 
   height: 100%;
 }
 
-.sidebar {
+.channel-layout .channel-layout-sidebar {
   flex: 0 0 15rem;
   overflow-y: auto;
   border-right: 1px #f69997 solid;
@@ -15,17 +15,11 @@
   color: #fbf5f3;
 }
 
-.sidebar .title {
+.channel-layout .channel-layout-sidebar .title {
   font-variant: all-small-caps;
   margin-bottom: 0.5rem;
 }
 
-.main {
-  flex-grow: 1;
-}
-
-.main-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.channel-layout .channel-layout-main {
+  flex: 1 0 0;
 }
