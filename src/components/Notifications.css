@@ -1,0 +1,40 @@
+.notification-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.notification-container .notification-list {
+  flex-grow: 0;
+}
+
+.notification-container .notification-rest {
+  flex-grow: 1;
+}
+
+.notification-list .notification {
+  padding: 0.25rem 0.5rem;
+  height: 2rem;
+  line-height: 1.5rem;
+  overflow-y: hidden;
+
+  display: flex;
+  flex-direction: row;
+  transition: 0.25 height;
+}
+
+.notification-list .notification-error {
+  background: #b14643;
+  border-bottom: 1px solid #582322;
+  color: #fbf5f3;
+}
+
+.notification-list .notification .notification-content {
+  flex-grow: 1;
+}
+
+.notification-list .notification .notification-dismiss {
+  flex-grow: 0;
+  height: 1.5rem;
+  line-height: 0.5rem;
+}

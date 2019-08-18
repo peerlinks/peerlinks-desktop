@@ -33,14 +33,16 @@ function App({ channels, network, initNetwork }) {
     }
 
     return <Router>
-      <ChannelLayout>
-        <Route exact path="/" render={() => {
-          return <Redirect to={redirect}/>;
-        }}/>
+      <Notifications>
+        <ChannelLayout>
+          <Route exact path="/" render={() => {
+            return <Redirect to={redirect}/>;
+          }}/>
 
-        <Route path='/new-channel' exact component={NewChannel}/>
-        <Route path='/channel/:id' component={Channel}/>
-      </ChannelLayout>
+          <Route path='/new-channel' exact component={NewChannel}/>
+          <Route path='/channel/:id' component={Channel}/>
+        </ChannelLayout>
+      </Notifications>
     </Router>;
   }
 
@@ -49,7 +51,6 @@ function App({ channels, network, initNetwork }) {
   };
 
   return <FullScreen>
-    <Notifications/>
     <SignIn isLoading={network.isLoading} onPassphrase={onPassphrase}/>
   </FullScreen>;
 }
