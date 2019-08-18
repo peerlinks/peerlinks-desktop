@@ -1,6 +1,6 @@
 import WaitList from 'promise-waitlist';
 
-export default class Network {
+export class Network {
   constructor() {
     window.addEventListener('message', ({ data: message }) => {
       this.onMessage(message);
@@ -70,3 +70,5 @@ export default class Network {
     this.waitList.resolve(seq, { error, stack, payload });
   }
 }
+
+export default new Network();

@@ -22,7 +22,7 @@ function Channel({ match, channels, identities }) {
       #{channel.name}
     </header>
     <section className='channel-content'>
-      <MessageList channelId='okay'/>
+      <MessageList channelId={channelId}/>
     </section>
     <footer className='channel-compose'>
       <div className='channel-compose-container'>

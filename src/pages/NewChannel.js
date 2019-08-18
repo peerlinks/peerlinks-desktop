@@ -1,24 +1,50 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
-import { createChannel } from '../redux/actions';
+import network from '../network';
+import { addChannel, addIdentity } from '../redux/actions';
 
 import FullScreen from '../layouts/FullScreen';
 
 import './NewChannel.css';
 
-function NewChannel({ loader, createChannel }) {
+function NewChannel({ addChannel, addIdentity }) {
+  const [ loading, setLoading ] = useState(false);
+  const [ error, setError ] = useState(null);
+  const [ redirect, setRedirect ] = useState(false);
+
   const [ channelName, setChannelName ] = useState('');
+
+  const createChannel = async () => {
+    const { identity, channel } = await network.createIdentityPair({
+      name: channelName,
+    });
+
+    addChannel(channel);
+    addIdentity(identity);
+
+    return channel;
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    createChannel({ name: channelName });
+
+    setLoading(true);
+    createChannel().then((channel) => {
+      setRedirect(`/channel/${channel.id}`);
+    }).catch((e) => {
+      setError(e);
+    }).finally(() =>{ 
+      setLoading(false);
+    });
 
     setChannelName('');
   };
 
   return <FullScreen>
-    {loader.error && <p className='error'>{loader.error.message}</p>}
+    {error && <p className='error'>{error.message}</p>}
+    {redirect && <Redirect to={redirect}/>}
     <form className='new-channel' onSubmit={onSubmit}>
       <div className='new-channel-row'>
         <h3 className='title'>New channel</h3>
@@ -27,7 +53,7 @@ function NewChannel({ loader, createChannel }) {
         <input
           className='new-channel-name'
           type='text'
-          disabled={loader.loading}
+          disabled={loading}
           placeholder='Channel name'
           required
           value={channelName}
@@ -36,7 +62,7 @@ function NewChannel({ loader, createChannel }) {
       <div className='new-channel-row'>
         <input
           type='submit'
-          disabled={loader.loading}
+          disabled={loading}
           className='button'
           value='Create'/>
       </div>
@@ -45,16 +71,13 @@ function NewChannel({ loader, createChannel }) {
 }
 
 const mapStateToProps = (state) => {
-  return {
-    loader: state.loaders.newChannel,
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createChannel({ name }) {
-      dispatch(createChannel({ name }));
-    }
+    addChannel: (channel) => dispatch(addChannel(channel)),
+    addIdentity: (channel) => dispatch(addIdentity(channel)),
   };
 };
 
