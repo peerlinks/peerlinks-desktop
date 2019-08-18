@@ -11,18 +11,12 @@ export default class Network {
     this.seq = 0;
     this.waitList = new WaitList();
 
-    this.channels = null;
-    this.identities = null;
-
     // channelId => []
     this.messages = new Map();
   }
 
   async init(passphrase) {
     await this.request('network:init', { passphrase });
-
-    this.channels = await this.getChannels();
-    this.identities = await this.getIdentities();
   }
 
   async getChannels() {

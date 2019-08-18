@@ -15,19 +15,28 @@ it('appends channel to empty list', () => {
 
 it('appends messages to the channel', () => {
   let state = channels(undefined, addChannel({ id: 'a' }));
-  state = channels(state, appendChannelMessage({ id: 'a' }, {
-    height: 1,
-    hash: 'b',
+  state = channels(state, appendChannelMessage({
+    channelId: 'a',
+    message: {
+      height: 1,
+      hash: 'b',
+    }
   }));
-  state = channels(state, appendChannelMessage({ id: 'a' }, {
-    height: 1,
-    hash: 'a',
+  state = channels(state, appendChannelMessage({
+    channelId: 'a',
+    message: {
+      height: 1,
+      hash: 'a',
+    },
   }));
 
   // Duplicate
-  state = channels(state, appendChannelMessage({ id: 'a' }, {
-    height: 1,
-    hash: 'a',
+  state = channels(state, appendChannelMessage({
+    channelId: 'a',
+    message: {
+      height: 1,
+      hash: 'a',
+    },
   }));
 
   const channel = state['a'];
