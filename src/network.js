@@ -23,14 +23,6 @@ export default class Network {
 
     this.channels = await this.getChannels();
     this.identities = await this.getIdentities();
-
-    for (const channel in this.channels) {
-      const count = await this.getMessageCount(channel.id);
-      const list = await this.getMessagesAtOffset(channel.id,
-        Math.max(count - MAX_DISPLAYED_MESSAGES), MAX_DISPLAYED_MESSSAGES);
-
-      this.messages.set(channel.id,
-    }
   }
 
   async getChannels() {
