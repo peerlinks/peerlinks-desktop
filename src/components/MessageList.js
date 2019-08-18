@@ -6,11 +6,31 @@ import { appendChannelMessage } from '../redux/actions';
 
 const DISPLAY_COUNT = 1000;
 
+const pad2 = (number) => {
+  let str = number.toString();
+  while (str.length < 2) {
+    str = '0' + str;
+  }
+  return str;
+};
+
 function MessageList({ channelId, channels, appendMessage } ) {
   const [ loading, setLoading ] = useState(false);
   const [ error, setError ] = useState(null);
 
-  const messages = channels.get(channelId).messages;
+  const messages = channels.get(channelId).messages.map((message) => {
+    let timestamp = new Date(message.timestamp * 1000);
+    timestamp = pad2(timestamp.getHours()) + ':' +
+      pad2(timestamp.getMinutes()) + ':' +
+      pad2(timestamp.getSeconds());
+
+    const author = message.author.displayPath.join('>');
+    const text = message.isRoot ? '<root>' : message.json.text || '';
+
+    return <div className='message-list-message' key={message.hash}>
+      {timestamp} [{author}]: {text}
+    </div>;
+  });
 
   const load = async () => {
     const count = await network.getMessageCount({ channelId });
@@ -38,6 +58,7 @@ function MessageList({ channelId, channels, appendMessage } ) {
   return <div className='message-list'>
     {error && <p className='error'>{error.stack}</p>}
     {loading && <p className='loading'>...loading</p>}
+    {messages}
   </div>;
 }
 
