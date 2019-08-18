@@ -13,8 +13,6 @@ import Channel from './pages/Channel';
 import SignIn from './pages/SignIn';
 import NewChannel from './pages/NewChannel';
 
-import Notifications from './components/Notifications';
-
 function App({ channels, network, initNetwork }) {
   if (network.error) {
     return <FullScreen>
@@ -33,16 +31,14 @@ function App({ channels, network, initNetwork }) {
     }
 
     return <Router>
-      <Notifications>
-        <ChannelLayout>
-          <Route exact path="/" render={() => {
-            return <Redirect to={redirect}/>;
-          }}/>
+      <ChannelLayout>
+        <Route exact path="/" render={() => {
+          return <Redirect to={redirect}/>;
+        }}/>
 
-          <Route path='/new-channel' exact component={NewChannel}/>
-          <Route path='/channel/:id' component={Channel}/>
-        </ChannelLayout>
-      </Notifications>
+        <Route path='/new-channel' exact component={NewChannel}/>
+        <Route path='/channel/:id' component={Channel}/>
+      </ChannelLayout>
     </Router>;
   }
 

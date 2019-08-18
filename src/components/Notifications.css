@@ -1,15 +1,15 @@
 .notification-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 .notification-container .notification-list {
-  flex-grow: 0;
+  flex: 0 0 0;
 }
 
 .notification-container .notification-rest {
-  flex-grow: 1;
+  flex: 1 0 0;
 }
 
 .notification-list .notification {

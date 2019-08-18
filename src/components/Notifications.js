@@ -5,7 +5,7 @@ import { removeNotification } from '../redux/actions';
 
 import './Notifications.css';
 
-function Notifications({ notifications, removeNotification, children }) {
+function Notifications({ notifications, removeNotification }) {
   const render = ({ id, kind, content }) => {
     const dismiss = (e) => {
       e.preventDefault();
@@ -24,9 +24,6 @@ function Notifications({ notifications, removeNotification, children }) {
   return <div className='notification-container'>
     <div className='notification-list'>
       {notifications.map((notification) => render(notification))}
-    </div>
-    <div className='notification-rest'>
-      {children}
     </div>
   </div>;
 }
