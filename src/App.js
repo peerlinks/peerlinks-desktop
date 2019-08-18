@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 
 import './App.css';
 
-import Channel from './pages/Channel';
+import Index from './pages/Index';
 import SignIn from './pages/SignIn';
 
 import Network from './network';
 
+const network = new Network();
+
 export default function App() {
   const [ initialized, setInitialized ] = useState(false);
   const [ loading, setLoading ] = useState(false);
-
-  const network = new Network();
 
   const onPassphrase = (passphrase) => {
     setLoading(true);
@@ -24,6 +24,6 @@ export default function App() {
     });
   };
 
-  return initialized ? <Channel network={network}/> :
+  return initialized ? <Index network={network}/> :
     <SignIn isLoading={loading} onPassphrase={onPassphrase}/>;
 }

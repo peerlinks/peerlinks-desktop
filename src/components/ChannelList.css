@@ -1,7 +1,3 @@
-.channel-list .title {
-  margin-bottom: 0.5rem;
-}
-
 .channel-list-elem {
   height: 2rem;
   padding: 0.5rem;
@@ -19,4 +15,8 @@
 .channel-list-elem-active {
   background: #247ba0;
   color: #fbf5f3;
+}
+
+.channel-list .button {
+  width: 100%;
 }
