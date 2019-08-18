@@ -40,7 +40,7 @@ export const loaders = (state, action) => {
 
   switch (action.type) {
     case 'SET_LOADER_READY':
-    case 'SET_LOADING':
+    case 'SET_LOADER_LOADING':
     case 'SET_LOADER_ERROR':
       return Object.assign({}, state, {
         [action.target]: singleLoader(state[action.target], action),

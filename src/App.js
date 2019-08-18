@@ -21,12 +21,21 @@ function App({ backend, channels, initBackend }) {
   }
 
   if (backend.ready) {
-    const channelId = channels.size === 0 ? null :
-      Array.from(channels.keys())[0];
+    // Select first channel if any are available
+    let redirect;
+    if (channels.size === 0) {
+      redirect = '/new-channel';
+    } else {
+      const channelId = Array.from(channels.keys())[0];
+      redirect = `/channel/${channelId}`;
+    }
 
     return <Router>
       <ChannelLayout>
-        {channelId && <Redirect to={`/channel/${channelId}`}/>}
+        <Route exact path="/" render={() => {
+          return <Redirect to={redirect}/>;
+        }}/>
+
         <Route path='/new-channel' exact component={NewChannel}/>
         <Route path='/channel/:id' component={Channel}/>
       </ChannelLayout>

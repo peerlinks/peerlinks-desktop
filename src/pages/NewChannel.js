@@ -17,7 +17,6 @@ function NewChannel({ loader, createChannel }) {
     setChannelName('');
   };
 
-  console.log(loader);
   return <FullScreen>
     {loader.error && <p className='error'>{loader.error.message}</p>}
     <form className='new-channel' onSubmit={onSubmit}>
