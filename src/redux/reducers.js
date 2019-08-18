@@ -43,12 +43,12 @@ export const channels = (state = new Map(), action) => {
         const messageHashes = new Set(channel.messageHashes);
         messageHashes.add(message.hash);
 
-        return Object.assign({}, state, {
-          [action.channelId]: Object.assign({}, channel, {
-            messageHashes,
-            messages: appendMessage(channel.messages, action.message),
-          }),
-        });
+        const copy = new Map(state);
+        copy.set(action.channelId, Object.assign({}, channel, {
+          messageHashes,
+          messages: appendMessage(channel.messages, action.message),
+        }));
+        return copy;
       }
     case 'TRIM_CHANNEL_MESSAGES':
       {

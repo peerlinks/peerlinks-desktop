@@ -29,11 +29,11 @@ export class Network {
     return await this.request('network:createIdentityPair', { name });
   }
 
-  async getMessageCount(channelId) {
+  async getMessageCount({ channelId }) {
     return await this.request('network:getMessageCount', { channelId });
   }
 
-  async getMessagesAtOffset(channelId, offset, limit) {
+  async getMessagesAtOffset({ channelId, offset, limit }) {
     return await this.request('network:getMessagesAtOffset', {
       channelId, offset, limit });
   }

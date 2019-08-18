@@ -35,7 +35,7 @@ function NewChannel({ addChannel, addIdentity }) {
       setRedirect(`/channel/${channel.id}`);
     }).catch((e) => {
       setError(e);
-    }).finally(() =>{ 
+    }).finally(() => {
       setLoading(false);
     });
 
