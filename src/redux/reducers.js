@@ -2,23 +2,48 @@ import { combineReducers } from 'redux';
 
 import { appendMessage } from './utils';
 
-export const backend = (state, action) => {
+export const singleLoader = (state, action) => {
   if (!state) {
     state = { ready: false, loading: false, error: null };
   }
 
   switch (action.type) {
-    case 'SET_BACKEND_READY':
+    case 'SET_LOADER_READY':
       return Object.assign({}, state, {
         ready: action.ready,
         loading: false,
+        error: null,
       });
-    case 'SET_BACKEND_LOADING':
-      return Object.assign({}, state, { loading: action.loading });
-    case 'SET_BACKEND_ERROR':
+    case 'SET_LOADER_LOADING':
+      return Object.assign({}, state, {
+        ready: false,
+        loading: action.loading,
+        error: null,
+      });
+    case 'SET_LOADER_ERROR':
       return Object.assign({}, state, {
         loading: false,
         error: action.error,
+      });
+    default:
+      return state;
+  }
+}
+
+export const loaders = (state, action) => {
+  if (!state) {
+    state = {
+      backend: singleLoader(undefined, {}),
+      newChannel: singleLoader(undefined, {}),
+    };
+  }
+
+  switch (action.type) {
+    case 'SET_LOADER_READY':
+    case 'SET_LOADING':
+    case 'SET_LOADER_ERROR':
+      return Object.assign({}, state, {
+        [action.target]: singleLoader(state[action.target], action),
       });
     default:
       return state;
@@ -92,7 +117,7 @@ export const channels = (state = new Map(), action) => {
 };
 
 export default combineReducers({
-  backend,
+  loaders,
   identities,
   channels,
 });

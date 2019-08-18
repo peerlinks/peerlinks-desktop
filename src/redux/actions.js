@@ -2,6 +2,15 @@ import Network from './network';
 
 const network = new Network();
 
+const wrapPromise = (target, promise, dispatch) => {
+  dispatch(setLoaderLoading({ target, loading: true }));
+  promise.then(() => {
+    dispatch(setLoaderReady({ target, ready: true }));
+  }).catch((error) => {
+    dispatch(setLoaderError({ target, error }));
+  });
+};
+
 //
 // backend
 //
@@ -22,26 +31,20 @@ export function initBackend({ passphrase }) {
   };
 
   return (dispatch) => {
-    dispatch(setBackendLoading({ loading: true }));
-
-    load(dispatch).then(() => {
-      dispatch(setBackendReady({ ready: true }));
-    }).catch((error) => {
-      dispatch(setBackendError({ error }));
-    });
+    wrapPromise('backend', load(dispatch), dispatch);
   };
 }
 
-export function setBackendReady({ ready }) {
-  return { type: 'SET_BACKEND_READY', ready };
+export function setLoaderReady({ target, ready }) {
+  return { type: 'SET_LOADER_READY', target, ready };
 }
 
-export function setBackendLoading({ loading }) {
-  return { type: 'SET_BACKEND_LOADING', loading };
+export function setLoaderLoading({ target, loading }) {
+  return { type: 'SET_LOADER_LOADING', target, loading };
 }
 
-export function setBackendError({ error }) {
-  return { type: 'SET_BACKEND_ERROR', error };
+export function setLoaderError({ target, error }) {
+  return { type: 'SET_LOADER_ERROR', target, error };
 }
 
 //
@@ -65,14 +68,10 @@ export function createChannel({ name }) {
   };
 
   return (dispatch) => {
-    dispatch(setBackendLoading({ loading: true }));
-    load(dispatch).then(() => {
-      dispatch(setBackendReady({ ready: true }));
-    }).catch((error) => {
-      dispatch(setBackendError({ error }));
-    });
+    wrapPromise('newChannel', load(dispatch), dispatch);
   };
 }
+
 export function addChannel(channel) {
   return { type: 'ADD_CHANNEL', channel };
 }

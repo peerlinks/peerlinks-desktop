@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
 import './App.css';
 
@@ -13,7 +13,7 @@ import NewChannel from './pages/NewChannel';
 
 import { initBackend } from './redux/actions';
 
-function App({ backend, initBackend }) {
+function App({ backend, channels, initBackend }) {
   if (backend.error) {
     return <FullScreen>
       <p className='error'>Got error: {backend.error.stack}</p>
@@ -21,8 +21,12 @@ function App({ backend, initBackend }) {
   }
 
   if (backend.ready) {
+    const channelId = channels.size === 0 ? null :
+      Array.from(channels.keys())[0];
+
     return <Router>
       <ChannelLayout>
+        {channelId && <Redirect to={`/channel/${channelId}`}/>}
         <Route path='/new-channel' exact component={NewChannel}/>
         <Route path='/channel/:id' component={Channel}/>
       </ChannelLayout>
@@ -40,7 +44,8 @@ function App({ backend, initBackend }) {
 
 const mapStateToProps = (state) => {
   return {
-    backend: state.backend,
+    backend: state.loaders.backend,
+    channels: state.channels,
   };
 };
 
