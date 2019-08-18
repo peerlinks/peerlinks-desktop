@@ -1,14 +1,7 @@
 const { ipcRenderer: ipc } = require('electron');
 
-let networkReady = false;
-
-const send = (type, payload) => {
-  window.postMessage({ sender: 'preload', type, payload });
-};
-
-ipc.once('network:ready', () => {
-  networkReady = true;
-  send('network:ready');
+ipc.on('response', (_, { seq, payload, error }) => {
+  window.postMessage({ sender: 'preload', seq, payload, error });
 });
 
 window.addEventListener('message', ({ data: message }) => {
@@ -16,13 +9,6 @@ window.addEventListener('message', ({ data: message }) => {
     return;
   }
 
-  const { type, payload } = message;
-  if (type === 'network:passphrase') {
-    // Development mode
-    if (networkReady) {
-      return send('network:ready');
-    }
-
-    ipc.send('network:passphrase', payload.passphrase);
-  }
+  const { type, seq, payload } = message;
+  ipc.send(type, { seq, payload });
 });

@@ -5,7 +5,7 @@ import MessageList from '../components/MessageList';
 
 import './Channel.css';
 
-export default function Channel() {
+export default function Channel({ network }) {
   const [ channel, setChannel ] = useState(null);
 
   const channels = [

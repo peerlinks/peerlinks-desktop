@@ -1,3 +1,4 @@
+import log from 'electron-log';
 import VowLink, { Message } from '@vowlink/protocol';
 import SqliteStorage from '@vowlink/sqlite-storage';
 import Swarm from '@vowlink/swarm';
@@ -23,9 +24,8 @@ export default class Network {
 
   async init() {
     const {
-      event,
       passphrase,
-    } = await this.waitList.waitFor('passphrase').promise;
+    } = await this.waitList.waitFor('init').promise;
 
     this.storage = new SqliteStorage({ file: this.options.db });
     await this.storage.open();
@@ -37,19 +37,49 @@ export default class Network {
     await this.vowLink.load();
 
     this.swarm = new Swarm(this.vowLink);
+    this.waitList.resolve('ready');
     this.ready = true;
-    event.reply('network:ready');
   }
 
   initIPC() {
     const ipc = this.ipc;
 
-    ipc.on('network:passphrase', (event, passphrase) => {
+    const handle = (type, handler, requireReady = true) => {
+      ipc.on(`network:${type}`, (event, { seq, payload }) => {
+        if (!this.ready && requireReady) {
+          return event.reply('response', { seq, error: 'Not ready' });
+        }
+
+        handler(payload).then((result) => {
+          event.reply('response', { seq, payload: result });
+        }).catch((err) => {
+          event.reply('response',
+            { seq, error: err.message, stack: err.stack });
+        });
+      });
+    };
+
+    handle('init', async ({ passphrase }) => {
+      log.info('network: got network:init');
+
       if (this.ready) {
-        return event.reply('network:ready');
+        return;
       }
 
-      this.waitList.resolve('passphrase', { event, passphrase });
+      this.waitList.resolve('init', { passphrase });
+      await this.waitList.waitFor('ready').promise;
+    }, false);
+
+    handle('getChannels', async () => {
+      const fetchChannel = async (channel) => {
+        return {
+          id: channel.id.toString('hex'),
+          name: channel.name,
+          messageCount: await channel.getMessageCount(),
+        };
+      };
+
+      return await Promise.all(this.vowLink.channels.map(fetchChannel));
     });
   }
 
