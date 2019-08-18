@@ -14,8 +14,6 @@ const pad2 = (number) => {
 };
 
 function MessageList({ channelId, channels, loadMessages } ) {
-  const [ currentChannel, setCurrentChannel ] = useState(null);
-
   const messages = channels.get(channelId).messages.map((message) => {
     let timestamp = new Date(message.timestamp * 1000);
     timestamp = pad2(timestamp.getHours()) + ':' +
@@ -30,9 +28,8 @@ function MessageList({ channelId, channels, loadMessages } ) {
     </div>;
   });
 
-  if (messages.length === 0 && currentChannel !== channelId) {
-    setCurrentChannel(channelId);
-
+  // Load only once per channel
+  if (messages.length === 0) {
     loadMessages({ channelId, limit: DISPLAY_COUNT });
   }
 
