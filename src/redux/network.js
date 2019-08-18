@@ -25,7 +25,7 @@ export default class Network {
     return await this.request('network:getIdentities');
   }
 
-  async createIdentityPair(name) {
+  async createIdentityPair({ name }) {
     return await this.request('network:createIdentityPair', { name });
   }
 

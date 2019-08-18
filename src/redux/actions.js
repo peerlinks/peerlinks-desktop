@@ -17,7 +17,7 @@ export function initBackend({ passphrase }) {
 
     const identities = await network.getIdentities();
     for (const identity of identities) {
-      dispatch(addIdentity({ identity }));
+      dispatch(addIdentity(identity));
     }
   };
 
@@ -45,18 +45,10 @@ export function setBackendError({ error }) {
 }
 
 //
-// currentChannel
-//
-
-export function setCurrentChannel({ channelId }) {
-  return { type: 'SET_CURRENT_CHANNEL', channelId };
-}
-
-//
 // identities
 //
 
-export function addIdentity({ identity }) {
+export function addIdentity(identity) {
   return { type: 'ADD_IDENTITY', identity };
 }
 
@@ -64,6 +56,23 @@ export function addIdentity({ identity }) {
 // channels
 //
 
+export function createChannel({ name }) {
+  const load = async (dispatch) => {
+    const { identity, channel } = await network.createIdentityPair({ name });
+
+    dispatch(addChannel(channel));
+    dispatch(addIdentity(identity));
+  };
+
+  return (dispatch) => {
+    dispatch(setBackendLoading({ loading: true }));
+    load(dispatch).then(() => {
+      dispatch(setBackendReady({ ready: true }));
+    }).catch((error) => {
+      dispatch(setBackendError({ error }));
+    });
+  };
+}
 export function addChannel(channel) {
   return { type: 'ADD_CHANNEL', channel };
 }

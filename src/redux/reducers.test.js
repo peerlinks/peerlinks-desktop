@@ -8,9 +8,9 @@ import {
 
 it('appends channel to empty list', () => {
   const state = channels(undefined, addChannel({ id: 'a' }));
-  assert.strictEqual(state['a'].id, 'a');
-  assert.strictEqual(state['a'].messages.length, 0);
-  assert.strictEqual(state['a'].messageHashes.size, 0);
+  assert.strictEqual(state.get('a').id, 'a');
+  assert.strictEqual(state.get('a').messages.length, 0);
+  assert.strictEqual(state.get('a').messageHashes.size, 0);
 });
 
 it('appends messages to the channel', () => {
@@ -39,7 +39,7 @@ it('appends messages to the channel', () => {
     },
   }));
 
-  const channel = state['a'];
+  const channel = state.get('a');
   assert.strictEqual(channel.messageHashes.size, 2);
   assert.strictEqual(channel.messages.length, 2);
   assert.deepStrictEqual(channel.messages.map((m) => `${m.height}:${m.hash}`), [

@@ -25,38 +25,33 @@ export const backend = (state, action) => {
   }
 };
 
-export const currentChannel = (state = null, action) => {
-  switch (action.type) {
-    case 'SET_CURRENT_CHANNEL':
-      return action.channelId;
-    default:
-      return state;
-  }
-};
-
-export const identities = (state = {}, action) => {
+export const identities = (state = new Map(), action) => {
   switch (action.type) {
     case 'ADD_IDENTITY':
-      return Object.assign({}, state, {
-        [action.id]: action.identity,
-      });
+      {
+        const copy = new Map(state);
+        copy.set(action.identity.publicKey, action.identity);
+        return copy;
+      }
     default:
       return state;
   }
 };
 
-export const channels = (state = {}, action) => {
+export const channels = (state = new Map(), action) => {
   switch (action.type) {
     case 'ADD_CHANNEL':
-      return Object.assign({}, state, {
-        [action.channel.id]: Object.assign({
+      {
+        const copy = new Map(state);
+        copy.set(action.channel.id, Object.assign({
           messageHashes: new Set(),
           messages: [],
-        }, action.channel),
-      });
+        }, action.channel));
+        return copy;
+      }
     case 'APPEND_CHANNEL_MESSAGE':
       {
-        const channel = state[action.channelId];
+        const channel = state.get(action.channelId);
         if (!channel) {
           return state;
         }
@@ -80,7 +75,7 @@ export const channels = (state = {}, action) => {
       }
     case 'TRIM_CHANNEL_MESSAGES':
       {
-        const channel = state[action.channelId];
+        const channel = state.get(action.channelId);
         if (!channel) {
           return state;
         }
@@ -98,7 +93,6 @@ export const channels = (state = {}, action) => {
 
 export default combineReducers({
   backend,
-  currentChannel,
   identities,
   channels,
 });

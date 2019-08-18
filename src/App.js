@@ -16,7 +16,7 @@ import { initBackend } from './redux/actions';
 function App({ backend, initBackend }) {
   if (backend.error) {
     return <FullScreen>
-      <h2>Got error: {backend.error}</h2>
+      <p className='error'>Got error: {backend.error.stack}</p>
     </FullScreen>;
   }
 
@@ -24,7 +24,7 @@ function App({ backend, initBackend }) {
     return <Router>
       <ChannelLayout>
         <Route path='/new-channel' exact component={NewChannel}/>
-        <Route path='/channel' component={Channel}/>
+        <Route path='/channel/:id' component={Channel}/>
       </ChannelLayout>
     </Router>;
   }

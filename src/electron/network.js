@@ -125,8 +125,9 @@ export default class Network {
 
   serializeIdentity(identity) {
     return {
-      identity: identity.name,
+      name: identity.name,
       publicKey: identity.publicKey.toString('hex'),
+      channelIds: identity.getChannelIds().map((id) => id.toString('hex')),
     };
   }
 

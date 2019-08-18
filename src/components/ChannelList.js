@@ -1,26 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
-import { setCurrentChannel } from '../redux/actions';
 
 import './ChannelList.css';
 
-function ChannelList({ currentChannel, channelList, selectChannel }) {
-  console.log(channelList);
+function ChannelList({ channelList }) {
   const list = channelList.map((channel) => {
     let className = 'channel-list-elem';
 
-    if (currentChannel === channel.id) {
-      className += ' channel-list-elem-active';
-    }
-
-    return <Link
+    return <NavLink
       className={className}
+      activeClassName='channel-list-elem-active'
       key={channel.id}
       to={`/channel/${channel.id}`}>
       {channel.name}
-    </Link>;
+    </NavLink>;
   });
 
   return <section className='channel-list'>
@@ -35,10 +29,7 @@ function ChannelList({ currentChannel, channelList, selectChannel }) {
 
 const mapStateToProps = (state) => {
   return {
-    currentChannel: state.currentChannel,
-    channelList: Object.keys(state.channels).map((channelId) => {
-      return state.channels[channelId];
-    }).sort((a, b) => {
+    channelList: Array.from(state.channels.values()).sort((a, b) => {
       if (a.name < b.name) {
         return -1;
       } else if (a.name > b.name) {
@@ -50,12 +41,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    selectChannel(channelId) {
-      dispatch(setCurrentChannel({ channelId }));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChannelList);
+export default connect(mapStateToProps)(ChannelList);

@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+
+import { createChannel } from '../redux/actions';
 
 import FullScreen from '../layouts/FullScreen';
 
 import './NewChannel.css';
 
-export default function NewChannel({ onNewChannel }) {
+function NewChannel({ createChannel }) {
   const [ channelName, setChannelName ] = useState('');
 
   const onSubmit = (e) => {
     e.preventDefault();
-    onNewChannel(channelName);
+    createChannel({ name: channelName });
+
+    setChannelName('');
   };
 
   return <FullScreen>
@@ -32,3 +37,17 @@ export default function NewChannel({ onNewChannel }) {
     </form>
   </FullScreen>;
 }
+
+const mapStateToProps = () => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createChannel({ name }) {
+      dispatch(createChannel({ name }));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewChannel);

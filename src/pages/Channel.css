@@ -32,7 +32,8 @@
 .channel-compose-identity {
   flex: 0 0 0;
   border: 1px solid #2d2d2a;
-  border-radius: 0.25rem 0 0 0.25rem;
+  border-radius: 0.25rem;
+  margin-right: 0.25rem;
 
   font-size: 1rem;
   font-weight: bold;
@@ -44,9 +45,8 @@
   display: block;
   flex: 1 0 0;
 
-  border-radius: 0 0.25rem 0.25rem 0;
+  border-radius: 0.25rem;
   border: 1px solid #2d2d2a;
-  border-left: 0;
   height: 3rem;
   padding: 0.75rem;
   font-size: 1rem;
