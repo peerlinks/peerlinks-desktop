@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import {
   requestInvite, waitForInvite, inviteRequestReset,
@@ -37,12 +36,6 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
     wait({ identityKey });
   };
 
-  let redirect;
-  if (state.channel) {
-    reset();
-    redirect = `/channel/${state.channel.id}`;
-  }
-
   let requestData;
   if (state.request && state.requestKey === identityKey) {
     requestData = `/invite ${identity.name} ${state.request.requestId} ` +
@@ -55,7 +48,6 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
   }
 
   return <form className='new-channel-request-invite' onSubmit={onSubmit}>
-    {redirect && <Redirect to={redirect}/>}
     <div className='new-channel-row'>
       <h3 className='title'>...or request invite for:</h3>
     </div>

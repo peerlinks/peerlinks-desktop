@@ -1,10 +1,11 @@
 import Network from './network';
 
+export const SET_REDIRECT = 'SET_REDIRECT';
+
 export const NETWORK_READY = 'NETWORK_READY';
 export const NETWORK_LOADING = 'NETWORK_LOADING';
 export const NETWORK_ERROR = 'NETWORK_ERROR';
 
-export const NEW_CHANNEL_CREATED = 'NEW_CHANNEL_CREATED';
 export const NEW_CHANNEL_RESET = 'NEW_CHANNEL_RESET';
 export const NEW_CHANNEL_IN_PROGRESS = 'NEW_CHANNEL_IN_PROGRESS';
 export const NEW_CHANNEL_ERROR = 'NEW_CHANNEL_ERROR';
@@ -14,7 +15,6 @@ export const INVITE_REQUEST_WAITING = 'INVITE_REQUEST_WAITING';
 export const INVITE_REQUEST_SET_IDENTITY_KEY =
   'INVITE_REQUEST_SET_IDENTITY_KEY';
 export const INVITE_REQUEST_SET_REQUEST = 'INVITE_REQUEST_SET_REQUEST';
-export const INVITE_REQUEST_GOT_CHANNEL = 'INVITE_REQUEST_GOT_CHANNEL';
 export const INVITE_REQUEST_RESET = 'INVITE_REQUEST_RESET';
 
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
@@ -30,6 +30,10 @@ export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
 export const CHANNEL_MARK_READ = 'CHANNEL_MARK_READ';
 
 const network = new Network();
+
+export function setRedirect(to) {
+  return { type: SET_REDIRECT, to };
+}
 
 //
 // network
@@ -60,13 +64,20 @@ export function initNetwork({ passphrase }) {
     for (const identity of identities) {
       dispatch(addIdentity(identity));
     }
+
+    dispatch(networkReady());
+
+    // Select first channel if any are available
+    if (channels.length === 0) {
+      dispatch(setRedirect('/new-channel'));
+    } else {
+      dispatch(setRedirect(`/channel/${channels[0].id}/`));
+    }
   };
 
   return (dispatch) => {
     dispatch(networkLoading());
-    init(dispatch).then(() => {
-      dispatch(networkReady());
-    }).catch((e) => {
+    init(dispatch).catch((e) => {
       dispatch(networkError(e));
     });
   };
@@ -75,10 +86,6 @@ export function initNetwork({ passphrase }) {
 //
 // new channel
 //
-
-export function newChannelCreated({ channelId }) {
-  return { type: NEW_CHANNEL_CREATED, channelId };
-}
 
 export function newChannelReset() {
   return { type: NEW_CHANNEL_RESET };
@@ -100,15 +107,13 @@ export function newChannel({ channelName }) {
 
     dispatch(addChannel(channel));
     dispatch(addIdentity(identity));
-
-    return channel.id;
+    dispatch(newChannelReset());
+    dispatch(setRedirect(`/channel/${channel.id}/`));
   };
 
   return (dispatch) => {
     dispatch(newChannelInProgress());
-    createChannel(dispatch).then((channelId) => {
-      dispatch(newChannelCreated({ channelId }));
-    }).catch((e) => {
+    createChannel(dispatch).catch((e) => {
       dispatch(newChannelError(e));
     });
   };
@@ -148,7 +153,8 @@ export function waitForInvite({ identityKey }) {
         channelId: channel.id,
       });
       dispatch(addChannel(channel));
-      dispatch({ type: INVITE_REQUEST_GOT_CHANNEL, channel });
+      dispatch(inviteRequestReset());
+      dispatch(setRedirect(`/channel/${channel.id}/`));
     }).catch((e) => {
       dispatch(newChannelError(e));
     });

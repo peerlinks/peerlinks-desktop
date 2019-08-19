@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 
 import './App.css';
 
-import { initNetwork } from './redux/actions';
+import { initNetwork, setRedirect } from './redux/actions';
 
 import FullScreen from './layouts/FullScreen';
 import ChannelLayout from './layouts/Channel';
@@ -13,23 +13,13 @@ import Channel from './pages/Channel';
 import SignIn from './pages/SignIn';
 import NewChannel from './pages/NewChannel';
 
-function App({ channels, network, initNetwork }) {
-  if (network.isReady) {
-    // Select first channel if any are available
-    let redirect;
-    if (channels.size === 0) {
-      redirect = '/new-channel';
-    } else {
-      const channelId = Array.from(channels.keys())[0];
-      redirect = `/channel/${channelId}/`;
-    }
+import Redirect from './components/Redirect';
 
+function App({ channels, network, initNetwork, setRedirect }) {
+  if (network.isReady) {
     return <Router>
       <ChannelLayout>
-        <Route exact path="/" render={() => {
-          return <Redirect to={redirect}/>;
-        }}/>
-
+        <Redirect/>
         <Route path='/new-channel' exact component={NewChannel}/>
         <Route path='/channel/:id/' component={Channel}/>
       </ChannelLayout>
@@ -58,6 +48,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     initNetwork: (...args) => dispatch(initNetwork(...args)),
+    setRedirect: (...args) => dispatch(setRedirect(...args)),
   };
 };
 

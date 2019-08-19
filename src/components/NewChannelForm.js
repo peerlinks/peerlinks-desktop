@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import {
   newChannel, newChannelReset,
@@ -17,15 +16,8 @@ function NewChannelForm({ newChannel, reset, state }) {
     newChannel({ channelName });
   };
 
-  let redirect;
-  if (state.created) {
-    redirect = `/channel/${state.created.channelId}/`;
-    reset();
-  }
-
   return <form className='new-channel-create' onSubmit={onSubmit}>
     {state.error && <p className='error'>{state.error.message}</p>}
-    {redirect && <Redirect to={redirect}/>}
     <div className='new-channel-row'>
       <h3 className='title'>Create new channel</h3>
     </div>
