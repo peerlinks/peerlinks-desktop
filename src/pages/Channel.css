@@ -15,39 +15,3 @@
   padding: 0.75rem;
   overflow-y: auto;
 }
-
-.channel-compose {
-  flex: 0 0 4.5rem;
-  padding: 0.75rem;
-
-  border-top: 1px solid #ccc;
-}
-
-.channel-compose-container {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-
-.channel-compose-identity {
-  flex: 0 0 0;
-  border: 1px solid #2d2d2a;
-  border-radius: 0.25rem;
-  margin-right: 0.25rem;
-
-  font-size: 1rem;
-  font-weight: bold;
-  background: #fbf5f3;
-  white-space: nowrap
-}
-
-.channel-compose-text {
-  display: block;
-  flex: 1 0 0;
-
-  border-radius: 0.25rem;
-  border: 1px solid #2d2d2a;
-  height: 3rem;
-  padding: 0.75rem;
-  font-size: 1rem;
-}

@@ -38,6 +38,16 @@ export default class Network {
       channelId, offset, limit });
   }
 
+  async waitForIncomingMessage({ channelId, timeout }) {
+    return await this.request('network:waitForIncomingMessage',
+      { channelId, timeout });
+  }
+
+  async postMessage({ channelId, identityKey, json }) {
+    return await this.request('network:postMessage',
+      { channelId, identityKey, json });
+  }
+
   // Internal
 
   async request(type, payload, timeout) {

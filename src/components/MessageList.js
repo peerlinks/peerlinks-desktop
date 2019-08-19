@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 import { loadMessages } from '../redux/actions';
 
-const DISPLAY_COUNT = 1000;
-
 const pad2 = (number) => {
   let str = number.toString();
   while (str.length < 2) {
@@ -30,7 +28,7 @@ function MessageList({ channelId, channels, loadMessages } ) {
 
   // Load only once per channel
   if (messages.length === 0) {
-    loadMessages({ channelId, limit: DISPLAY_COUNT });
+    loadMessages({ channelId });
   }
 
   return <div className='message-list'>

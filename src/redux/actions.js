@@ -128,7 +128,22 @@ export function addIdentity(identity) {
 //
 
 export function addChannel(channel) {
-  return { type: ADD_CHANNEL, channel };
+  return (dispatch) => {
+    dispatch({ type: ADD_CHANNEL, channel });
+
+    const loop = () => {
+      network.waitForIncomingMessage({ channelId: channel.id }).then(() => {
+        dispatch(loadMessages({ channelId: channel.id }));
+        loop();
+      }).catch((e) => {
+        dispatch(addNotification({
+          kind: 'error',
+          content: 'Failed to wait for an update: ' + e.message,
+        }));
+      });
+    };
+    loop();
+  };
 }
 
 export function appendChannelMessage({ channelId, message }) {
@@ -139,7 +154,10 @@ export function trimChannelMessages({ channelId, count }) {
   return { type: TRIM_CHANNEL_MESSAGES, channelId, count };
 }
 
-export function loadMessages({ channelId, offset = 0, limit }) {
+export const DEFAULT_LOAD_LIMIT = 1024;
+
+export function loadMessages(options) {
+  const { channelId, offset = 0, limit = DEFAULT_LOAD_LIMIT } = options;
   const load = async (dispatch) => {
     const messages = await network.getReverseMessagesAtOffset({
       channelId,
@@ -157,6 +175,27 @@ export function loadMessages({ channelId, offset = 0, limit }) {
       dispatch(addNotification({
         kind: 'error',
         content: 'Failed to load messages: ' + e.message,
+      }));
+    });
+  };
+}
+
+export function postMessage({ channelId, identityKey, json }) {
+  const post = async (dispatch) => {
+    const message = await network.postMessage({
+      channelId,
+      identityKey,
+      json,
+    });
+
+    dispatch(appendChannelMessage({ channelId, message }));
+  };
+
+  return (dispatch) => {
+    post(dispatch).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to post message: ' + e.message,
       }));
     });
   };

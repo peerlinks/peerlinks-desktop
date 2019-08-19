@@ -18,6 +18,7 @@ export default class Network {
     this.swarm = null;
 
     this.waitList = new WaitList();
+    this.updateWaiters = new Set();
     this.ready = false;
 
     this.initIPC();
@@ -101,6 +102,13 @@ export default class Network {
       });
     };
 
+    const identityByKey = (key) => {
+      key = Buffer.from(key, 'hex');
+      return this.vowLink.identities.find((identity) => {
+        return identity.publicKey.equals(key);
+      });
+    };
+
     handle('getMessageCount', async ({ channelId }) => {
       const channel = channelById(channelId);
       if (!channel) {
@@ -120,6 +128,40 @@ export default class Network {
       return messages.map((message) => {
         return this.serializeMessage(message);
       });
+    });
+
+    handle('waitForIncomingMessage', async ({ channelId, timeout }) => {
+      const channel = channelById(channelId);
+      if (!channel) {
+        throw new Error('Channel not found: ' + channelId);
+      }
+
+      log.info(`network: waitForIncomingMessage ${channelId}`);
+
+      const waiter = await channel.waitForIncomingMessage(timeout);
+      this.updateWaiters.add(waiter);
+      try {
+        await waiter.promise;
+      } finally {
+        this.updateWaiters.delete(waiter);
+      }
+    });
+
+    handle('postMessage', async ({ channelId, identityKey, json }) => {
+      const channel = channelById(channelId);
+      if (!channel) {
+        throw new Error('Channel not found: ' + channelId);
+      }
+
+      const identity = identityByKey(identityKey);
+      if (!identity) {
+        throw new Error('Identity not found: ' + identityKey);
+      }
+
+      log.info(`network: postMessage ${channelId} id=${identity.name}`);
+
+      const message = await channel.post(Message.json(json), identity);
+      return this.serializeMessage(message);
     });
   }
 
@@ -158,5 +200,10 @@ export default class Network {
     await this.vowLink.close();
     await this.swarm.destroy();
     await this.storage.close();
+
+    for (const waiter of this.updateWaiters) {
+      waiter.cancel();
+    }
+    this.updateWaiters.clear();
   }
 }
