@@ -230,12 +230,70 @@ export function loadMessages(options) {
   };
 }
 
-export function postMessage({ channelId, identityKey, json }) {
+export function invite(params) {
+  const run = async (dispatch) => {
+    await network.invite(params);
+  };
+
+  return (dispatch) => {
+    run(dispatch).then((e) => {
+      dispatch(addNotification({
+        kind: 'info',
+        content: `Invited "${params.inviteeName}" to the channel`,
+      }));
+    }).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: `Failed to invite "${params.inviteeName}"`,
+      }));
+    });
+  };
+}
+
+const COMMANDS = new Map(
+  [
+    'invite',
+    { args: [ 'inviteeName', 'requestId', 'request' ], action: invite },
+  ],
+);
+
+export function postMessage({ channelId, identityKey, text }) {
+  // Execute commands
+  async function runCommand(dispatch, { channelId, identityKey, text }) {
+    const parts = text.trim().split(/\s+/g);
+
+    const commandName = parts.shift();
+    const args = parts;
+
+    if (!COMMANDS.has(commandName)) {
+      throw new Error(`Unknown command: /${commandName}`);
+    }
+
+    const command = COMMANDS.get(commandName);
+    if (command.args.length !== args.length) {
+      throw new Error('Invalid command arguments. ' +
+        `Expected: /${commandName} ${command.args.join(' ')}`);
+    }
+
+    const params = Object.create(null);
+    params.channelId = channelId;
+    params.identityKey = identityKey;
+    for (const [ i, arg ] of args.entries()) {
+      params[command.args[i]] = arg;
+    }
+
+    dispatch(command.action(params));
+  }
+
   const post = async (dispatch) => {
+    if (text.startsWith('/')) {
+      return await runCommand(dispatch, { channelId, identityKey, text });
+    }
+
     const message = await network.postMessage({
       channelId,
       identityKey,
-      json,
+      json: { text },
     });
 
     dispatch(appendChannelMessage({ channelId, message }));

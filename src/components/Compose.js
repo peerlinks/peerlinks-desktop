@@ -56,7 +56,7 @@ function Compose({ identities, channelId, postMessage }) {
     postMessage({
       channelId,
       identityKey,
-      json: { text: message },
+      text: message,
     });
 
     setMessage('');

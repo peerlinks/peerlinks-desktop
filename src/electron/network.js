@@ -5,6 +5,8 @@ import SqliteStorage from '@vowlink/sqlite-storage';
 import Swarm from '@vowlink/swarm';
 import WaitList from 'promise-waitlist';
 
+const INVITE_TIMEOUT = 15 * 60 * 1000; // 15 minutes
+
 export default class Network {
   constructor(ipc, options = {}) {
     this.ipc = ipc;
@@ -233,6 +235,38 @@ export default class Network {
       this.swarm.joinChannel(channel);
 
       return this.serializeChannel(channel);
+    });
+
+    handle('invite', async (params) => {
+      let {
+        identityKey, channelId, inviteeName, requestId, request,
+      } = params;
+
+      const channel = channelById(channelId);
+      if (!channel) {
+        throw new Error('Channel not found: ' + channelId);
+      }
+
+      try {
+        requestId = Buffer.from(requestId, 'base64');
+        request = Buffer.from(request, 'base64');
+      } catch (e) {
+        throw new Error('Invalid encoding of invite');
+      }
+
+      const identity = identityByKey(identityKey);
+      if (!identity) {
+        throw new Error('Identity not found: ' + identityKey);
+      }
+
+      const { encryptedInvite, peerId } =
+        identity.issueInvite(channel, request, inviteeName);
+
+      await swarm.sendInvite({
+        requestId,
+        peerId,
+        encryptedInvite,
+      }, INVITE_TIMEOUT).promise;
     });
   }
 
