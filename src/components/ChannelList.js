@@ -13,7 +13,8 @@ function ChannelList({ channelList }) {
       activeClassName='channel-list-elem-active'
       key={channel.id}
       to={`/channel/${channel.id}`}>
-      {channel.name}
+      <span className='channel-list-elem-hash'>#</span>
+      <span className='channel-list-elem-title'>{channel.name}</span>
     </NavLink>;
   });
 

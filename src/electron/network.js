@@ -18,7 +18,13 @@ export default class Network {
     this.swarm = null;
 
     this.waitList = new WaitList();
+
+    // Set<WaitList.Entry>
     this.updateWaiters = new Set();
+
+    // Map<identityKey, Function>
+    this.pendingInvites = new Map();
+
     this.ready = false;
 
     this.initIPC();
@@ -162,6 +168,71 @@ export default class Network {
 
       const message = await channel.post(Message.json(json), identity);
       return this.serializeMessage(message);
+    });
+
+    handle('requestInvite', async ({ identityKey }) => {
+      const identity = identityByKey(identityKey);
+      if (!identity) {
+        throw new Error('Identity not found: ' + identityKey);
+      }
+
+      log.info(`network: requestInvite id=${identity.name}`);
+
+      const { requestId, request, decrypt } =
+        identity.requestInvite(this.vowLink.id);
+
+      if (this.pendingInvites.has(identityKey)) {
+        const existing = this.pendingInvites.get(identityKey);
+        if (existing.waiter) {
+          existing.waiter.cancel();
+        }
+      }
+      this.pendingInvites.set(identityKey, {
+        requestId,
+        decrypt,
+
+        // To be set below
+        waiter: null,
+      });
+
+      return {
+        requestId: requestId.toString('base64'),
+        request: request.toString('base64'),
+      };
+    });
+
+    handle('waitForInvite', async ({ identityKey }) => {
+      const identity = identityByKey(identityKey);
+      if (!identity) {
+        throw new Error('Identity not found: ' + identityKey);
+      }
+
+      if (!this.pendingInvites.has(identityKey)) {
+        throw new Error('No pending invites for: ' + identity.name);
+      }
+
+      const entry = this.pendingInvites.get(identityKey);
+      if (!entry.waiter) {
+        entry.waiter = this.swarm.waitForInvite(entry.requestId);
+      }
+
+      const encryptedInvite = await entry.waiter.promise;
+      const invite = decrypt(encryptedInvite);
+
+      // Find suitable channel name
+      let channelName = invite.channelName;
+      let counter = 0;
+      while (this.vowLink.getChannel(channelName)) {
+        counter++;
+        channelName = `${invite.channelName}-${counter}`;
+      }
+
+      const channel = await this.vowLink.channelFromInvite(invite, identity, {
+        name: channelName,
+      });
+      this.swarm.joinChannel(channel);
+
+      return this.serializeChannel(channel);
     });
   }
 

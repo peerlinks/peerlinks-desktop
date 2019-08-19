@@ -9,6 +9,14 @@ export const NEW_CHANNEL_RESET = 'NEW_CHANNEL_RESET';
 export const NEW_CHANNEL_IN_PROGRESS = 'NEW_CHANNEL_IN_PROGRESS';
 export const NEW_CHANNEL_ERROR = 'NEW_CHANNEL_ERROR';
 
+export const INVITE_REQUEST_GENERATING = 'INVITE_REQUEST_GENERATING';
+export const INVITE_REQUEST_WAITING = 'INVITE_REQUEST_WAITING';
+export const INVITE_REQUEST_SET_IDENTITY_KEY =
+  'INVITE_REQUEST_SET_IDENTITY_KEY';
+export const INVITE_REQUEST_SET_REQUEST = 'INVITE_REQUEST_SET_REQUEST';
+export const INVITE_REQUEST_GOT_CHANNEL = 'INVITE_REQUEST_GOT_CHANNEL';
+export const INVITE_REQUEST_RESET = 'INVITE_REQUEST_RESET';
+
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
 
@@ -97,6 +105,41 @@ export function newChannel({ channelName }) {
     dispatch(newChannelInProgress());
     createChannel(dispatch).then((channelId) => {
       dispatch(newChannelCreated({ channelId }));
+    }).catch((e) => {
+      dispatch(newChannelError(e));
+    });
+  };
+}
+
+export function requestInvite({ identityKey }) {
+  const generate = async (dispatch) => {
+    return await network.requestInvite({ identityKey });
+  };
+
+  return (dispatch) => {
+    dispatch({ type: INVITE_REQUEST_GENERATING });
+    generate(dispatch).then((request) => {
+      dispatch({
+        type: INVITE_REQUEST_SET_REQUEST,
+        identityKey,
+        request,
+      });
+    }).catch((e) => {
+      dispatch(newChannelError(e));
+    });
+  };
+}
+
+export function waitForInvite({ identityKey }) {
+  const wait = async (dispatch) => {
+    return await network.waitForInvite({ identityKey });
+  };
+
+  return (dispatch) => {
+    dispatch({ type: INVITE_REQUEST_WAITING });
+    wait(dispatch).then((channel) => {
+      dispatch({ type: ADD_CHANNEL, channel });
+      dispatch({ type: INVITE_REQUEST_GOT_CHANNEL, channel });
     }).catch((e) => {
       dispatch(newChannelError(e));
     });

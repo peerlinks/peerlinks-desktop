@@ -62,10 +62,14 @@ h6 {
   color: #233d4d;
 
   cursor: pointer;
-  transition: 0.25s all;
+  transition: background 0.25s, color 0.25s;
 }
 
-.button:hover {
+.button:disabled {
+  color: #afafaf;
+}
+
+.button:hover:not(:disabled) {
   background: #233d4d;
   color: #fbf5f3;
 }

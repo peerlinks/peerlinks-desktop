@@ -3,7 +3,7 @@
   margin-bottom: 0.5rem;
 }
 
-.new-channel .new-channel-name {
+.new-channel input[type="text"] {
   width: 100%;
   font-size: 2rem;
   padding: 0.75rem;
@@ -14,4 +14,8 @@
   width: 100%;
   font-size: 1rem;
   padding: 0.75rem;
+}
+
+.new-channel hr {
+  margin: 0.5rem 0;
 }

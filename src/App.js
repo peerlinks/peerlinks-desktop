@@ -27,7 +27,7 @@ function App({ channels, network, initNetwork }) {
       redirect = '/new-channel';
     } else {
       const channelId = Array.from(channels.keys())[0];
-      redirect = `/channel/${channelId}`;
+      redirect = `/channel/${channelId}/`;
     }
 
     return <Router>
@@ -37,7 +37,7 @@ function App({ channels, network, initNetwork }) {
         }}/>
 
         <Route path='/new-channel' exact component={NewChannel}/>
-        <Route path='/channel/:id' component={Channel}/>
+        <Route path='/channel/:id/' component={Channel}/>
       </ChannelLayout>
     </Router>;
   }

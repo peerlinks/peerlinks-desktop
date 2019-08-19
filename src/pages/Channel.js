@@ -12,7 +12,9 @@ function Channel({ match, channels }) {
 
   return <div className='channel-container'>
     <header className='channel-info'>
-      #{channel.name}
+      <div className='channel-info-container'>
+        <div className='channel-name'>#{channel.name}</div>
+      </div>
     </header>
     <section className='channel-content'>
       <MessageList channelId={channelId}/>

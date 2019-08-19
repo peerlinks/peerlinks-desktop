@@ -8,6 +8,10 @@ import {
   NEW_CHANNEL_CREATED, NEW_CHANNEL_RESET, NEW_CHANNEL_IN_PROGRESS,
   NEW_CHANNEL_ERROR,
 
+  INVITE_REQUEST_GENERATING, INVITE_REQUEST_WAITING,
+  INVITE_REQUEST_SET_IDENTITY_KEY, INVITE_REQUEST_SET_REQUEST,
+  INVITE_REQUEST_GOT_CHANNEL, INVITE_REQUEST_RESET,
+
   ADD_NOTIFICATION, REMOVE_NOTIFICATION,
   ADD_IDENTITY,
   ADD_CHANNEL, APPEND_CHANNEL_MESSAGE, TRIM_CHANNEL_MESSAGES,
@@ -35,7 +39,16 @@ export const network = (state, action) => {
 
 export const newChannel = (state, action) => {
   if (!state) {
-    state = { created: null, isLoading: false, error: null };
+    state = {
+      created: null,
+      isLoading: false,
+      error: null,
+
+      // Invites
+      identityKey: null,
+      inviteRequest: null,
+      inviteChannel: null,
+    };
   }
 
   switch (action.type) {
@@ -56,6 +69,53 @@ export const newChannel = (state, action) => {
       return Object.assign({}, state, {
         isLoading: false,
         error: action.error,
+      });
+    default:
+      return state;
+  }
+};
+
+export const inviteRequest = (state, action) => {
+  if (!state) {
+    state = {
+      isGenerating: false,
+      isWaiting: false,
+
+      identityKey: null,
+      requestKey: null,
+      request: null,
+      channel: null,
+    };
+  }
+
+  switch (action.type) {
+    case INVITE_REQUEST_GENERATING:
+      return Object.assign({}, state, { isGenerating: true });
+    case INVITE_REQUEST_WAITING:
+      return Object.assign({}, state, { isWaiting: true });
+    case INVITE_REQUEST_SET_IDENTITY_KEY:
+      return Object.assign({}, state, {
+        identityKey: action.identityKey,
+      });
+    case INVITE_REQUEST_SET_REQUEST:
+      return Object.assign({}, state, {
+        isGenerating: false,
+        isWaiting: false,
+        requestKey: action.identityKey,
+        request: action.request,
+      });
+    case INVITE_REQUEST_GOT_CHANNEL:
+      return Object.assign({}, state, {
+        channel: action.channel,
+        isWaiting: false,
+      });
+    case INVITE_REQUEST_RESET:
+      return Object.assign({}, state, {
+        isGenerating: false,
+        isWaiting: false,
+
+        request: null,
+        channel: null,
       });
     default:
       return state;
@@ -162,6 +222,7 @@ export default combineReducers({
   // Various asynchronous states
   network,
   newChannel,
+  inviteRequest,
   notifications,
 
   identities,
