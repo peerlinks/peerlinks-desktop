@@ -244,25 +244,25 @@ export function invite(params) {
     }).catch((e) => {
       dispatch(addNotification({
         kind: 'error',
-        content: `Failed to invite "${params.inviteeName}"`,
+        content: `Failed to invite "${params.inviteeName}": ` + e.message,
       }));
     });
   };
 }
 
-const COMMANDS = new Map(
+const COMMANDS = new Map([
   [
     'invite',
     { args: [ 'inviteeName', 'requestId', 'request' ], action: invite },
   ],
-);
+]);
 
 export function postMessage({ channelId, identityKey, text }) {
   // Execute commands
   async function runCommand(dispatch, { channelId, identityKey, text }) {
     const parts = text.trim().split(/\s+/g);
 
-    const commandName = parts.shift();
+    const commandName = parts.shift().slice(1);
     const args = parts;
 
     if (!COMMANDS.has(commandName)) {

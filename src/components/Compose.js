@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { postMessage } from '../redux/actions';
 
@@ -27,7 +28,10 @@ function Compose({ identities, channelId, postMessage }) {
 
   if (availableIdentities.length === 0) {
     return <div className='channel-compose-container'>
-      <p>No write access to channel. Request an invite</p>
+      <p>
+        No write access to channel,
+        <Link to='/new-channel'>request invite</Link>
+      </p>
     </div>;
   }
 

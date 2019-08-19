@@ -198,8 +198,8 @@ export default class Network {
       });
 
       return {
-        requestId: requestId.toString('base64'),
-        request: request.toString('base64'),
+        requestId: requestId.toString('hex'),
+        request: request.toString('hex'),
       };
     });
 
@@ -224,7 +224,13 @@ export default class Network {
       // Find suitable channel name
       let channelName = invite.channelName;
       let counter = 0;
-      while (this.vowLink.getChannel(channelName)) {
+      let existing;
+      while (existing = this.vowLink.getChannel(channelName)) {
+        if (existing.id.equals(invite.channelPubKey)) {
+          // Just add the chain, the `channelFromInvite` will not throw
+          break;
+        }
+
         counter++;
         channelName = `${invite.channelName}-${counter}`;
       }
@@ -248,8 +254,8 @@ export default class Network {
       }
 
       try {
-        requestId = Buffer.from(requestId, 'base64');
-        request = Buffer.from(request, 'base64');
+        requestId = Buffer.from(requestId, 'hex');
+        request = Buffer.from(request, 'hex');
       } catch (e) {
         throw new Error('Invalid encoding of invite');
       }
@@ -262,7 +268,7 @@ export default class Network {
       const { encryptedInvite, peerId } =
         identity.issueInvite(channel, request, inviteeName);
 
-      await swarm.sendInvite({
+      await this.swarm.sendInvite({
         requestId,
         peerId,
         encryptedInvite,

@@ -23,6 +23,12 @@
   transition: 0.25 height;
 }
 
+.notification-list .notification {
+  background: #fbf5f3;
+  border-bottom: 1px solid #222;
+  color: #222;
+}
+
 .notification-list .notification-error {
   background: #b14643;
   border-bottom: 1px solid #582322;
