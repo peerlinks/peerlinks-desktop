@@ -23,6 +23,10 @@
 
 .channel-list-elem-unread {
   flex-grow: 0;
+  background: red;
+  padding: 0 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
 }
 
 .channel-list-elem-active {
