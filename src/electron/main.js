@@ -1,8 +1,11 @@
-import * as path from 'path';
-import { app, session, BrowserWindow, ipcMain as ipc } from 'electron';
-import log from 'electron-log';
+require = require("esm")(module);
 
-import Network from './network';
+const path = require('path');
+const { app, session, BrowserWindow, ipcMain: ipc } = require('electron');
+const log = require('electron-log');
+const isDev = require('electron-is-dev');
+
+const Network = require('./network').default;
 
 let window = null;
 
@@ -26,7 +29,7 @@ function createWindow() {
     webPreferences: {
       contextIsolation: true,
       enableRemoteModule: false,
-      preload: path.join(app.getAppPath(), 'src', 'electron', 'preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
   window.once('closed', () => window = null);
@@ -35,7 +38,11 @@ function createWindow() {
   window.maximize();
 
   // Development
-  window.loadURL('http://127.0.0.1:3000');
+  if (isDev) {
+    window.loadURL('http://127.0.0.1:3000');
+  } else {
+    window.loadFile(path.join(__dirname, '..', '..', 'build', 'index.html'));
+  }
 
   // Allow only notifications
   session
