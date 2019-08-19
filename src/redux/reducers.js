@@ -13,7 +13,7 @@ import {
   INVITE_REQUEST_GOT_CHANNEL, INVITE_REQUEST_RESET,
 
   ADD_NOTIFICATION, REMOVE_NOTIFICATION,
-  ADD_IDENTITY,
+  ADD_IDENTITY, IDENTITY_ADD_CHANNEL,
   ADD_CHANNEL, APPEND_CHANNEL_MESSAGE, TRIM_CHANNEL_MESSAGES,
 } from './actions';
 
@@ -158,6 +158,21 @@ export const identities = (state = new Map(), action) => {
       {
         const copy = new Map(state);
         copy.set(action.identity.publicKey, action.identity);
+        return copy;
+      }
+    case IDENTITY_ADD_CHANNEL:
+      {
+        const copy = new Map(state);
+        const identity = copy.get(action.identityKey);
+
+        const channelIds = identity.channelIds.slice();
+        if (!channelIds.includes(action.channelId)) {
+          channelIds.push(action.channelId);
+        }
+
+        copy.set(action.identityKey, Object.assign({}, identity, {
+          channelIds,
+        }));
         return copy;
       }
     default:

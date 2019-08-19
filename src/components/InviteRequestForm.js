@@ -38,11 +38,14 @@ function InviteRequestForm({ identities, request, wait, state }) {
   };
 
   let redirect;
+  if (state.channel) {
+    redirect = `/channel/${state.channel.id}`;
+  }
 
   let requestData;
   if (state.request && state.requestKey === identityKey) {
-    requestData = `/invite ${state.request.requestId} ` +
-      `${state.request.request} ${identity.name}`;
+    requestData = `/invite ${identity.name} ${state.request.requestId} ` +
+      `${state.request.request}`;
   } else {
     if (identityKey && !state.isGenerating) {
       request({ identityKey });
@@ -64,8 +67,8 @@ function InviteRequestForm({ identities, request, wait, state }) {
       </select>
     </div>
     <div className='new-channel-row'>
-      Send the code below to your peer and click the "Wait for invite" button
-      below:
+      Click "Wait for invite" and ask your peer to post the code below in
+      their channel:
     </div>
     <div className='new-channel-row'>
       <input

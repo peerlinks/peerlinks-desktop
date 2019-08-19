@@ -217,7 +217,7 @@ export default class Network {
       }
 
       const encryptedInvite = await entry.waiter.promise;
-      const invite = decrypt(encryptedInvite);
+      const invite = entry.decrypt(encryptedInvite);
 
       // Find suitable channel name
       let channelName = invite.channelName;

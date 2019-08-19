@@ -21,6 +21,7 @@ export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
 
 export const ADD_IDENTITY = 'ADD_IDENTITY';
+export const IDENTITY_ADD_CHANNEL = 'IDENTITY_ADD_CHANNEL';
 
 export const ADD_CHANNEL = 'ADD_CHANNEL';
 export const APPEND_CHANNEL_MESSAGE = 'APPEND_CHANNEL_MESSAGE';
@@ -138,7 +139,13 @@ export function waitForInvite({ identityKey }) {
   return (dispatch) => {
     dispatch({ type: INVITE_REQUEST_WAITING });
     wait(dispatch).then((channel) => {
-      dispatch({ type: ADD_CHANNEL, channel });
+      // Allow posting to this channel
+      dispatch({
+        type: IDENTITY_ADD_CHANNEL,
+        identityKey,
+        channelId: channel.id,
+      });
+      dispatch(addChannel(channel));
       dispatch({ type: INVITE_REQUEST_GOT_CHANNEL, channel });
     }).catch((e) => {
       dispatch(newChannelError(e));
