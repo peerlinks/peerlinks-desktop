@@ -87,7 +87,7 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
         className='button'
         value={state.isWaiting ? 'Waiting...' : 'Wait for invite'}/>
     </div>
-  </form>
+  </form>;
 }
 
 const mapStateToProps = (state) => {

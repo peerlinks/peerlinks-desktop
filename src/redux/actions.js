@@ -259,11 +259,18 @@ export function loadMessages(options) {
 
 export function invite(params) {
   const run = async (dispatch) => {
-    await network.invite(params);
+    return await network.invite(params);
   };
 
   return (dispatch) => {
-    run(dispatch).then((e) => {
+    run(dispatch).then((success) => {
+      if (!success) {
+        return dispatch(addNotification({
+          kind: 'error',
+          content: `"${params.inviteeName}" did not accept the invite`,
+        }));
+      }
+
       dispatch(addNotification({
         kind: 'info',
         content: `Invited "${params.inviteeName}" to the channel`,

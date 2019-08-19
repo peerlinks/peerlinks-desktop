@@ -269,7 +269,7 @@ export default class Network {
       const { encryptedInvite, peerId } =
         identity.issueInvite(channel, request, inviteeName);
 
-      await this.swarm.sendInvite({
+      return await this.swarm.sendInvite({
         requestId,
         peerId,
         encryptedInvite,
