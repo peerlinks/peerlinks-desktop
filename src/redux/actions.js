@@ -26,6 +26,8 @@ export const IDENTITY_ADD_CHANNEL = 'IDENTITY_ADD_CHANNEL';
 export const ADD_CHANNEL = 'ADD_CHANNEL';
 export const APPEND_CHANNEL_MESSAGE = 'APPEND_CHANNEL_MESSAGE';
 export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
+export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
+export const CHANNEL_MARK_READ = 'CHANNEL_MARK_READ';
 
 const network = new Network();
 
@@ -187,6 +189,7 @@ export function addChannel(channel) {
 
     const loop = () => {
       network.waitForIncomingMessage({ channelId: channel.id }).then(() => {
+        dispatch(updateMessageCount({ channelId: channel.id }));
         dispatch(loadMessages({ channelId: channel.id }));
         loop();
       }).catch((e) => {
@@ -200,12 +203,32 @@ export function addChannel(channel) {
   };
 }
 
-export function appendChannelMessage({ channelId, message }) {
-  return { type: APPEND_CHANNEL_MESSAGE, channelId, message };
+export function appendChannelMessage({ channelId, message, isPosted = false }) {
+  return { type: APPEND_CHANNEL_MESSAGE, channelId, message, isPosted };
 }
 
 export function trimChannelMessages({ channelId, count }) {
   return { type: TRIM_CHANNEL_MESSAGES, channelId, count };
+}
+
+export function updateMessageCount({ channelId }) {
+  const update = async (dispatch) => {
+    const messageCount = await network.getMessageCount({ channelId });
+    dispatch({ type: CHANNEL_SET_MESSAGE_COUNT, channelId, messageCount });
+  };
+
+  return (dispatch) => {
+    update(dispatch).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to update message count: ' + e.message,
+      }));
+    });
+  };
+}
+
+export function channelMarkRead({ channelId }) {
+  return { type: CHANNEL_MARK_READ, channelId };
 }
 
 export const DEFAULT_LOAD_LIMIT = 1024;
@@ -300,7 +323,7 @@ export function postMessage({ channelId, identityKey, text }) {
       json: { text },
     });
 
-    dispatch(appendChannelMessage({ channelId, message }));
+    dispatch(appendChannelMessage({ channelId, message, isPosted: true }));
   };
 
   return (dispatch) => {

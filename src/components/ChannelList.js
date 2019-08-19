@@ -6,22 +6,29 @@ import './ChannelList.css';
 
 function ChannelList({ channelList }) {
   const list = channelList.map((channel) => {
-    let className = 'channel-list-elem';
-
-    return <NavLink
-      className={className}
-      activeClassName='channel-list-elem-active'
-      key={channel.id}
-      to={`/channel/${channel.id}`}>
-      <span className='channel-list-elem-hash'>#</span>
-      <span className='channel-list-elem-title'>{channel.name}</span>
-    </NavLink>;
+    let unread;
+    const unreadCount = channel.messageCount - channel.messagesRead;
+    if (unreadCount > 0) {
+      unread = <div className='channel-list-elem-unread'>
+        {unreadCount}
+      </div>
+    }
+    return <div className='channel-list-row' key={channel.id}>
+      <NavLink
+        className='channel-list-elem'
+        activeClassName='channel-list-elem-active'
+        to={`/channel/${channel.id}`}>
+        <div className='channel-list-elem-left'>
+          <span className='channel-list-elem-hash'>#</span>
+          <span className='channel-list-elem-title'>{channel.name}</span>
+        </div>
+        {unread}
+      </NavLink>
+    </div>;
   });
 
   return <section className='channel-list'>
-    <div className='channel-list-row'>
-      {list}
-    </div>
+    {list}
     <div className='channel-list-row'>
       <Link className='button' to='/new-channel'>new channel</Link>
     </div>

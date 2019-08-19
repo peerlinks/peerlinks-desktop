@@ -13,8 +13,11 @@ import {
   INVITE_REQUEST_GOT_CHANNEL, INVITE_REQUEST_RESET,
 
   ADD_NOTIFICATION, REMOVE_NOTIFICATION,
+
   ADD_IDENTITY, IDENTITY_ADD_CHANNEL,
+
   ADD_CHANNEL, APPEND_CHANNEL_MESSAGE, TRIM_CHANNEL_MESSAGES,
+  CHANNEL_SET_MESSAGE_COUNT, CHANNEL_MARK_READ,
 } from './actions';
 
 export const network = (state, action) => {
@@ -192,7 +195,36 @@ export const channels = (state = new Map(), action) => {
         copy.set(action.channel.id, Object.assign({
           messageHashes: new Set(),
           messages: [],
+
+          // Start in all-read state
+          messagesRead: action.channel.messageCount,
         }, action.channel));
+        return copy;
+      }
+    case CHANNEL_SET_MESSAGE_COUNT:
+      {
+        if (!state.has(action.channelId)) {
+          return state;
+        }
+
+        const copy = new Map(state);
+        const channel = state.get(action.channelId);
+        copy.set(action.channelId, Object.assign({}, channel, {
+          messageCount: action.messageCount,
+        }));
+        return copy;
+      }
+    case CHANNEL_MARK_READ:
+      {
+        if (!state.has(action.channelId)) {
+          return state;
+        }
+
+        const copy = new Map(state);
+        const channel = state.get(action.channelId);
+        copy.set(action.channelId, Object.assign({}, channel, {
+          messagesRead: channel.messageCount,
+        }));
         return copy;
       }
     case APPEND_CHANNEL_MESSAGE:
@@ -216,6 +248,10 @@ export const channels = (state = new Map(), action) => {
         copy.set(action.channelId, Object.assign({}, channel, {
           messageHashes,
           messages: appendMessage(channel.messages, action.message),
+
+          // Posting messages should increment the counter
+          messageCount: action.isPosted ? channel.messageCount + 1 :
+            channel.messageCount,
         }));
         return copy;
       }

@@ -85,9 +85,9 @@ export default class Network {
     }, false);
 
     handle('getChannels', async () => {
-      return this.vowLink.channels.map((channel) => {
-        return this.serializeChannel(channel);
-      });
+      return await Promise.all(this.vowLink.channels.map(async (channel) => {
+        return await this.serializeChannel(channel);
+      }));
     });
 
     handle('getIdentities', async () => {
@@ -100,7 +100,7 @@ export default class Network {
       const [ identity, channel ] = await this.vowLink.createIdentityPair(name);
       return {
         identity: this.serializeIdentity(identity),
-        channel: this.serializeChannel(channel),
+        channel: await this.serializeChannel(channel),
       };
     });
 
@@ -241,7 +241,7 @@ export default class Network {
       });
       this.swarm.joinChannel(channel);
 
-      return this.serializeChannel(channel);
+      return await this.serializeChannel(channel);
     });
 
     handle('invite', async (params) => {
@@ -285,10 +285,11 @@ export default class Network {
     };
   }
 
-  serializeChannel(channel) {
+  async serializeChannel(channel) {
     return {
       id: channel.id.toString('hex'),
       name: channel.name,
+      messageCount: await channel.getMessageCount(),
     };
   }
 

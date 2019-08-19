@@ -1,14 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { channelMarkRead } from '../redux/actions';
+
 import MessageList from '../components/MessageList';
 import Compose from '../components/Compose';
 
 import './Channel.css';
 
-function Channel({ match, channels }) {
+function Channel({ match, channels, markRead }) {
   const channelId = match.params.id;
   const channel = channels.get(channelId);
+
+  // Current channel gets read automatically
+  if (channel.messagesRead !== channel.messageCount) {
+    markRead({ channelId });
+  }
 
   return <div className='channel-container'>
     <header className='channel-info'>
@@ -31,4 +38,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(Channel);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    markRead: (...args) => dispatch(channelMarkRead(...args)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Channel);

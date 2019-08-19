@@ -1,5 +1,7 @@
 .channel-list-elem {
-  display: block;
+  display: flex;
+  flex-direction: row;
+
   padding: 0.5rem;
   margin-bottom: 0.25rem;
   border: 1px solid #afafaf;
@@ -13,6 +15,14 @@
   overflow: hidden;
 
   transition: color 0.25s, background 0.25s;
+}
+
+.channel-list-elem-left {
+  flex-grow: 1;
+}
+
+.channel-list-elem-unread {
+  flex-grow: 0;
 }
 
 .channel-list-elem-active {
