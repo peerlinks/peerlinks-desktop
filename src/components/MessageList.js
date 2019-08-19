@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { loadMessages } from '../redux/actions';
-import { keyToColor } from '../utils';
+
+import Message from './Message';
 
 import './MessageList.css';
 
@@ -16,61 +17,25 @@ function MessageList({ channelId, channels, loadMessages } ) {
   }
 
   const messages = channel.messages.map((message) => {
-    if (message.isRoot) {
-      return null;
-    }
-
-    const publicKeys = message.author.publicKeys;
-    const displayPath = message.author.displayPath.map((component, i) => {
-      const style = { color: keyToColor(publicKeys[i]) };
-      const name = component.trim().replace(/^#+/, '');
-      return <span
-        className='message-author-name'
-        style={style}>
-        {name}
-      </span>;
-    });
-
-    const timestamp = new Date(message.timestamp * 1000);
-    const time = timestamp.toLocaleTimeString();
-
-    let author;
-    let authorClass = 'message-author';
-    if (displayPath.length === 0) {
-      authorClass += ' message-author-root';
-      author = `#${channel.name}`;
-    } else if (expandAuthorFor === message.hash) {
-      author = [];
-      for (const component of displayPath) {
-        author.push(component);
-        author.push(<span>&gt;</span>);
-      }
-      author.pop();
-    } else {
-      author = displayPath[displayPath.length - 1];
-    }
-
-    const content = <div className='message-content-text'>
-      {message.json.text || ''}
-    </div>;
+    const isExpanded = expandAuthorFor === message.hash;
 
     const expandAuthor = (e) => {
       e.preventDefault();
 
       // Toggle
-      if (expandAuthorFor === message.hash) {
+      if (isExpanded) {
         setExpandAuthorFor(null);
       } else {
         setExpandAuthorFor(message.hash);
       }
     };
 
-    return <div className='message' key={message.hash}>
-      <div className={authorClass} onClick={expandAuthor}>{author}</div>
-      <div className='message-content'>{content}</div>
-      <div className='message-time'>{time}</div>
-    </div>;
-  }).filter((message) => message);
+    return <Message
+      channel={channel}
+      message={message}
+      isExpanded={isExpanded}
+      onExpand={expandAuthor}/>;
+  });
 
   return <div className='message-list'>
     {messages}

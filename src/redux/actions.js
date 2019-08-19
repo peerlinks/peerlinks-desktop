@@ -1,4 +1,5 @@
 import Network from './network';
+import COMMANDS from './commands';
 
 export const SET_REDIRECT = 'SET_REDIRECT';
 
@@ -289,13 +290,6 @@ export function invite(params) {
     });
   };
 }
-
-const COMMANDS = new Map([
-  [
-    'invite',
-    { args: [ 'inviteeName', 'requestId', 'request' ], action: invite },
-  ],
-]);
 
 export function postMessage({ channelId, identityKey, text }) {
   // Execute commands

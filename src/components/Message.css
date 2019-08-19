@@ -1,0 +1,36 @@
+.message {
+  display: flex;
+  margin-bottom: 0.25rem;
+  padding: 0.25rem;
+
+  line-height: 1.5rem;
+
+  border: 1px solid #f0f0f0;
+  border-radius: 0.25rem;
+}
+
+.message-author {
+  flex-grow: 0;
+  padding-right: 0.25rem;
+
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.message-author-root {
+  font-style: italic;
+}
+
+.message-content {
+  flex-grow: 1;
+  user-select: text;
+}
+
+.message-time {
+  flex-grow: 0;
+  padding-left: 0.25rem;
+
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+  font-size: 0.75rem;
+}
