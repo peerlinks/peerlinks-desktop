@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import {
-  requestInvite, waitForInvite,
+  requestInvite, waitForInvite, inviteRequestReset,
 } from '../redux/actions';
 
 import './InviteRequestForm.css';
 
-function InviteRequestForm({ identities, request, wait, state }) {
+function InviteRequestForm({ identities, request, wait, reset, state }) {
   const [ identityKey, setIdentityKey ] = useState(null);
 
   const options = identities.map((identity) => {
@@ -39,6 +39,7 @@ function InviteRequestForm({ identities, request, wait, state }) {
 
   let redirect;
   if (state.channel) {
+    reset();
     redirect = `/channel/${state.channel.id}`;
   }
 
@@ -100,6 +101,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     request: (...args) => dispatch(requestInvite(...args)),
     wait: (...args) => dispatch(waitForInvite(...args)),
+    reset: (...args) => dispatch(inviteRequestReset(...args)),
   };
 };
 

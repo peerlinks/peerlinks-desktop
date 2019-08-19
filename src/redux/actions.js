@@ -153,6 +153,10 @@ export function waitForInvite({ identityKey }) {
   };
 }
 
+export function inviteRequestReset() {
+  return { type: INVITE_REQUEST_RESET };
+}
+
 //
 // notifications
 //
