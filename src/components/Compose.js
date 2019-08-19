@@ -70,7 +70,8 @@ function Compose({ identities, channelId, postMessage }) {
     <select
       className='channel-compose-identity'
       value={identityKey}
-      onChange={onIdentityChange}>
+      onChange={onIdentityChange}
+      title='select identity'>
       {options}
     </select>
     <input
