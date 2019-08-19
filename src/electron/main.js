@@ -4,6 +4,14 @@ const path = require('path');
 const { app, session, BrowserWindow, ipcMain: ipc } = require('electron');
 const log = require('electron-log');
 const isDev = require('electron-is-dev');
+const { autoUpdater } = require("electron-updater");
+
+// Request update every 4 hours for those who run it over prolonged periods
+// of time.
+const UPDATE_FREQUENCY = 4 * 3600 * 1000;
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
 
 const Network = require('./network').default;
 
@@ -57,7 +65,19 @@ function createWindow() {
     });
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+
+  setInterval(() => {
+    autoUpdater.checkForUpdatesAndNotify().catch(() => {
+      // Ignore
+    });
+  }, UPDATE_FREQUENCY);
+
+  autoUpdater.checkForUpdatesAndNotify().catch(() => {
+    // Ignore
+  });
+});
 app.on('activate', createWindow);
 
 // Quit when all windows are closed.
