@@ -24,9 +24,13 @@ export const network = (state, action) => {
 
   switch (action.type) {
     case NETWORK_READY:
-      return Object.assign({}, state, { isReady: true, isLoading: false });
+      return Object.assign({}, state, {
+        isReady: true,
+        isLoading: false,
+        error: null,
+      });
     case NETWORK_LOADING:
-      return Object.assign({}, state, { isLoading: true });
+      return Object.assign({}, state, { isLoading: true, error: null });
     case NETWORK_ERROR:
       return Object.assign({}, state, {
         isLoading: false,

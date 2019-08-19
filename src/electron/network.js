@@ -33,18 +33,10 @@ export default class Network {
   }
 
   async init() {
-    const {
-      passphrase,
-    } = await this.waitList.waitFor('init').promise;
-
     this.storage = new SqliteStorage({ file: this.options.db });
     await this.storage.open();
 
-    this.vowLink = new VowLink({
-      storage: this.storage,
-      passphrase,
-    });
-    await this.vowLink.load();
+    this.vowLink = await this.waitList.waitFor('init').promise;
 
     this.swarm = new Swarm(this.vowLink);
     this.waitList.resolve('ready');
@@ -79,7 +71,16 @@ export default class Network {
         return;
       }
 
-      this.waitList.resolve('init', { passphrase });
+      const vowLink = new VowLink({
+        storage: this.storage,
+        passphrase,
+      });
+      if (!await vowLink.load()) {
+        throw new Error('Invalid passphrase');
+      }
+
+      this.waitList.resolve('init', vowLink);
+
       await this.waitList.waitFor('ready').promise;
     }, false);
 

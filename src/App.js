@@ -14,12 +14,6 @@ import SignIn from './pages/SignIn';
 import NewChannel from './pages/NewChannel';
 
 function App({ channels, network, initNetwork }) {
-  if (network.error) {
-    return <FullScreen>
-      <p className='error'>Got error: {network.error.stack}</p>
-    </FullScreen>;
-  }
-
   if (network.isReady) {
     // Select first channel if any are available
     let redirect;
@@ -47,6 +41,9 @@ function App({ channels, network, initNetwork }) {
   };
 
   return <FullScreen>
+    {network.error && <p className='error'>
+      Got error: {network.error.message}
+    </p>}
     <SignIn isLoading={network.isLoading} onPassphrase={onPassphrase}/>
   </FullScreen>;
 }
