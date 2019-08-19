@@ -2,34 +2,53 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { loadMessages } from '../redux/actions';
+import { keyToColor } from '../utils';
 
-const pad2 = (number) => {
-  let str = number.toString();
-  while (str.length < 2) {
-    str = '0' + str;
-  }
-  return str;
-};
+import './MessageList.css';
 
 function MessageList({ channelId, channels, loadMessages } ) {
-  const messages = channels.get(channelId).messages.map((message) => {
-    let timestamp = new Date(message.timestamp * 1000);
-    timestamp = pad2(timestamp.getHours()) + ':' +
-      pad2(timestamp.getMinutes()) + ':' +
-      pad2(timestamp.getSeconds());
-
-    const author = message.author.displayPath.join('>');
-    const text = message.isRoot ? '<root>' : message.json.text || '';
-
-    return <div className='message-list-message' key={message.hash}>
-      {timestamp} [{author}]: {text}
-    </div>;
-  });
+  const channel = channels.get(channelId);
 
   // Load only once per channel
-  if (messages.length === 0) {
+  if (channel.messages.length === 0) {
     loadMessages({ channelId });
   }
+
+  const messages = channel.messages.map((message) => {
+    if (message.isRoot) {
+      return null;
+    }
+
+    const displayPath = message.author.displayPath;
+    const publicKeys = message.author.publicKeys;
+
+    const timestamp = new Date(message.timestamp * 1000);
+    const time = timestamp.toLocaleTimeString();
+
+    let author;
+    let style;
+    let authorClass = 'message-author';
+    if (displayPath.length === 0) {
+      authorClass += ' message-author-root';
+      author = `#${channel.name}`;
+    } else {
+      author = displayPath[displayPath.length - 1];
+      author = author.trim().replace(/^#+/, '');
+
+      const publicKey = publicKeys[publicKeys.length - 1];
+      style = { color: keyToColor(publicKey) };
+    }
+
+    const content = <div className='message-content-text'>
+      {message.json.text || ''}
+    </div>;
+
+    return <div className='message' key={message.hash}>
+      <div className={authorClass} style={style}>{author}</div>
+      <div className='message-content'>{content}</div>
+      <div className='message-time'>{time}</div>
+    </div>;
+  }).filter((message) => message);
 
   return <div className='message-list'>
     {messages}
