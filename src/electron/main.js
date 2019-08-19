@@ -1,7 +1,9 @@
 require = require("esm")(module);
 
 const path = require('path');
-const { app, session, BrowserWindow, ipcMain: ipc } = require('electron');
+const {
+  app, session, BrowserWindow, ipcMain: ipc, shell,
+} = require('electron');
 const log = require('electron-log');
 const isDev = require('electron-is-dev');
 const { autoUpdater } = require("electron-updater");
