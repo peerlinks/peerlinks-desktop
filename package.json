@@ -17,7 +17,6 @@
     ],
     "files": [
       "src/electron",
-      "node_modules/**/*",
       "build",
       "assets/icon.icns"
     ]
