@@ -4,13 +4,20 @@ Electron app for [VowLink][] protocol.
 
 ## Usage
 
-See [releases][] for the latest prebuilt binaries (only macOS at the moment).
+See [releases][] for the latest prebuilt binaries (only macOS at the moment),
+or run from source:
+```sh
+git clone git://github.com/vowlink/vowlink-electron
+cd vowlink-electron
+npm install
+npm run electron
+```
 
 The best way to get started is to:
 1. Install the application either from [releases][] page, or run it from source
 with `npm install && npm run electron`
 2. Create a new channel for yourself (might be a good idea to use a nickname)
-4. Click "new channel" in the channel list
+4. Click "new channel/identity" in the channel list
 5. Copy the invite request and send it over to someone and ask them to
    paste it in their channel
 6. Chat together!
