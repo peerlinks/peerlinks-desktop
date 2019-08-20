@@ -8,14 +8,40 @@ import './Compose.css';
 
 function Compose({ identities, channelId, postMessage }) {
   const [ identityKey, setIdentityKey ] = useState(null);
+  const [ savedState, setSavedState ] = useState(new Map());
   const [ message, setMessage ] = useState('');
   const [ lastChannel, setLastChannel ] = useState(null);
 
+  const restore = (channelId) => {
+    if (!channelId) {
+      return;
+    }
+
+    const state = savedState.get(channelId);
+    if (state) {
+      setMessage(state.message);
+      setIdentityKey(state.identityKey);
+    } else {
+      setMessage('');
+      setIdentityKey(null);
+    }
+  };
+
+  const save = (channelId) => {
+    if (!channelId) {
+      return;
+    }
+
+    const copy = new Map(savedState);
+    copy.set(channelId, { message, identityKey });
+    setSavedState(copy);
+  };
+
   // Reset on channelId change
-  // TODO(indutny): preserve text?
   if (lastChannel !== channelId) {
-    setIdentityKey(null);
-    setMessage('');
+    save(lastChannel);
+    restore(channelId);
+
     setLastChannel(channelId);
   }
 
