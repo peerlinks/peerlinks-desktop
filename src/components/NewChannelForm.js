@@ -19,7 +19,7 @@ function NewChannelForm({ newChannel, reset, state }) {
   return <form className='new-channel-create' onSubmit={onSubmit}>
     {state.error && <p className='error'>{state.error.message}</p>}
     <div className='new-channel-row'>
-      <h3 className='title'>Create new channel</h3>
+      <h3 className='title'>New channel and identity</h3>
     </div>
     <div className='new-channel-row'>
       <input
@@ -37,6 +37,12 @@ function NewChannelForm({ newChannel, reset, state }) {
         disabled={state.isLoading}
         className='button'
         value='Create'/>
+    </div>
+    <div className='new-channel-row'>
+      <i>
+        NOTE: Identity will be created together with the channel, both
+        sharing the name.
+      </i>
     </div>
   </form>
 }

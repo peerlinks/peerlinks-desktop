@@ -30,7 +30,7 @@ function ChannelList({ channelList }) {
   return <section className='channel-list'>
     {list}
     <div className='channel-list-row'>
-      <Link className='button' to='/new-channel'>new channel</Link>
+      <Link className='button' to='/new-channel'>new channel/identity</Link>
     </div>
   </section>;
 }
