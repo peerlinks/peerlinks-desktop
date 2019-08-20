@@ -59,16 +59,43 @@ export function networkError(error) {
   return { type: NETWORK_ERROR, error };
 }
 
+// Not really an action, but a helper
+async function loadNetwork(dispatch) {
+  const channels = await network.getChannels();
+  for (const channel of channels) {
+    dispatch(addChannel(channel));
+  }
+
+  const identities = await network.getIdentities();
+  for (const identity of identities) {
+    dispatch(addIdentity(identity));
+  }
+
+  dispatch(networkReady());
+
+  // Select first channel if any are available
+  if (channels.length === 0) {
+    dispatch(setRedirect('/new-channel'));
+  } else {
+    dispatch(setRedirect(`/channel/${channels[0].id}/`));
+  }
+}
+
 export function checkNetwork() {
+  const check = async (dispatch) => {
+    const isReady = await network.isReady();
+
+    if (!isReady) {
+      dispatch(networkNotReady());
+      return;
+    }
+
+    await loadNetwork(dispatch);
+  };
+
   return (dispatch) => {
     dispatch(networkLoading());
-    network.isReady().then((isReady) => {
-      if (isReady) {
-        dispatch(networkReady());
-      } else {
-        dispatch(networkNotReady());
-      }
-    }).catch((e) => {
+    check(dispatch).catch((e) => {
       dispatch(networkError(e));
     });
   };
@@ -77,25 +104,7 @@ export function checkNetwork() {
 export function initNetwork({ passphrase }) {
   const init = async (dispatch) => {
     await network.init({ passphrase });
-
-    const channels = await network.getChannels();
-    for (const channel of channels) {
-      dispatch(addChannel(channel));
-    }
-
-    const identities = await network.getIdentities();
-    for (const identity of identities) {
-      dispatch(addIdentity(identity));
-    }
-
-    dispatch(networkReady());
-
-    // Select first channel if any are available
-    if (channels.length === 0) {
-      dispatch(setRedirect('/new-channel'));
-    } else {
-      dispatch(setRedirect(`/channel/${channels[0].id}/`));
-    }
+    await loadNetwork(dispatch);
   };
 
   return (dispatch) => {
