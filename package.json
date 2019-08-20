@@ -30,15 +30,7 @@
     "electron-log": "^3.0.7",
     "electron-updater": "^4.1.2",
     "esm": "^3.2.25",
-    "promise-waitlist": "^1.2.0",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-redux": "^7.1.0",
-    "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.1",
-    "redux": "^4.0.4",
-    "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "promise-waitlist": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -69,6 +61,14 @@
     "concurrently": "^4.1.2",
     "electron": "^6.0.2",
     "electron-builder": "^21.2.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "^3.1.1",
+    "redux": "^4.0.4",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
     "wait-on": "^3.3.0"
   }
 }
