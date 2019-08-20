@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { channelMarkRead } from '../redux/actions';
 
@@ -11,6 +12,9 @@ import './Channel.css';
 function Channel({ match, channels, markRead }) {
   const channelId = match.params.id;
   const channel = channels.get(channelId);
+  if (!channel) {
+    return null;
+  }
 
   // Current channel gets read automatically
   if (channel.messagesRead !== channel.messageCount) {
@@ -21,6 +25,11 @@ function Channel({ match, channels, markRead }) {
     <header className='channel-info'>
       <div className='channel-info-container'>
         <div className='channel-name'>#{channel.name}</div>
+        <Link
+          to={`/channel/${channelId}/delete`}
+          className='channel-delete button button-danger'>
+          delete channel
+        </Link>
       </div>
     </header>
     <MessageList channelId={channelId}/>

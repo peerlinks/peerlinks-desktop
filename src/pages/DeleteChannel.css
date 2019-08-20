@@ -1,0 +1,11 @@
+.delete-channel-row {
+  margin-bottom: 0.5rem;
+}
+
+.delete-channel .button {
+  font-size: 1.5rem;
+}
+
+.delete-channel .delete-button {
+  margin-right: 0.5rem;
+}

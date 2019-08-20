@@ -16,9 +16,9 @@ import {
 
   ADD_NOTIFICATION, REMOVE_NOTIFICATION,
 
-  ADD_IDENTITY, IDENTITY_ADD_CHANNEL,
+  ADD_IDENTITY, REMOVE_IDENTITY, IDENTITY_ADD_CHANNEL,
 
-  ADD_CHANNEL, APPEND_CHANNEL_MESSAGE, TRIM_CHANNEL_MESSAGES,
+  ADD_CHANNEL, REMOVE_CHANNEL, APPEND_CHANNEL_MESSAGE, TRIM_CHANNEL_MESSAGES,
   CHANNEL_SET_MESSAGE_COUNT, CHANNEL_MARK_READ,
 } from './actions';
 
@@ -164,6 +164,12 @@ export const identities = (state = new Map(), action) => {
         copy.set(action.identity.publicKey, action.identity);
         return copy;
       }
+    case REMOVE_IDENTITY:
+      {
+        const copy = new Map(state);
+        copy.delete(action.identityKey);
+        return copy;
+      }
     case IDENTITY_ADD_CHANNEL:
       {
         const copy = new Map(state);
@@ -196,6 +202,12 @@ export const channels = (state = new Map(), action) => {
           // Start in all-read state
           messagesRead: action.channel.messageCount,
         }, action.channel));
+        return copy;
+      }
+    case REMOVE_CHANNEL:
+      {
+        const copy = new Map(state);
+        copy.delete(action.channelId);
         return copy;
       }
     case CHANNEL_SET_MESSAGE_COUNT:

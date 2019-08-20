@@ -12,6 +12,7 @@ import ChannelLayout from './layouts/Channel';
 import Channel from './pages/Channel';
 import SignIn from './pages/SignIn';
 import NewChannel from './pages/NewChannel';
+import DeleteChannel from './pages/DeleteChannel';
 
 import Redirect from './components/Redirect';
 
@@ -21,7 +22,8 @@ function App({ channels, network, initNetwork, setRedirect }) {
       <ChannelLayout>
         <Redirect/>
         <Route path='/new-channel' exact component={NewChannel}/>
-        <Route path='/channel/:id/' component={Channel}/>
+        <Route path='/channel/:id/' exact component={Channel}/>
+        <Route path='/channel/:id/delete' exact component={DeleteChannel}/>
       </ChannelLayout>
     </Router>;
   }

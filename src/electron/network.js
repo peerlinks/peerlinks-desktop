@@ -118,6 +118,18 @@ export default class Network {
       });
     };
 
+    handle('removeIdentityPair', async ({ channelId, identityKey }) => {
+      const channel = channelById(channelId);
+      if (channel) {
+        await this.vowLink.removeChannel(channel);
+      }
+
+      const identity = identityByKey(identityKey);
+      if (identity) {
+        await this.vowLink.removeIdentity(identity);
+      }
+    });
+
     handle('getMessageCount', async ({ channelId }) => {
       const channel = channelById(channelId);
       if (!channel) {
@@ -288,6 +300,8 @@ export default class Network {
   async serializeChannel(channel) {
     return {
       id: channel.id.toString('hex'),
+      publicKey: channel.publicKey.toString('hex'),
+
       name: channel.name,
       messageCount: await channel.getMessageCount(),
     };

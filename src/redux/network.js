@@ -29,6 +29,11 @@ export default class Network {
     return await this.request('network:createIdentityPair', { name });
   }
 
+  async removeIdentityPair({ channelId, identityKey }) {
+    return await this.request('network:removeIdentityPair',
+      { channelId, identityKey });
+  }
+
   async getMessageCount({ channelId }) {
     return await this.request('network:getMessageCount', { channelId });
   }

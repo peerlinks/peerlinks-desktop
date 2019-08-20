@@ -66,11 +66,22 @@ h6 {
   transition: background 0.25s, color 0.25s;
 }
 
+.button.button-danger {
+  background: #fff;
+  color: #c74e4c;
+  border-color: #c74e4c;
+}
+
 .button:disabled {
   color: #afafaf;
 }
 
 .button:hover:not(:disabled) {
   background: #233d4d;
+  color: #fbf5f3;
+}
+
+.button.button-danger:hover:not(:disabled) {
+  background: #c74e4c;
   color: #fbf5f3;
 }

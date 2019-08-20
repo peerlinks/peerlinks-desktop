@@ -22,9 +22,11 @@ export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
 
 export const ADD_IDENTITY = 'ADD_IDENTITY';
+export const REMOVE_IDENTITY = 'REMOVE_IDENTITY';
 export const IDENTITY_ADD_CHANNEL = 'IDENTITY_ADD_CHANNEL';
 
 export const ADD_CHANNEL = 'ADD_CHANNEL';
+export const REMOVE_CHANNEL = 'REMOVE_CHANNEL';
 export const APPEND_CHANNEL_MESSAGE = 'APPEND_CHANNEL_MESSAGE';
 export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
 export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
@@ -186,6 +188,10 @@ export function addIdentity(identity) {
   return { type: ADD_IDENTITY, identity };
 }
 
+export function removeIdentity({ identityKey }) {
+  return { type: REMOVE_IDENTITY, identityKey };
+}
+
 //
 // channels
 //
@@ -207,6 +213,29 @@ export function addChannel(channel) {
       });
     };
     loop();
+  };
+}
+
+export function removeChannel({ channelId }) {
+  return { type: REMOVE_CHANNEL, channelId };
+}
+
+export function removeIdentityPair({ channelId, identityKey }) {
+  const remove = async (dispatch) => {
+    await network.removeIdentityPair({ channelId, identityKey });
+
+    dispatch(removeChannel({ channelId }));
+    dispatch(removeIdentity({ identityKey }));
+    dispatch(setRedirect('/new-channel'));
+  };
+
+  return (dispatch) => {
+    remove(dispatch).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to remove channel: ' + e.message,
+      }));
+    });
   };
 }
 

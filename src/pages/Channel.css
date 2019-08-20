@@ -17,6 +17,11 @@
   justify-content: space-between;
 }
 
-.channel-info-title {
+.channel-info .channel-name {
   flex-grow: 0;
+}
+
+.channel-info .channel-delete {
+  flex-grow: 0;
+  padding: 0 0.25rem;
 }
