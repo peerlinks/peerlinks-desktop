@@ -1,6 +1,7 @@
 require = require("esm")(module);
 
 const path = require('path');
+const fs = require('fs');
 const {
   app, session, BrowserWindow, ipcMain: ipc, shell,
 } = require('electron');
@@ -12,7 +13,13 @@ const { autoUpdater } = require("electron-updater");
 // of time.
 const UPDATE_FREQUENCY = 4 * 3600 * 1000;
 
-const DB_FILE = path.join(app.getPath('userData'), 'db.sqlite');
+const USER_DATA_DIR = app.getPath('userData');
+const DB_FILE = path.join(USER_DATA_DIR, 'db.sqlite');
+
+// Create `userData` folder if it doesn't exist
+if (!fs.existsSync(USER_DATA_DIR)) {
+  fs.mkdirSync(USER_DATA_DIR);
+}
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
