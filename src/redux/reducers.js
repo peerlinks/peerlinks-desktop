@@ -5,7 +5,7 @@ import { appendMessage } from './utils';
 import {
   SET_REDIRECT,
 
-  NETWORK_READY, NETWORK_LOADING, NETWORK_ERROR,
+  NETWORK_READY, NETWORK_NOT_READY, NETWORK_LOADING, NETWORK_ERROR,
 
   NEW_CHANNEL_RESET, NEW_CHANNEL_IN_PROGRESS,
   NEW_CHANNEL_ERROR,
@@ -40,6 +40,12 @@ export const network = (state, action) => {
     case NETWORK_READY:
       return Object.assign({}, state, {
         isReady: true,
+        isLoading: false,
+        error: null,
+      });
+    case NETWORK_NOT_READY:
+      return Object.assign({}, state, {
+        isReady: false,
         isLoading: false,
         error: null,
       });

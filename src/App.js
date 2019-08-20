@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
 import './App.css';
 
-import { initNetwork, setRedirect } from './redux/actions';
+import { checkNetwork, initNetwork } from './redux/actions';
 
 import FullScreen from './layouts/FullScreen';
 import ChannelLayout from './layouts/Channel';
@@ -16,7 +16,12 @@ import DeleteChannel from './pages/DeleteChannel';
 
 import Redirect from './components/Redirect';
 
-function App({ channels, network, initNetwork, setRedirect }) {
+function App({ channels, network, checkNetwork, initNetwork }) {
+  // Check if the window as reopened and network is ready
+  useEffect(() => {
+    checkNetwork();
+  }, []);
+
   if (network.isReady) {
     return <Router>
       <ChannelLayout>
@@ -49,8 +54,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    checkNetwork: (...args) => dispatch(checkNetwork(...args)),
     initNetwork: (...args) => dispatch(initNetwork(...args)),
-    setRedirect: (...args) => dispatch(setRedirect(...args)),
   };
 };
 

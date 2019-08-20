@@ -4,6 +4,7 @@ import COMMANDS from './commands';
 export const SET_REDIRECT = 'SET_REDIRECT';
 
 export const NETWORK_READY = 'NETWORK_READY';
+export const NETWORK_NOT_READY = 'NETWORK_NOT_READY';
 export const NETWORK_LOADING = 'NETWORK_LOADING';
 export const NETWORK_ERROR = 'NETWORK_ERROR';
 
@@ -46,12 +47,31 @@ export function networkReady() {
   return { type: NETWORK_READY };
 }
 
+export function networkNotReady() {
+  return { type: NETWORK_NOT_READY };
+}
+
 export function networkLoading() {
   return { type: NETWORK_LOADING };
 }
 
 export function networkError(error) {
   return { type: NETWORK_ERROR, error };
+}
+
+export function checkNetwork() {
+  return (dispatch) => {
+    dispatch(networkLoading());
+    network.isReady().then((isReady) => {
+      if (isReady) {
+        dispatch(networkReady());
+      } else {
+        dispatch(networkNotReady());
+      }
+    }).catch((e) => {
+      dispatch(networkError(e));
+    });
+  };
 }
 
 export function initNetwork({ passphrase }) {
