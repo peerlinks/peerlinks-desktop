@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { loadMessages } from '../redux/actions';
@@ -9,6 +9,26 @@ import './MessageList.css';
 
 function MessageList({ channelId, channels, loadMessages } ) {
   const [ expandAuthorFor, setExpandAuthorFor ] = useState(null);
+  const [ lastChannelId, setLastChannelId ] = useState(null);
+  const [ isSticky, setIsSticky ] = useState(false);
+  const view = useRef();
+
+  useEffect(() => {
+    if (isSticky && view.current) {
+      const elem = view.current;
+      elem.scrollTo({
+        top: elem.scrollHeight - elem.clientHeight,
+        left: 0,
+      });
+    }
+  });
+
+  // Stick to the bottom on channel change
+  if (lastChannelId !== channelId) {
+    setIsSticky(true);
+    setLastChannelId(channelId);
+  }
+
   const channel = channels.get(channelId);
 
   // Load only once per channel
@@ -33,11 +53,20 @@ function MessageList({ channelId, channels, loadMessages } ) {
     return <Message
       channel={channel}
       message={message}
+      key={message.hash}
       isExpanded={isExpanded}
       onExpand={expandAuthor}/>;
   });
 
-  return <div className='message-list'>
+  const onScroll = ({ target }) => {
+    const scrollTop = target.scrollTop;
+    const maxScrollTop = target.scrollHeight - target.clientHeight;
+
+    // Scroll to the bottom
+    setIsSticky(scrollTop === maxScrollTop);
+  };
+
+  return <div className='message-list' onScroll={onScroll} ref={view}>
     {messages}
   </div>;
 }

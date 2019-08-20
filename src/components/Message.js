@@ -43,7 +43,7 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
     {message.json.text || ''}
   </div>;
 
-  return <div className='message' key={message.hash}>
+  return <div className='message'>
     <div className={authorClass} onClick={onExpand}>{author}</div>
     <div className='message-content'>{content}</div>
     <div className='message-time'>{time}</div>

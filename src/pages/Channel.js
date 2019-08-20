@@ -23,9 +23,7 @@ function Channel({ match, channels, markRead }) {
         <div className='channel-name'>#{channel.name}</div>
       </div>
     </header>
-    <section className='channel-content'>
-      <MessageList channelId={channelId}/>
-    </section>
+    <MessageList channelId={channelId}/>
     <footer className='channel-compose'>
       <Compose channelId={channelId}/>
     </footer>
