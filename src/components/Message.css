@@ -26,6 +26,10 @@
   user-select: text;
 }
 
+.message-content p {
+  margin: 0;
+}
+
 .message-time {
   flex-grow: 0;
   padding-left: 0.25rem;

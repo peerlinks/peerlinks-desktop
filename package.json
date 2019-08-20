@@ -69,6 +69,9 @@
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "remark": "^11.0.1",
+    "remark-emoji": "^2.0.2",
+    "remark-react": "^6.0.0",
     "wait-on": "^3.3.0"
   }
 }

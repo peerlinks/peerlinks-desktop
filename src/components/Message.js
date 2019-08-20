@@ -1,4 +1,7 @@
 import React from 'react';
+import remark from 'remark';
+import remarkReact from 'remark-react';
+import remarkEmoji from 'remark-emoji';
 
 import { keyToColor } from '../utils';
 
@@ -39,8 +42,11 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
     author = displayPath[displayPath.length - 1];
   }
 
-  const content = <div className='message-content-text'>
-    {message.json.text || ''}
+  let content = remark().use(remarkReact).use(remarkEmoji).processSync(
+    message.json.text || '').contents;
+
+  content = <div className='message-content-text'>
+    {content}
   </div>;
 
   return <div className='message'>
