@@ -84,6 +84,10 @@ export default class Network {
       await this.waitList.waitFor('ready').promise;
     }, false);
 
+    handle('isReady', async () => {
+      return this.ready;
+    }, false);
+
     handle('getChannels', async () => {
       return await Promise.all(this.vowLink.channels.map(async (channel) => {
         return await this.serializeChannel(channel);

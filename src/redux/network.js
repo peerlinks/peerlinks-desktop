@@ -17,6 +17,10 @@ export default class Network {
     await this.request('network:init', { passphrase });
   }
 
+  async isReady() {
+    return await this.request('network:isReady');
+  }
+
   async getChannels() {
     return await this.request('network:getChannels');
   }

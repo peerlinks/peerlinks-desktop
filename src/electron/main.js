@@ -51,7 +51,10 @@ function createWindow() {
       enableRemoteModule: false,
       preload: path.join(__dirname, 'preload.js'),
     },
+    show: false,
   });
+  window.once('ready-to-show', () => window.show());
+
   window.once('closed', () => window = null);
 
   // We need more screen space
