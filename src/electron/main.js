@@ -12,6 +12,8 @@ const { autoUpdater } = require("electron-updater");
 // of time.
 const UPDATE_FREQUENCY = 4 * 3600 * 1000;
 
+const DB_FILE = path.join(app.getPath('userData'), 'db.sqlite');
+
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
@@ -19,8 +21,9 @@ const Network = require('./network').default;
 
 let window = null;
 
+log.info(`database file=${DB_FILE}`);
 const network = new Network(ipc, {
-  db: path.join(app.getPath('userData'), 'db.sqlite'),
+  db: DB_FILE,
 });
 
 network.init().then(() => {
