@@ -134,6 +134,16 @@ export default class Network {
       }
     });
 
+    handle('updateChannelMetadata', async ({ channelId, metadata }) => {
+      const channel = channelById(channelId);
+      if (!channel) {
+        throw new Error('Channel not found: ' + channelId);
+      }
+
+      channel.setMetadata(metadata);
+      await this.vowLink.saveChannel(channel);
+    });
+
     handle('getMessageCount', async ({ channelId }) => {
       const channel = channelById(channelId);
       if (!channel) {
@@ -298,6 +308,7 @@ export default class Network {
       name: identity.name,
       publicKey: identity.publicKey.toString('hex'),
       channelIds: identity.getChannelIds().map((id) => id.toString('hex')),
+      metadata: identity.getMetadata(),
     };
   }
 
@@ -307,7 +318,8 @@ export default class Network {
       publicKey: channel.publicKey.toString('hex'),
 
       name: channel.name,
-      messageCount: await channel.getMessageCount(),
+      metadata: channel.getMetadata(),
+      messageCount: channel.getMessageCount(),
     };
   }
 

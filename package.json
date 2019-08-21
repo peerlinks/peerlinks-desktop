@@ -23,7 +23,7 @@
   },
   "homepage": "./",
   "dependencies": {
-    "@vowlink/protocol": "^1.0.2",
+    "@vowlink/protocol": "^1.1.0",
     "@vowlink/sqlite-storage": "^1.0.2",
     "@vowlink/swarm": "^1.0.2",
     "electron-is-dev": "^1.1.0",

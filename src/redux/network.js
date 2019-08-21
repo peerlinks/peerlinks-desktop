@@ -38,6 +38,11 @@ export default class Network {
       { channelId, identityKey });
   }
 
+  async updateChannelMetadata({ channelId, metadata }) {
+    return await this.request('network:updateChannelMetadata',
+      { channelId, identityKey });
+  }
+
   async getMessageCount({ channelId }) {
     return await this.request('network:getMessageCount', { channelId });
   }
