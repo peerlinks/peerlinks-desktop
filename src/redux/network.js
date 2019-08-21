@@ -40,7 +40,7 @@ export default class Network {
 
   async updateChannelMetadata({ channelId, metadata }) {
     return await this.request('network:updateChannelMetadata',
-      { channelId, identityKey });
+      { channelId, metadata });
   }
 
   async getMessageCount({ channelId }) {
