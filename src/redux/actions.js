@@ -59,8 +59,19 @@ export function networkError(error) {
   return { type: NETWORK_ERROR, error };
 }
 
+async function setInitialPage(dispatch, getState) {
+  const { channels } = getState();
+
+  // Select first channel if any are available
+  if (channels.size === 0) {
+    dispatch(setRedirect('/new-channel'));
+  } else {
+    dispatch(setRedirect(`/channel/${channels.values().next().value.id}/`));
+  }
+}
+
 // Not really an action, but a helper
-async function loadNetwork(dispatch) {
+async function loadNetwork(dispatch, getState) {
   const channels = await network.getChannels();
   for (const channel of channels) {
     dispatch(addChannel(channel));
@@ -72,17 +83,11 @@ async function loadNetwork(dispatch) {
   }
 
   dispatch(networkReady());
-
-  // Select first channel if any are available
-  if (channels.length === 0) {
-    dispatch(setRedirect('/new-channel'));
-  } else {
-    dispatch(setRedirect(`/channel/${channels[0].id}/`));
-  }
+  setInitialPage(dispatch, getState);
 }
 
 export function checkNetwork() {
-  const check = async (dispatch) => {
+  const check = async (dispatch, getState) => {
     const isReady = await network.isReady();
 
     if (!isReady) {
@@ -90,26 +95,26 @@ export function checkNetwork() {
       return;
     }
 
-    await loadNetwork(dispatch);
+    await loadNetwork(dispatch, getState);
   };
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(networkLoading());
-    check(dispatch).catch((e) => {
+    check(dispatch, getState).catch((e) => {
       dispatch(networkError(e));
     });
   };
 }
 
 export function initNetwork({ passphrase }) {
-  const init = async (dispatch) => {
+  const init = async (dispatch, getState) => {
     await network.init({ passphrase });
-    await loadNetwork(dispatch);
+    await loadNetwork(dispatch, getState);
   };
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(networkLoading());
-    init(dispatch).catch((e) => {
+    init(dispatch, getState).catch((e) => {
       dispatch(networkError(e));
     });
   };
@@ -250,16 +255,16 @@ export function removeChannel({ channelId }) {
 }
 
 export function removeIdentityPair({ channelId, identityKey }) {
-  const remove = async (dispatch) => {
+  const remove = async (dispatch, getState) => {
     await network.removeIdentityPair({ channelId, identityKey });
 
     dispatch(removeChannel({ channelId }));
     dispatch(removeIdentity({ identityKey }));
-    dispatch(setRedirect('/new-channel'));
+    setInitialPage(dispatch, getState);
   };
 
-  return (dispatch) => {
-    remove(dispatch).catch((e) => {
+  return (dispatch, getState) => {
+    remove(dispatch, getState).catch((e) => {
       dispatch(addNotification({
         kind: 'error',
         content: 'Failed to remove channel: ' + e.message,
