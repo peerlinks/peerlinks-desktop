@@ -14,7 +14,7 @@ import SignIn from './pages/SignIn';
 import NewChannel from './pages/NewChannel';
 import DeleteChannel from './pages/DeleteChannel';
 
-import Redirect from './components/Redirect';
+import RedirectOnce from './components/RedirectOnce';
 
 function App({ channels, network, checkNetwork, initNetwork }) {
   // Check if the window as reopened and network is ready
@@ -25,7 +25,7 @@ function App({ channels, network, checkNetwork, initNetwork }) {
   if (network.isReady) {
     return <Router>
       <ChannelLayout>
-        <Redirect/>
+        <RedirectOnce/>
         <Route path='/new-channel' exact component={NewChannel}/>
         <Route path='/channel/:id/' exact component={Channel}/>
         <Route path='/channel/:id/delete' exact component={DeleteChannel}/>

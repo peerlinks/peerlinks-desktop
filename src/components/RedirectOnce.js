@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect as RouterRedirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { setRedirect } from '../redux/actions';
 
-function Redirect({ redirect, setRedirect }) {
+function RedirectOnce({ redirect, setRedirect }) {
   if (redirect) {
     setRedirect(null);
-    return <RouterRedirect to={redirect}/>;
+    return <Redirect to={redirect}/>;
   }
   return null;
 }
@@ -24,4 +24,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Redirect);
+export default connect(mapStateToProps, mapDispatchToProps)(RedirectOnce);
