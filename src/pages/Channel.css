@@ -6,7 +6,8 @@
 
 .channel-info {
   flex: 0 0 3rem;
-  border-bottom: 1px solid #ccc;
+  background: #F9F9F9;
+  border-bottom: 1px solid #E3E3E3;
   padding: 0.5rem;
   line-height: 2rem;
 }
@@ -19,9 +20,10 @@
 
 .channel-info .channel-name {
   flex-grow: 0;
+  font-weight: bold;
 }
 
 .channel-info .channel-delete {
   flex-grow: 0;
-  padding: 0 0.25rem;
+  padding: 0 0.5rem;
 }

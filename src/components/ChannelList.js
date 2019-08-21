@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './ChannelList.css';
@@ -8,31 +8,26 @@ function ChannelList({ channelList }) {
   const list = channelList.map((channel) => {
     let unread;
     const unreadCount = channel.messageCount - channel.messagesRead;
+
+    let elemClass = 'channel-list-elem';
     if (unreadCount > 0) {
-      unread = <div className='channel-list-elem-unread'>
-        {unreadCount}
-      </div>
+      elemClass += ' channel-list-elem-unread';
     }
     return <div className='channel-list-row' key={channel.id}>
       <NavLink
-        className='channel-list-elem'
+        className={elemClass}
         activeClassName='channel-list-elem-active'
         to={`/channel/${channel.id}`}>
         <div className='channel-list-elem-left'>
           <span className='channel-list-elem-hash'>#</span>
           <span className='channel-list-elem-title'>{channel.name}</span>
         </div>
-        {unread}
       </NavLink>
     </div>;
   });
 
   return <section className='channel-list'>
     {list}
-    <hr/>
-    <div className='channel-list-row'>
-      <Link className='button' to='/new-channel'>new channel/identity</Link>
-    </div>
   </section>;
 }
 

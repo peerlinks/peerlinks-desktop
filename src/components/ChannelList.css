@@ -2,12 +2,13 @@
   display: flex;
   flex-direction: row;
 
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
+  margin-right: 1rem;
   margin-bottom: 0.25rem;
-  border: 1px solid #d5e3f1;
-  border-radius: 0.25rem;
+  border-radius: 0 0.25rem 0.25rem 0;
   text-decoration: none;
-  color: #fbf5f3;
+  font-size: 1rem;
+  color: #4d5364;
 
   cursor: pointer;
   text-overflow: ellipsis;
@@ -22,16 +23,12 @@
 }
 
 .channel-list-elem-unread {
-  flex-grow: 0;
-  background: red;
-  padding: 0 0.5rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
+  color: #E8E9EB;
 }
 
 .channel-list-elem-active {
-  background: #d5e3f1;
-  color: #111;
+  background: #E8E9EB;
+  color: #050914;
 }
 
 .channel-list .button {
@@ -40,7 +37,6 @@
 }
 
 .channel-list-elem-hash {
-  font-weight: bold;
 }
 
 .channel-list-elem-title {
