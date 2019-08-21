@@ -68,8 +68,8 @@ h6 {
 
 .button.button-danger {
   background: #fff;
-  color: #c74e4c;
-  border-color: #c74e4c;
+  color: #ff3c38;
+  border-color: #ff3c38;
 }
 
 .button:disabled {
@@ -77,11 +77,11 @@ h6 {
 }
 
 .button:hover:not(:disabled) {
-  background: #233d4d;
+  background: #6699cc;
   color: #fbf5f3;
 }
 
 .button.button-danger:hover:not(:disabled) {
-  background: #c74e4c;
+  background: #ff3c38;
   color: #fbf5f3;
 }

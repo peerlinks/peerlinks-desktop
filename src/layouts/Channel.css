@@ -8,10 +8,10 @@
 .channel-layout .channel-layout-sidebar {
   flex: 0 0 15rem;
   overflow-y: auto;
-  border-right: 1px #f69997 solid;
+  border-right: 1px #6699cc solid;
   padding: 0.5rem;
 
-  background: #f25f5c;
+  background: #26384b;
   color: #fbf5f3;
 }
 

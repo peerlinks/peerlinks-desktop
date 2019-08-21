@@ -4,7 +4,7 @@
 
   padding: 0.5rem;
   margin-bottom: 0.25rem;
-  border: 1px solid #afafaf;
+  border: 1px solid #d5e3f1;
   border-radius: 0.25rem;
   text-decoration: none;
   color: #fbf5f3;
@@ -30,8 +30,8 @@
 }
 
 .channel-list-elem-active {
-  background: #247ba0;
-  color: #fbf5f3;
+  background: #d5e3f1;
+  color: #111;
 }
 
 .channel-list .button {

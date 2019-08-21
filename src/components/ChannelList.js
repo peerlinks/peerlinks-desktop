@@ -29,6 +29,7 @@ function ChannelList({ channelList }) {
 
   return <section className='channel-list'>
     {list}
+    <hr/>
     <div className='channel-list-row'>
       <Link className='button' to='/new-channel'>new channel/identity</Link>
     </div>
