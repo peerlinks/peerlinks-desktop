@@ -6,7 +6,7 @@
 }
 
 .channel-layout .channel-layout-sidebar {
-  flex: 0 0 19rem;
+  flex: 0 1 16rem;
   overflow-y: auto;
   border-right: 1px #090E20 solid;
 
@@ -42,5 +42,5 @@
 }
 
 .channel-layout .channel-layout-main {
-  flex: 1 0 0;
+  flex: 1 2 0;
 }
