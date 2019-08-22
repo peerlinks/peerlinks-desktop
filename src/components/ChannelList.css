@@ -8,7 +8,7 @@
   border-radius: 0 0.25rem 0.25rem 0;
   text-decoration: none;
   font-size: 1rem;
-  color: #4d5364;
+  color: #797e8b;
 
   cursor: pointer;
   text-overflow: ellipsis;
@@ -24,6 +24,7 @@
 
 .channel-list-elem-unread {
   color: #E8E9EB;
+  font-weight: bold;
 }
 
 .channel-list-elem-active {

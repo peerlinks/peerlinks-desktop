@@ -20,7 +20,7 @@ function App({ channels, network, checkNetwork, initNetwork }) {
   // Check if the window as reopened and network is ready
   useEffect(() => {
     checkNetwork();
-  }, []);
+  }, [ checkNetwork ]);
 
   if (network.isReady) {
     return <Router>
