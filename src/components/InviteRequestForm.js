@@ -53,7 +53,7 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
     </div>
     <div className='form-row'>
       <select
-        className='invite-request-identity'
+        className='form-input invite-request-identity'
         value={identityKey}
         onChange={onIdentityKey}>
         {options}
@@ -66,7 +66,7 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
     <div className='form-row'>
       <textarea
         type='text'
-        className='invite-request-data'
+        className='form-input invite-request-data'
         readOnly
         value={requestData}
         onClick={(e) => e.target.select()}
