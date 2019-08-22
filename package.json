@@ -2,7 +2,7 @@
   "name": "VowLink",
   "description": "VowLink - Secure Distributed IRC",
   "author": "Fedor Indutny <fedor@indutny.com>",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "private": true,
   "main": "src/electron/main.js",
   "repository": "git@github.com:vowlink/vowlink-electron",
@@ -36,12 +36,10 @@
   "scripts": {
     "start": "npm run react:build && ELECTRON_IS_DEV=0 electron .",
     "postinstall": "electron-builder install-app-deps",
-
     "react:start": "react-scripts start",
     "react:build": "react-scripts build",
     "react:test": "react-scripts test",
     "react:eject": "react-scripts eject",
-
     "electron:dev": "concurrently \"BROWSER=none npm run react:start\" \"wait-on http://localhost:3000/ && electron .\"",
     "electron:build": "npm run build && electron-builder",
     "electron:publish": "npm run electron:build -- -p always"
