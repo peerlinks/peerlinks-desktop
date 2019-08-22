@@ -238,7 +238,6 @@ export function addChannel(channel) {
     const loop = () => {
       network.waitForIncomingMessage({ channelId: channel.id }).then(() => {
         dispatch(updateMessageCount({ channelId: channel.id }));
-        dispatch(loadMessages({ channelId: channel.id }));
         loop();
       }).catch((e) => {
         dispatch(addNotification({

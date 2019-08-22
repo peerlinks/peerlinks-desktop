@@ -23,17 +23,17 @@ function MessageList({ channelId, channels, loadMessages } ) {
     }
   });
 
+  const channel = channels.get(channelId);
+
+  // Load only once per channel
+  if (channel.messages.length === 0 && lastChannelId !== channelId) {
+    loadMessages({ channelId });
+  }
+
   // Stick to the bottom on channel change
   if (lastChannelId !== channelId) {
     setIsSticky(true);
     setLastChannelId(channelId);
-  }
-
-  const channel = channels.get(channelId);
-
-  // Load only once per channel
-  if (channel.messages.length === 0) {
-    loadMessages({ channelId });
   }
 
   const messages = channel.messages.map((message) => {
