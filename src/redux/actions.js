@@ -31,7 +31,6 @@ export const REMOVE_CHANNEL = 'REMOVE_CHANNEL';
 export const APPEND_CHANNEL_MESSAGE = 'APPEND_CHANNEL_MESSAGE';
 export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
 export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
-export const CHANNEL_MARK_READ = 'CHANNEL_MARK_READ';
 export const CHANNEL_UPDATE_METADATA = 'CHANNEL_UPDATE_METADATA';
 
 const network = new Network();
@@ -316,7 +315,23 @@ export function updateMessageCount({ channelId }) {
 }
 
 export function channelMarkRead({ channelId }) {
-  return { type: CHANNEL_MARK_READ, channelId };
+  return (dispatch, getState) => {
+    const channel = getState().channels.get(channelId);
+    if (!channel) {
+      return;
+    }
+
+    // No update needed
+    if (channel.metadata.readCount >= channel.messageCount) {
+      return;
+    }
+
+    const metadata = Object.assign({}, channel.metadata, {
+      readCount: channel.messageCount,
+    });
+
+    dispatch(updateChannelMetadata({ channelId, metadata }));
+  };
 }
 
 export const DEFAULT_LOAD_LIMIT = 1024;

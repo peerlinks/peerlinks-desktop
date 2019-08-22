@@ -6,7 +6,8 @@ import './ChannelList.css';
 
 function ChannelList({ channelList }) {
   const list = channelList.map((channel) => {
-    const unreadCount = channel.messageCount - channel.messagesRead;
+    const unreadCount = channel.messageCount -
+      (channel.metadata.readCount || 0);
 
     let elemClass = 'channel-list-elem';
     if (unreadCount > 0) {

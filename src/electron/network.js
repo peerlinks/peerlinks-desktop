@@ -308,7 +308,7 @@ export default class Network {
       name: identity.name,
       publicKey: identity.publicKey.toString('hex'),
       channelIds: identity.getChannelIds().map((id) => id.toString('hex')),
-      metadata: identity.getMetadata(),
+      metadata: identity.getMetadata() || {},
     };
   }
 
@@ -318,8 +318,8 @@ export default class Network {
       publicKey: channel.publicKey.toString('hex'),
 
       name: channel.name,
-      metadata: channel.getMetadata(),
-      messageCount: channel.getMessageCount(),
+      metadata: channel.getMetadata() || {},
+      messageCount: await channel.getMessageCount(),
     };
   }
 

@@ -17,9 +17,7 @@ function Channel({ match, channels, markRead }) {
   }
 
   // Current channel gets read automatically
-  if (channel.messagesRead !== channel.messageCount) {
-    markRead({ channelId });
-  }
+  markRead({ channelId });
 
   return <div className='channel-container'>
     <header className='channel-info'>

@@ -237,7 +237,7 @@ export const channels = (state = new Map(), action) => {
     case CHANNEL_UPDATE_METADATA:
       return updateChannel(state, action, (channel) => {
         return Object.assign({}, channel, {
-          metadata: Object.assign({}, channel.metadata, action.metadata),
+          metadata: action.metadata,
         });
       });
     case APPEND_CHANNEL_MESSAGE:
