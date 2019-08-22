@@ -18,6 +18,7 @@
     "files": [
       "src/electron",
       "build",
+      "build/images",
       "assets/icon.icns"
     ]
   },
