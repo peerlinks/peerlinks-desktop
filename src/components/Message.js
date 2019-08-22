@@ -24,7 +24,6 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
     </span>;
   });
 
-  const timestamp = new Date(message.timestamp * 1000);
   const time = moment(message.timestamp * 1000).format('hh:mm:ss');
 
   let author;

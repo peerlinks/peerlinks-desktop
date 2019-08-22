@@ -32,6 +32,7 @@ export const APPEND_CHANNEL_MESSAGE = 'APPEND_CHANNEL_MESSAGE';
 export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
 export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
 export const CHANNEL_MARK_READ = 'CHANNEL_MARK_READ';
+export const CHANNEL_UPDATE_METADATA = 'CHANNEL_UPDATE_METADATA';
 
 const network = new Network();
 
@@ -268,6 +269,23 @@ export function removeIdentityPair({ channelId, identityKey }) {
       dispatch(addNotification({
         kind: 'error',
         content: 'Failed to remove channel: ' + e.message,
+      }));
+    });
+  };
+}
+
+export function updateChannelMetadata({ channelId, metadata }) {
+  const update = async (dispatch) => {
+    await network.updateChannelMetadata({ channelId, metadata });
+
+    dispatch({ type: CHANNEL_UPDATE_METADATA, channelId, metadata });
+  };
+
+  return (dispatch) => {
+    update(dispatch).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to update channel metadata: ' + e.message,
       }));
     });
   };

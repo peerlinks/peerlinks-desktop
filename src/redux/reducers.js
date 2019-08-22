@@ -19,7 +19,7 @@ import {
   ADD_IDENTITY, REMOVE_IDENTITY, IDENTITY_ADD_CHANNEL,
 
   ADD_CHANNEL, REMOVE_CHANNEL, APPEND_CHANNEL_MESSAGE, TRIM_CHANNEL_MESSAGES,
-  CHANNEL_SET_MESSAGE_COUNT, CHANNEL_MARK_READ,
+  CHANNEL_SET_MESSAGE_COUNT, CHANNEL_UPDATE_METADATA,
 } from './actions';
 
 export const redirect = (state = null, action) => {
@@ -196,6 +196,18 @@ export const identities = (state = new Map(), action) => {
   }
 };
 
+const updateChannel = (state, action, body) => {
+  if (!state.has(action.channelId)) {
+    return state;
+  }
+
+  const copy = new Map(state);
+  const channel = state.get(action.channelId);
+  copy.set(action.channelId, body(channel));
+  return copy;
+};
+
+
 export const channels = (state = new Map(), action) => {
   switch (action.type) {
     case ADD_CHANNEL:
@@ -217,72 +229,44 @@ export const channels = (state = new Map(), action) => {
         return copy;
       }
     case CHANNEL_SET_MESSAGE_COUNT:
-      {
-        if (!state.has(action.channelId)) {
-          return state;
-        }
-
-        const copy = new Map(state);
-        const channel = state.get(action.channelId);
-        copy.set(action.channelId, Object.assign({}, channel, {
+      return updateChannel(state, action, (channel) => {
+        return Object.assign({}, channel, {
           messageCount: action.messageCount,
-        }));
-        return copy;
-      }
-    case CHANNEL_MARK_READ:
-      {
-        if (!state.has(action.channelId)) {
-          return state;
-        }
-
-        const copy = new Map(state);
-        const channel = state.get(action.channelId);
-        copy.set(action.channelId, Object.assign({}, channel, {
-          messagesRead: channel.messageCount,
-        }));
-        return copy;
-      }
+        });
+      });
+    case CHANNEL_UPDATE_METADATA:
+      return updateChannel(state, action, (channel) => {
+        return Object.assign({}, channel, {
+          metadata: Object.assign({}, channel.metadata, action.metadata),
+        });
+      });
     case APPEND_CHANNEL_MESSAGE:
-      {
-        const channel = state.get(action.channelId);
-        if (!channel) {
-          return state;
-        }
-
+      return updateChannel(state, action, (channel) => {
         const message = action.message;
 
         // Duplicate
         if (channel.messageHashes.has(message.hash)) {
-          return state;
+          return channel;
         }
 
         const messageHashes = new Set(channel.messageHashes);
         messageHashes.add(message.hash);
 
-        const copy = new Map(state);
-        copy.set(action.channelId, Object.assign({}, channel, {
+        return Object.assign({}, channel, {
           messageHashes,
           messages: appendMessage(channel.messages, action.message),
 
           // Posting messages should increment the counter
           messageCount: action.isPosted ? channel.messageCount + 1 :
             channel.messageCount,
-        }));
-        return copy;
-      }
-    case TRIM_CHANNEL_MESSAGES:
-      {
-        const channel = state.get(action.channelId);
-        if (!channel) {
-          return state;
-        }
-
-        return Object.assign({}, state, {
-          [action.channelId]: Object.assign({}, channel, {
-            messages: channel.messages.slice(-action.count),
-          }),
         });
-      }
+      });
+    case TRIM_CHANNEL_MESSAGES:
+      return updateChannel(state, action, (channel) => {
+        return Object.assign({}, channel, {
+          messages: channel.messages.slice(-action.count),
+        });
+      });
     default:
       return state;
   }
