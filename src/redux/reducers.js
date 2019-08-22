@@ -214,7 +214,6 @@ export const channels = (state = new Map(), action) => {
       {
         const copy = new Map(state);
         copy.set(action.channel.id, Object.assign({
-          messageHashes: new Set(),
           messages: [],
 
           // Start in all-read state
@@ -244,19 +243,10 @@ export const channels = (state = new Map(), action) => {
       return updateChannel(state, action, (channel) => {
         const message = action.message;
 
-        // Duplicate
-        if (channel.messageHashes.has(message.hash)) {
-          return channel;
-        }
-
-        const messageHashes = new Set(channel.messageHashes);
-        messageHashes.add(message.hash);
-
         const messages = channel.messages;
         appendMessage(messages, action.message);
 
         return Object.assign({}, channel, {
-          messageHashes,
           messages,
 
           // Posting messages should increment the counter
@@ -268,25 +258,12 @@ export const channels = (state = new Map(), action) => {
       return updateChannel(state, action, (channel) => {
         const receivedMessages = action.messages;
 
-        const messageHashes = new Set(channel.messageHashes);
-        const newMessages = [];
-        for (const message of receivedMessages) {
-          // Duplicate
-          if (channel.messageHashes.has(message.hash)) {
-            continue;
-          }
-
-          messageHashes.add(message.hash);
-          newMessages.push(message);
-        }
-
         const messages = channel.messages.slice();
-        for (const message of newMessages) {
+        for (const message of receivedMessages) {
           appendMessage(messages, message);
         }
 
         return Object.assign({}, channel, {
-          messageHashes,
           messages,
         });
       });

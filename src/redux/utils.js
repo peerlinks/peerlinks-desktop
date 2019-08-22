@@ -1,3 +1,5 @@
+import binarySearch from 'binary-search';
+
 export function compareMessages(a, b) {
   if (a.height < b.height) {
     return -1;
@@ -15,6 +17,12 @@ export function compareMessages(a, b) {
 }
 
 export function appendMessage(messages, message) {
-  messages.push(message);
-  messages.sort(compareMessages);
+  let index = binarySearch(messages, message, compareMessages);
+  if (index >= 0) {
+    // Duplicate
+    return;
+  }
+
+  index = -1 - index;
+  messages.splice(index, 0, message);
 }
