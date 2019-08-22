@@ -41,7 +41,7 @@
     "react:test": "react-scripts test",
     "react:eject": "react-scripts eject",
     "electron:dev": "concurrently \"BROWSER=none npm run react:start\" \"wait-on http://localhost:3000/ && electron .\"",
-    "electron:build": "npm run build && electron-builder",
+    "electron:build": "npm run react:build && electron-builder",
     "electron:publish": "npm run electron:build -- -p always"
   },
   "eslintConfig": {
