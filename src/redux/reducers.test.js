@@ -2,19 +2,25 @@ import * as assert from 'assert';
 
 import { channels } from './reducers';
 import {
-  addChannel,
+  ADD_CHANNEL,
   appendChannelMessage,
 } from './actions';
 
 it('appends channel to empty list', () => {
-  const state = channels(undefined, addChannel({ id: 'a' }));
+  const state = channels(undefined, {
+    type: ADD_CHANNEL,
+    channel: { id: 'a' },
+  });
   assert.strictEqual(state.get('a').id, 'a');
   assert.strictEqual(state.get('a').messages.length, 0);
   assert.strictEqual(state.get('a').messageHashes.size, 0);
 });
 
 it('appends messages to the channel', () => {
-  let state = channels(undefined, addChannel({ id: 'a' }));
+  let state = channels(undefined, {
+    type: ADD_CHANNEL,
+    channel: { id: 'a' },
+  });
   state = channels(state, appendChannelMessage({
     channelId: 'a',
     message: {
