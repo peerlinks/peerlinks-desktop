@@ -93,20 +93,24 @@ function Compose({ identities, channelId, postMessage }) {
   };
 
   return <form className='channel-compose-container' onSubmit={onSubmit}>
-    <select
-      className='channel-compose-identity'
-      value={identityKey}
-      onChange={onIdentityChange}
-      title='select identity'>
-      {options}
-    </select>
-    <input
-      className='channel-compose-text'
-      required
-      type='text'
-      placeholder='Write a message'
-      value={message}
-      onChange={onMessageChange}/>
+    <div className='channel-compose-identity-container'>
+      <select
+        className='channel-compose-identity'
+        value={identityKey}
+        onChange={onIdentityChange}
+        title='select identity'>
+        {options}
+      </select>
+    </div>
+    <div className='channel-compose-text-container'>
+      <input
+        className='channel-compose-text'
+        required
+        type='text'
+        placeholder='Write a message'
+        value={message}
+        onChange={onMessageChange}/>
+    </div>
   </form>;
 }
 
