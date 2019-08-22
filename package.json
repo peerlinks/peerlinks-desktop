@@ -34,15 +34,17 @@
     "promise-waitlist": "^1.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron": "npm run build && ELECTRON_IS_DEV=0 electron .",
-    "electron:dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000/ && electron .\"",
+    "start": "npm run react:build && ELECTRON_IS_DEV=0 electron .",
+    "postinstall": "electron-builder install-app-deps",
+
+    "react:start": "react-scripts start",
+    "react:build": "react-scripts build",
+    "react:test": "react-scripts test",
+    "react:eject": "react-scripts eject",
+
+    "electron:dev": "concurrently \"BROWSER=none npm react:start\" \"wait-on http://localhost:3000/ && electron .\"",
     "electron:build": "npm run build && electron-builder",
-    "electron:publish": "npm run electron:build -- -p always",
-    "postinstall": "electron-builder install-app-deps"
+    "electron:publish": "npm run electron:build -- -p always"
   },
   "eslintConfig": {
     "extends": "react-app"

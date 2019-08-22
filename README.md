@@ -10,7 +10,7 @@ or run from source:
 git clone git://github.com/vowlink/vowlink-electron
 cd vowlink-electron
 npm install
-npm run electron
+npm start
 ```
 
 The best way to get started is to:
