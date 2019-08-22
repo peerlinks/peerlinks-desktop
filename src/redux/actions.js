@@ -231,13 +231,34 @@ export function removeIdentity({ identityKey }) {
 // channels
 //
 
+// Small delay to prevent spins
+const UPDATE_ONCE = 150;
+
 export function addChannel(channel) {
   return (dispatch) => {
     dispatch({ type: ADD_CHANNEL, channel });
 
+    const runUpdate = () => {
+      dispatch(updateMessageCount({ channelId: channel.id }));
+      dispatch(loadMessages({ channelId: channel.id }));
+    };
+
+    // Coalesce updates
+    let timer;
+    const update = () => {
+      if (timer) {
+        return;
+      }
+
+      timer = setTimeout(() => {
+        timer = null;
+        runUpdate();
+      }, UPDATE_ONCE);
+    };
+
     const loop = () => {
       network.waitForIncomingMessage({ channelId: channel.id }).then(() => {
-        dispatch(updateMessageCount({ channelId: channel.id }));
+        runUpdate();
         loop();
       }).catch((e) => {
         dispatch(addNotification({
@@ -338,7 +359,7 @@ export function channelMarkRead({ channelId }) {
   };
 }
 
-export const DEFAULT_LOAD_LIMIT = 1024;
+export const DEFAULT_LOAD_LIMIT = 256;
 
 export function loadMessages(options) {
   const { channelId, offset = 0, limit = DEFAULT_LOAD_LIMIT } = options;
@@ -350,6 +371,9 @@ export function loadMessages(options) {
     });
 
     dispatch(appendChannelMessages({ channelId, messages }));
+
+    // TODO(indutny): scroll back
+    dispatch(trimChannelMessages({ channelId, count: DEFAULT_LOAD_LIMIT }));
   };
 
   return (dispatch) => {
