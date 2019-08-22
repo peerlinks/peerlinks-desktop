@@ -35,7 +35,7 @@ function NewChannelForm({ newChannel, reset, state }) {
       <input
         type='submit'
         disabled={state.isLoading}
-        className='button'
+        className='button new-channel-button'
         value='Create'/>
     </div>
     <div className='new-channel-row'>
