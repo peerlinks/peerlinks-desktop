@@ -52,6 +52,12 @@ h6 {
   font-size: 1.25rem;
 }
 
+hr {
+  margin-bottom: 0.5rem;
+  border: 0;
+  background: #e3e3e3;
+}
+
 /* Buttons */
 
 .button {
@@ -84,4 +90,32 @@ h6 {
 .button.button-danger:hover:not(:disabled) {
   background: #ff3c38;
   color: #fbf5f3;
+}
+
+/* Forms */
+
+form {
+  text-align: center;
+}
+
+.form-row {
+  margin-bottom: 0.5rem;
+}
+
+form .title {
+  margin-bottom: 0.5rem;
+}
+
+form .button {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.75rem;
+}
+
+input[type="text"].form-input,
+input[type="password"].form-input {
+  width: 100%;
+  font-size: 2rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
 }

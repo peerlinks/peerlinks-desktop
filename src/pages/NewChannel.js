@@ -18,7 +18,7 @@ function NewChannel({ identities }) {
   }
 
   return <FullScreen>
-    <div className='new-channel'>
+    <div className='new-channel-page'>
       <NewChannelForm/>
 
       {invite}

@@ -47,32 +47,32 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
     requestData = '...generating';
   }
 
-  return <form className='new-channel-request-invite' onSubmit={onSubmit}>
-    <div className='new-channel-row'>
+  return <form className='invite-request-form' onSubmit={onSubmit}>
+    <div className='form-row'>
       <h3 className='title'>...or request invite for:</h3>
     </div>
-    <div className='new-channel-row'>
+    <div className='form-row'>
       <select
-        className='new-channel-invite-identity'
+        className='invite-request-identity'
         value={identityKey}
         onChange={onIdentityKey}>
         {options}
       </select>
     </div>
-    <div className='new-channel-row'>
+    <div className='form-row'>
       Click "Wait for invite" and ask your peer to post the code below in
       their channel:
     </div>
-    <div className='new-channel-row'>
-      <input
+    <div className='form-row'>
+      <textarea
         type='text'
-        className='new-channel-request-data'
+        className='invite-request-data'
         readOnly
         value={requestData}
         onClick={(e) => e.target.select()}
         onChange={(e) => e.preventDefault()}/>
     </div>
-    <div className='new-channel-row'>
+    <div className='form-row'>
       <input
         type='submit'
         disabled={state.isGenerating || state.isWaiting}

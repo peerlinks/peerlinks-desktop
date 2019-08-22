@@ -15,24 +15,24 @@ export default function SignIn({ isLoading, onPassphrase }) {
   };
 
   const form = <form onSubmit={onSubmit}>
-    <div className='sign-in-row'>
+    <div className='form-row'>
       <h3 className='title'>Decrypt private keys</h3>
     </div>
-    <div className='sign-in-row'>
+    <div className='form-row'>
       <input
-        className='sign-in-passphrase'
+        className='form-input'
         type='password'
         required
         value={passphrase}
         onChange={onPassphraseChange}
         placeholder='Enter passphrase'/>
     </div>
-    <div className='sign-in-row'>
-      <input className='sign-in-submit button' type='submit' value='Sign In'/>
+    <div className='form-row'>
+      <input className='button' type='submit' value='Sign In'/>
     </div>
   </form>;
 
-  return <div className='sign-in'>
+  return <div className='sign-in-container'>
     {isLoading ? <h3>Decrypting...</h3> : form}
   </div>;
 }
