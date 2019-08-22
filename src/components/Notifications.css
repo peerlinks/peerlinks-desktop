@@ -15,8 +15,8 @@
 
 .notification-list .notification {
   padding: 0.25rem 0.5rem;
-  height: 2rem;
-  line-height: 1.5rem;
+  height: 3rem;
+  line-height: 2.5rem;
   overflow-y: hidden;
 
   display: flex;
@@ -40,8 +40,10 @@
   flex-grow: 1;
 }
 
-.notification-list .notification .notification-dismiss {
+.notification-list .notification .notification-dismiss-container {
   flex-grow: 0;
-  height: 1.5rem;
-  line-height: 0.5rem;
+}
+
+.notification-list .notification .notification-dismiss {
+  height: 2.5rem;
 }

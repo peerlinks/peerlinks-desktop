@@ -362,7 +362,7 @@ export function channelMarkRead({ channelId }) {
   };
 }
 
-export const DEFAULT_LOAD_LIMIT = 256;
+export const DEFAULT_LOAD_LIMIT = 1024;
 
 export function loadMessages(options) {
   const { channelId, offset = 0, limit = DEFAULT_LOAD_LIMIT } = options;

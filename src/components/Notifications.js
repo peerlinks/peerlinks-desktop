@@ -24,9 +24,11 @@ function Notifications({ notifications, removeNotification }) {
 
     return <div className={className} key={id}>
       <div className='notification-content'>{content}</div>
-      <button className='notification-dismiss button' onClick={dismiss}>
-        dismiss
-      </button>
+      <div className='notification-dismiss-container'>
+        <button className='notification-dismiss button' onClick={dismiss}>
+          dismiss
+        </button>
+      </div>
     </div>;
   };
   return <div className='notification-container'>

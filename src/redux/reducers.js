@@ -212,6 +212,11 @@ export const channels = (state = new Map(), action) => {
   switch (action.type) {
     case ADD_CHANNEL:
       {
+        // Do not overwrite existing messages for self-invite
+        if (state.has(action.channel.id)) {
+          return state;
+        }
+
         const copy = new Map(state);
         copy.set(action.channel.id, Object.assign({
           messages: [],

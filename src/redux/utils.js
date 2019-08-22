@@ -1,4 +1,10 @@
+import moment from 'moment';
+import remark from 'remark';
+import remarkReact from 'remark-react';
+import remarkEmoji from 'remark-emoji';
+
 import binarySearch from 'binary-search';
+import { keyToColor } from '../utils';
 
 export function compareMessages(a, b) {
   if (a.height < b.height) {
@@ -24,5 +30,31 @@ export function appendMessage(messages, message) {
   }
 
   index = -1 - index;
-  messages.splice(index, 0, message);
+  messages.splice(index, 0, enrichMessage(message));
+}
+
+export function enrichMessage(message) {
+  if (message.isRoot) {
+    return Object.assign({}, message, { enriched: null });
+  }
+
+  const publicKeys = message.author.publicKeys;
+  const displayPath = message.author.displayPath.map((component, i) => {
+    const name = component.trim().replace(/^#+/, '');
+    const publicKey = publicKeys[i];
+    return {
+      color: keyToColor(publicKey),
+      publicKey: publicKey.toString('hex'),
+      name,
+    };
+  });
+
+  const time = moment(message.timestamp * 1000).format('hh:mm:ss');
+
+  const text = remark().use(remarkReact).use(remarkEmoji).processSync(
+        message.json.text || '').contents;
+
+  return Object.assign({}, message, {
+    enriched: { displayPath, time, text },
+  });
 }

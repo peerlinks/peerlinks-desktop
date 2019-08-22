@@ -1,10 +1,4 @@
 import React from 'react';
-import remark from 'remark';
-import remarkReact from 'remark-react';
-import remarkEmoji from 'remark-emoji';
-import moment from 'moment';
-
-import { keyToColor } from '../utils';
 
 import './Message.css';
 
@@ -13,18 +7,18 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
     return null;
   }
 
-  const publicKeys = message.author.publicKeys;
-  const displayPath = message.author.displayPath.map((component, i) => {
-    const style = { color: keyToColor(publicKeys[i]) };
-    const name = component.trim().replace(/^#+/, '');
+  const enriched = message.enriched;
+
+  const publicKeys = enriched.publicKeys;
+  const displayPath = enriched.displayPath.map((component, i) => {
+    const style = { color: component.color };
     return <span
       className='message-author-name'
-      style={style}>
-      {name}
+      style={style}
+      title={component.publicKey}>
+      {component.name}
     </span>;
   });
-
-  const time = moment(message.timestamp * 1000).format('hh:mm:ss');
 
   let author;
   let authorClass = 'message-author';
@@ -42,17 +36,14 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
     author = displayPath[displayPath.length - 1];
   }
 
-  const text = remark().use(remarkReact).use(remarkEmoji).processSync(
-    message.json.text || '').contents;
-
   return <div className='message'>
     <div className='message-time-container'>
-      <div className='message-time'>{time}</div>
+      <div className='message-time'>{enriched.time}</div>
     </div>
     <div className='message-content-container'>
       <div className='message-content'>
         <span className={authorClass} onClick={onExpand}>{author}</span>:&nbsp;
-        <span className='message-text'>{text}</span>
+        <span className='message-text'>{enriched.text}</span>
       </div>
     </div>
   </div>;
