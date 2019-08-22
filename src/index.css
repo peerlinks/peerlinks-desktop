@@ -55,6 +55,7 @@ h6 {
 hr {
   margin-bottom: 0.5rem;
   border: 0;
+  height: 1px;
   background: #e3e3e3;
 }
 
