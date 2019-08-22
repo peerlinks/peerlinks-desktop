@@ -23,24 +23,18 @@
 }
 
 .channel-layout .channel-layout-sidebar .new-channel-button {
-  position: relative;
-  top: -0.1rem;
   display: inline-block;
-  font-size: 1rem;
-  line-height: 1.2rem;
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 1px solid #4d5364;
-  text-align: center;
-  border-radius: 1rem;
+  width: 1rem;
+  height: 1rem;
 
   text-decoration: none;
-  color: #4d5364;
+  background: url(/images/new-channel.svg);
+  background-size: contain;
 }
 
 .channel-layout .channel-layout-sidebar .new-channel-button:hover {
-  color: #E8E9EB;
-  border-color: #E8E9EB;
+  background: url(/images/new-channel-active.svg);
+  background-size: contain;
 }
 
 .channel-layout .channel-layout-main {

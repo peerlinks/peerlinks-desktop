@@ -11,7 +11,6 @@ export default function ChannelLayout({ children }) {
     className='new-channel-button'
     to='/new-channel'
     title='New channel and identity'>
-    +
   </Link>;
   return <div className='channel-layout'>
     <Notifications/>
