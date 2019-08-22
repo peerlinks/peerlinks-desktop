@@ -2,6 +2,7 @@ import React from 'react';
 import remark from 'remark';
 import remarkReact from 'remark-react';
 import remarkEmoji from 'remark-emoji';
+import moment from 'moment';
 
 import { keyToColor } from '../utils';
 
@@ -24,7 +25,7 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
   });
 
   const timestamp = new Date(message.timestamp * 1000);
-  const time = timestamp.toLocaleTimeString();
+  const time = moment(message.timestamp * 1000).format('hh:mm:ss');
 
   let author;
   let authorClass = 'message-author';
@@ -42,16 +43,18 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
     author = displayPath[displayPath.length - 1];
   }
 
-  let content = remark().use(remarkReact).use(remarkEmoji).processSync(
+  const text = remark().use(remarkReact).use(remarkEmoji).processSync(
     message.json.text || '').contents;
 
-  content = <div className='message-content-text'>
-    {content}
-  </div>;
-
   return <div className='message'>
-    <div className={authorClass} onClick={onExpand}>{author}</div>
-    <div className='message-content'>{content}</div>
-    <div className='message-time'>{time}</div>
+    <div className='message-time-container'>
+      <div className='message-time'>{time}</div>
+    </div>
+    <div className='message-content-container'>
+      <p className='message-content'>
+        <span className={authorClass} onClick={onExpand}>{author}</span>:&nbsp;
+        <span className='message-text'>{text}</span>
+      </p>
+    </div>
   </div>;
 }
