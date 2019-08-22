@@ -235,12 +235,14 @@ export function removeIdentity({ identityKey }) {
 const UPDATE_ONCE = 150;
 
 export function addChannel(channel) {
+  const channelId = channel.id;
+
   return (dispatch) => {
     dispatch({ type: ADD_CHANNEL, channel });
 
     const runUpdate = () => {
-      dispatch(updateMessageCount({ channelId: channel.id }));
-      dispatch(loadMessages({ channelId: channel.id }));
+      dispatch(updateMessageCount({ channelId }));
+      dispatch(loadMessages({ channelId }));
     };
 
     // Coalesce updates
@@ -257,8 +259,9 @@ export function addChannel(channel) {
     };
 
     const loop = () => {
-      network.waitForIncomingMessage({ channelId: channel.id }).then(() => {
-        runUpdate();
+      network.waitForIncomingMessage({ channelId }).then(() => {
+        update();
+
         loop();
       }).catch((e) => {
         dispatch(addNotification({

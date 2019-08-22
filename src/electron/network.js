@@ -21,8 +21,11 @@ export default class Network {
 
     this.waitList = new WaitList();
 
-    // Set<WaitList.Entry>
-    this.updateWaiters = new Set();
+    // Map<Channel, WaitList.Entry>
+    this.updateLoops = new WeakMap();
+
+    // Map<Channel>
+    this.updatedChannels = new WeakSet();
 
     // Map<identityKey, Function>
     this.pendingInvites = new Map();
@@ -37,6 +40,9 @@ export default class Network {
     await this.storage.open();
 
     this.vowLink = await this.waitList.waitFor('init').promise;
+    for (const channel of this.vowLink.channels) {
+      this.runUpdateLoop(channel);
+    }
 
     this.swarm = new Swarm(this.vowLink);
     this.waitList.resolve('ready');
@@ -102,6 +108,8 @@ export default class Network {
 
     handle('createIdentityPair', async ({ name }) => {
       const [ identity, channel ] = await this.vowLink.createIdentityPair(name);
+      this.runUpdateLoop(channel);
+
       return {
         identity: this.serializeIdentity(identity),
         channel: await this.serializeChannel(channel),
@@ -171,15 +179,20 @@ export default class Network {
         throw new Error('Channel not found: ' + channelId);
       }
 
-      log.info(`network: waitForIncomingMessage ${channelId}`);
-
-      const waiter = await channel.waitForIncomingMessage(timeout);
-      this.updateWaiters.add(waiter);
-      try {
-        await waiter.promise;
-      } finally {
-        this.updateWaiters.delete(waiter);
+      // We might have been already updated between `waitForIncomingMessage`
+      // calls.
+      if (this.updatedChannels.has(channel)) {
+        this.updatedChannels.delete(channel);
+        log.info(`network: waitForIncomingMessage ${channelId} ... immediate`);
+        return;
       }
+
+      // Otherwise - wait
+      log.info(`network: waitForIncomingMessage ${channelId} ... wait`);
+      const entry = this.waitList.waitFor(
+        'update:' + channelId.toString('hex'), timeout);
+      await entry.promise;
+      this.updatedChannels.delete(channel);
     });
 
     handle('postMessage', async ({ channelId, identityKey, json }) => {
@@ -303,6 +316,34 @@ export default class Network {
     });
   }
 
+  async runUpdateLoop(channel, timeout) {
+    // Channel removed
+    if (!this.vowLink.channels.includes(channel)) {
+      return;
+    }
+
+    if (this.updateLoops.has(channel)) {
+      return;
+    }
+
+    const entry = channel.waitForIncomingMessage(timeout);
+    this.updateLoops.set(channel, entry);
+    try {
+      await entry.promise;
+
+      this.updatedChannels.add(channel);
+
+      this.waitList.resolve('update:' + channel.id.toString('hex'));
+    } catch (e) {
+      log.error(`network: channel update loop error ${e.stack}`);
+      return;
+    } finally {
+      this.updateLoops.delete(channel);
+    }
+
+    return await this.runUpdateLoop(channel, timeout);
+  }
+
   serializeIdentity(identity) {
     return {
       name: identity.name,
@@ -344,9 +385,6 @@ export default class Network {
     await this.swarm.destroy();
     await this.storage.close();
 
-    for (const waiter of this.updateWaiters) {
-      waiter.cancel();
-    }
-    this.updateWaiters.clear();
+    this.waitList.close(new Error('Closed'));
   }
 }
