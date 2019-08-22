@@ -15,7 +15,6 @@ export function compareMessages(a, b) {
 }
 
 export function appendMessage(messages, message) {
-  const result = messages.concat([ message ]);
-  result.sort(compareMessages);
-  return result;
+  messages.push(message);
+  messages.sort(compareMessages);
 }

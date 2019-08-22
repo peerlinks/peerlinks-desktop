@@ -29,6 +29,7 @@ export const IDENTITY_ADD_CHANNEL = 'IDENTITY_ADD_CHANNEL';
 export const ADD_CHANNEL = 'ADD_CHANNEL';
 export const REMOVE_CHANNEL = 'REMOVE_CHANNEL';
 export const APPEND_CHANNEL_MESSAGE = 'APPEND_CHANNEL_MESSAGE';
+export const APPEND_CHANNEL_MESSAGES = 'APPEND_CHANNEL_MESSAGES';
 export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
 export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
 export const CHANNEL_UPDATE_METADATA = 'CHANNEL_UPDATE_METADATA';
@@ -294,6 +295,10 @@ export function appendChannelMessage({ channelId, message, isPosted = false }) {
   return { type: APPEND_CHANNEL_MESSAGE, channelId, message, isPosted };
 }
 
+export function appendChannelMessages({ channelId, messages }) {
+  return { type: APPEND_CHANNEL_MESSAGES, channelId, messages };
+}
+
 export function trimChannelMessages({ channelId, count }) {
   return { type: TRIM_CHANNEL_MESSAGES, channelId, count };
 }
@@ -345,9 +350,7 @@ export function loadMessages(options) {
       limit,
     });
 
-    for (const message of messages) {
-      dispatch(appendChannelMessage({ channelId, message }));
-    }
+    dispatch(appendChannelMessages({ channelId, messages }));
   };
 
   return (dispatch) => {

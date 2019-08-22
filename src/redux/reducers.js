@@ -18,8 +18,8 @@ import {
 
   ADD_IDENTITY, REMOVE_IDENTITY, IDENTITY_ADD_CHANNEL,
 
-  ADD_CHANNEL, REMOVE_CHANNEL, APPEND_CHANNEL_MESSAGE, TRIM_CHANNEL_MESSAGES,
-  CHANNEL_SET_MESSAGE_COUNT, CHANNEL_UPDATE_METADATA,
+  ADD_CHANNEL, REMOVE_CHANNEL, APPEND_CHANNEL_MESSAGE, APPEND_CHANNEL_MESSAGES,
+  TRIM_CHANNEL_MESSAGES, CHANNEL_SET_MESSAGE_COUNT, CHANNEL_UPDATE_METADATA,
 } from './actions';
 
 export const redirect = (state = null, action) => {
@@ -252,13 +252,42 @@ export const channels = (state = new Map(), action) => {
         const messageHashes = new Set(channel.messageHashes);
         messageHashes.add(message.hash);
 
+        const messages = channel.messages;
+        appendMessage(messages, action.message);
+
         return Object.assign({}, channel, {
           messageHashes,
-          messages: appendMessage(channel.messages, action.message),
+          messages,
 
           // Posting messages should increment the counter
           messageCount: action.isPosted ? channel.messageCount + 1 :
             channel.messageCount,
+        });
+      });
+    case APPEND_CHANNEL_MESSAGES:
+      return updateChannel(state, action, (channel) => {
+        const receivedMessages = action.messages;
+
+        const messageHashes = new Set(channel.messageHashes);
+        const newMessages = [];
+        for (const message of receivedMessages) {
+          // Duplicate
+          if (channel.messageHashes.has(message.hash)) {
+            continue;
+          }
+
+          messageHashes.add(message.hash);
+          newMessages.push(message);
+        }
+
+        const messages = channel.messages.slice();
+        for (const message of newMessages) {
+          appendMessage(messages, message);
+        }
+
+        return Object.assign({}, channel, {
+          messageHashes,
+          messages,
         });
       });
     case TRIM_CHANNEL_MESSAGES:
