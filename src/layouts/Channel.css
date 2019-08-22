@@ -28,12 +28,12 @@
   height: 1rem;
 
   text-decoration: none;
-  background: url(/images/new-channel.svg);
+  background: url(../images/new-channel.svg);
   background-size: contain;
 }
 
 .channel-layout .channel-layout-sidebar .new-channel-button:hover {
-  background: url(/images/new-channel-active.svg);
+  background: url(../images/new-channel-active.svg);
   background-size: contain;
 }
 
