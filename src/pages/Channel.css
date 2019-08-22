@@ -18,12 +18,19 @@
   justify-content: space-between;
 }
 
-.channel-info .channel-name {
+.channel-info .channel-name-container {
   flex-grow: 0;
   font-weight: bold;
 }
 
-.channel-info .channel-delete {
+.channel-info .channel-name {
+  vertical-align: middle;
+}
+
+.channel-info .channel-delete-container {
   flex-grow: 0;
+}
+
+.channel-info .channel-delete {
   padding: 0 0.5rem;
 }

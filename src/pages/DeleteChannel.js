@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import FullScreen from '../layouts/FullScreen';
 
@@ -8,7 +8,8 @@ import { removeIdentityPair } from '../redux/actions';
 
 import './DeleteChannel.css';
 
-function DeleteChannel({ match, channels, removeIdentityPair }) {
+const DeleteChannel = withRouter((props) => {
+  const { match, channels, removeIdentityPair, history } = props;
   const channel = channels.get(match.params.id);
   if (!channel) {
     return null;
@@ -22,10 +23,16 @@ function DeleteChannel({ match, channels, removeIdentityPair }) {
     });
   };
 
+  const onBack = (e) => {
+    history.push(`/channel/${channel.id}/`);
+  };
+
   return <FullScreen>
     <div className='delete-channel'>
       <div className='delete-channel-row'>
         <h3 className='title'>Are you sure you want to delete?</h3>
+      </div>
+      <div className='delete-channel-row delete-channel-name'>
         <h2 className='channel-name'>#{channel.name}</h2>
       </div>
 
@@ -35,11 +42,11 @@ function DeleteChannel({ match, channels, removeIdentityPair }) {
           onClick={onDelete}>
           Delete
         </button>
-        <Link
+        <button
           className='button take-back-button'
-          to={`/channel/${channel.id}/`}>
+          onClick={onBack}>
           Take me back!
-        </Link>
+        </button>
       </div>
 
       <div className='delete-channel-row'>
@@ -47,7 +54,7 @@ function DeleteChannel({ match, channels, removeIdentityPair }) {
       </div>
     </div>
   </FullScreen>;
-}
+});
 
 const mapStateToProps = (state) => {
   return {

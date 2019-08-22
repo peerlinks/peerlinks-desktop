@@ -24,12 +24,16 @@ function Channel({ match, channels, markRead }) {
   return <div className='channel-container'>
     <header className='channel-info'>
       <div className='channel-info-container'>
-        <div className='channel-name'>#{channel.name}</div>
-        <Link
-          to={`/channel/${channelId}/delete`}
-          className='channel-delete button button-danger'>
-          delete channel
-        </Link>
+        <div className='channel-name-container'>
+          <div className='channel-name'>#{channel.name}</div>
+        </div>
+        <div className='channel-delete-container'>
+          <Link
+            to={`/channel/${channelId}/delete`}
+            className='channel-delete button button-danger'>
+            delete channel
+          </Link>
+        </div>
       </div>
     </header>
     <MessageList channelId={channelId}/>

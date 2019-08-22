@@ -55,19 +55,19 @@ h6 {
 /* Buttons */
 
 .button {
-  border: 1px solid #233d4d;
+  border: 1px solid #4c4c9d;
   border-radius: 0.25rem;
   padding: 0.5rem;
-  background: #fbf5f3;
+  background: none;
   text-decoration:none;
-  color: #233d4d;
+  color: #4c4c9d;
 
   cursor: pointer;
   transition: background 0.25s, color 0.25s;
 }
 
 .button.button-danger {
-  background: #fff;
+  background: none;
   color: #ff3c38;
   border-color: #ff3c38;
 }
@@ -77,8 +77,8 @@ h6 {
 }
 
 .button:hover:not(:disabled) {
-  background: #6699cc;
-  color: #fbf5f3;
+  background: #4c4c9d;
+  color: #f9f9f9;
 }
 
 .button.button-danger:hover:not(:disabled) {

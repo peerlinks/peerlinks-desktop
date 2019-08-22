@@ -2,8 +2,19 @@
   margin-bottom: 0.5rem;
 }
 
+.delete-channel-name {
+  border-radius: 0.25rem;
+  padding: 1rem 0.25rem;
+  background: #F9F9F9;
+}
+
 .delete-channel .button {
   font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.delete-channel .take-back-button {
+  display: -block;
 }
 
 .delete-channel .delete-button {
