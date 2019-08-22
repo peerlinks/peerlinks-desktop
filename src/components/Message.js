@@ -50,10 +50,10 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
       <div className='message-time'>{time}</div>
     </div>
     <div className='message-content-container'>
-      <p className='message-content'>
+      <div className='message-content'>
         <span className={authorClass} onClick={onExpand}>{author}</span>:&nbsp;
         <span className='message-text'>{text}</span>
-      </p>
+      </div>
     </div>
   </div>;
 }
