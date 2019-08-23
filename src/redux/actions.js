@@ -375,7 +375,7 @@ export function loadMessages(options) {
 
     dispatch(appendChannelMessages({ channelId, messages }));
 
-    // TODO(indutny): scroll back
+    // TODO(indutny): allow scroll back in UI
     dispatch(trimChannelMessages({ channelId, count: DEFAULT_LOAD_LIMIT }));
   };
 

@@ -6,7 +6,7 @@ import { postMessage } from '../redux/actions';
 
 import './Compose.css';
 
-function Compose({ identities, channelId, postMessage }) {
+function Compose({ identities, channelId, postMessage, onBeforePost }) {
   const [ identityKey, setIdentityKey ] = useState(null);
   const [ savedState, setSavedState ] = useState(new Map());
   const [ message, setMessage ] = useState('');
@@ -82,6 +82,8 @@ function Compose({ identities, channelId, postMessage }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    onBeforePost();
 
     postMessage({
       channelId,

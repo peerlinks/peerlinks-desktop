@@ -1,23 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { channelMarkRead } from '../redux/actions';
+import { channelMarkRead, loadMessages } from '../redux/actions';
 
 import MessageList from '../components/MessageList';
 import Compose from '../components/Compose';
 
 import './Channel.css';
 
-function Channel({ match, channels, markRead }) {
+function Channel({ match, channels, markRead, loadMessages }) {
+  const [ lastChannelId, setLastChannelId ] = useState(null);
+  const [ isSticky, setIsSticky ] = useState(false);
+
   const channelId = match.params.id;
   const channel = channels.get(channelId);
   if (!channel) {
     return null;
   }
 
+  if (lastChannelId !== channelId) {
+    setLastChannelId(channelId);
+
+    // Load only once per channel
+    if (channel.messages.length === 0) {
+      loadMessages({ channelId });
+    }
+
+    // Stick to the bottom on channel change
+    setIsSticky(true);
+  }
+
   // Current channel gets read automatically
   markRead({ channelId });
+
+  const onBeforePost = () => {
+    // Move view to the bottom when posting
+    setIsSticky(true);
+  };
 
   return <div className='channel-container'>
     <header className='channel-info'>
@@ -34,9 +54,12 @@ function Channel({ match, channels, markRead }) {
         </div>
       </div>
     </header>
-    <MessageList channelId={channelId}/>
+    <MessageList
+      channel={channel}
+      isSticky={isSticky}
+      setIsSticky={setIsSticky}/>
     <footer className='channel-compose'>
-      <Compose channelId={channelId}/>
+      <Compose channelId={channelId} onBeforePost={onBeforePost}/>
     </footer>
   </div>;
 }
@@ -50,6 +73,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     markRead: (...args) => dispatch(channelMarkRead(...args)),
+    loadMessages: (...args) => dispatch(loadMessages(...args)),
   };
 };
 

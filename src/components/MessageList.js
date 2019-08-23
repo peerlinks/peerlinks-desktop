@@ -1,16 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import { loadMessages } from '../redux/actions';
-
 import Message from './Message';
 
 import './MessageList.css';
 
-function MessageList({ channelId, channels, loadMessages } ) {
+function MessageList({ channel, isSticky, setIsSticky }) {
   const [ expandAuthorFor, setExpandAuthorFor ] = useState(null);
-  const [ lastChannelId, setLastChannelId ] = useState(null);
-  const [ isSticky, setIsSticky ] = useState(false);
   const view = useRef();
 
   useEffect(() => {
@@ -22,19 +18,6 @@ function MessageList({ channelId, channels, loadMessages } ) {
       });
     }
   });
-
-  const channel = channels.get(channelId);
-
-  // Load only once per channel
-  if (channel.messages.length === 0 && lastChannelId !== channelId) {
-    loadMessages({ channelId });
-  }
-
-  // Stick to the bottom on channel change
-  if (lastChannelId !== channelId) {
-    setIsSticky(true);
-    setLastChannelId(channelId);
-  }
 
   const messages = channel.messages.map((message) => {
     const isExpanded = expandAuthorFor === message.hash;
@@ -77,10 +60,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loadMessages: (...args) => dispatch(loadMessages(...args)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MessageList);
+export default connect(mapStateToProps)(MessageList);
