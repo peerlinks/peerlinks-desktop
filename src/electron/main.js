@@ -14,7 +14,7 @@ const { autoUpdater } = require("electron-updater");
 const UPDATE_FREQUENCY = 4 * 3600 * 1000;
 
 const USER_DATA_DIR = app.getPath('userData');
-const DB_FILE = path.join(USER_DATA_DIR, 'db.sqlite');
+const DB_FILE = path.join(USER_DATA_DIR, isDev ? 'db-dev.sqlite' : 'db.sqlite');
 
 // Create `userData` folder if it doesn't exist
 if (!fs.existsSync(USER_DATA_DIR)) {
