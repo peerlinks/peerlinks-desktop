@@ -1,6 +1,6 @@
 # vowlink-electron
 
-Electron app for [VowLink][] protocol.
+Desktop client for [VowLink][] protocol.
 
 ## Usage
 
@@ -24,7 +24,7 @@ with `npm install && npm run electron`
 ## Community
 
 * [#vowlink][irc] IRC Channel on FreeNode
-* [Slack][] channel
+* [Slack][] channel.
 
 ## LICENSE
 
