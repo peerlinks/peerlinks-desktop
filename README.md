@@ -1,4 +1,4 @@
-# vowlink-electron
+# vowlink-desktop
 
 Desktop client for [VowLink][] protocol.
 
