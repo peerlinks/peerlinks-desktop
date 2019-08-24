@@ -38,7 +38,9 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
 
   return <div className='message'>
     <div className='message-time-container'>
-      <div className='message-time'>{enriched.time}</div>
+      <div className='message-time' title={enriched.time.full}>
+        {enriched.time.short}
+      </div>
     </div>
     <div className='message-content-container'>
       <div className='message-content'>

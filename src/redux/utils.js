@@ -49,12 +49,19 @@ export function enrichMessage(message) {
     };
   });
 
-  const time = moment(message.timestamp * 1000).format('hh:mm:ss');
+  const time = moment(message.timestamp * 1000);
 
   const text = remark().use(remarkReact).use(remarkEmoji).processSync(
         message.json.text || '').contents;
 
   return Object.assign({}, message, {
-    enriched: { displayPath, time, text },
+    enriched: {
+      displayPath,
+      time: {
+        short: time.format('hh:mm:ss'),
+        full: time.format('LL'),
+      },
+      text,
+    },
   });
 }
