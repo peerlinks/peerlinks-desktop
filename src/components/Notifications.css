@@ -47,3 +47,7 @@
 .notification-list .notification .notification-dismiss {
   height: 2.5rem;
 }
+
+.notification-list .notification-error .notification-dismiss {
+  background: #fbf5f3;
+}

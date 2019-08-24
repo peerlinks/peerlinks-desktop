@@ -246,8 +246,6 @@ export const channels = (state = new Map(), action) => {
       });
     case APPEND_CHANNEL_MESSAGE:
       return updateChannel(state, action, (channel) => {
-        const message = action.message;
-
         const messages = channel.messages;
         appendMessage(messages, action.message);
 

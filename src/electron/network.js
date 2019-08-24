@@ -1,8 +1,11 @@
-import log from 'electron-log';
 import { Buffer } from 'buffer';
+
 import VowLink, { Message } from '@vowlink/protocol';
 import SqliteStorage from '@vowlink/sqlite-storage';
 import Swarm from '@vowlink/swarm';
+
+import log from 'electron-log';
+import * as sodium from 'sodium-universal';
 import WaitList from 'promise-waitlist';
 
 const INVITE_TIMEOUT = 15 * 60 * 1000; // 15 minutes
@@ -78,6 +81,7 @@ export default class Network {
       }
 
       const vowLink = new VowLink({
+        sodium,
         storage: this.storage,
         passphrase,
       });

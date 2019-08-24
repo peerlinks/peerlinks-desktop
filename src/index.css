@@ -73,6 +73,10 @@ hr {
   transition: background 0.25s, color 0.25s;
 }
 
+.button:focus {
+  outline: 0;
+}
+
 .button.button-danger {
   background: none;
   color: #ff3c38;
