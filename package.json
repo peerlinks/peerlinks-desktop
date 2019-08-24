@@ -38,11 +38,11 @@
     "start": "npm run react:build && ELECTRON_IS_DEV=0 electron .",
     "postinstall": "electron-builder install-app-deps",
     "react:start": "react-scripts start",
-    "react:build": "react-scripts build -mwl",
+    "react:build": "react-scripts build",
     "react:test": "react-scripts test",
     "react:eject": "react-scripts eject",
     "electron:dev": "concurrently \"BROWSER=none npm run react:start\" \"wait-on http://localhost:3000/ && electron .\"",
-    "electron:build": "npm run react:build && electron-builder",
+    "electron:build": "npm run react:build && electron-builder -mlw",
     "electron:publish": "npm run electron:build -- -p always"
   },
   "eslintConfig": {

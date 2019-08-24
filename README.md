@@ -4,8 +4,7 @@ Electron app for [VowLink][] protocol.
 
 ## Usage
 
-See [releases][] for the latest prebuilt binaries (only macOS at the moment),
-or run from source:
+See [releases][] for the latest prebuilt binaries or run from source:
 ```sh
 git clone git://github.com/vowlink/vowlink-electron
 cd vowlink-electron
