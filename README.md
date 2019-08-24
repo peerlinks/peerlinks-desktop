@@ -2,6 +2,8 @@
 
 Desktop client for [VowLink][] protocol.
 
+![Screenshot](https://raw.githubusercontent.com/vowlink/vowlink-desktop/master/Artwork/desktop-screenshot.png)
+
 ## Usage
 
 See [releases][] for the latest prebuilt binaries or run from source:
