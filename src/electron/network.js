@@ -27,7 +27,7 @@ export default class Network {
     // Map<Channel, WaitList.Entry>
     this.updateLoops = new WeakMap();
 
-    // Map<Channel>
+    // WeakSet<Channel>
     this.updatedChannels = new WeakSet();
 
     // Map<identityKey, Function>
@@ -283,6 +283,7 @@ export default class Network {
         name: channelName,
       });
       this.swarm.joinChannel(channel);
+      this.runUpdateLoop(channel);
 
       return await this.serializeChannel(channel);
     });
@@ -333,7 +334,9 @@ export default class Network {
     const entry = channel.waitForIncomingMessage(timeout);
     this.updateLoops.set(channel, entry);
     try {
+      log.error(`network: waiting for ${channel.debugId} update`);
       await entry.promise;
+      log.error(`network: got ${channel.debugId} update`);
 
       this.updatedChannels.add(channel);
 
