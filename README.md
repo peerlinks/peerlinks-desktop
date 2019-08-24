@@ -9,8 +9,8 @@ Desktop client for [VowLink][] protocol.
 
 See [releases][] for the latest prebuilt binaries or run from source:
 ```sh
-git clone git://github.com/vowlink/vowlink-electron
-cd vowlink-electron
+git clone git://github.com/vowlink/vowlink-desktop
+cd vowlink-desktop
 npm install
 npm start
 ```
