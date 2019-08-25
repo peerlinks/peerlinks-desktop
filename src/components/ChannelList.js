@@ -1,10 +1,42 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './ChannelList.css';
 
-function ChannelList({ channelList }) {
+const ChannelList = withRouter(({ history, channelList }) => {
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (!e.metaKey && !e.ctrlKey) {
+        return;
+      }
+
+      // cmd+digit, ctrl+digit
+      if (!/^\d$/.test(e.key)) {
+        return;
+      }
+
+      let digit = parseInt(e.key, 10);
+      if (digit === 0) {
+        digit = 9;
+      } else {
+        digit--;
+      }
+
+      if (digit >= channelList.length) {
+        return;
+      }
+
+      const channel = channelList[digit];
+      history.replace(`/channel/${channel.id}/`);
+    };
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  });
+
   const list = channelList.map((channel) => {
     const unreadCount = channel.messageCount -
       (channel.metadata.readCount || 0);
@@ -17,7 +49,7 @@ function ChannelList({ channelList }) {
       <NavLink
         className={elemClass}
         activeClassName='channel-list-elem-active'
-        to={`/channel/${channel.id}`}>
+        to={`/channel/${channel.id}/`}>
         <div className='channel-list-elem-left'>
           <span className='channel-list-elem-hash'>#</span>
           <span className='channel-list-elem-title'>{channel.name}</span>
@@ -29,7 +61,7 @@ function ChannelList({ channelList }) {
   return <section className='channel-list'>
     {list}
   </section>;
-}
+});
 
 const mapStateToProps = (state) => {
   return {
