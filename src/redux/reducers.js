@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { appendMessage } from './utils';
+import { appendMessage, computeIdentityFilter } from './utils';
 
 import {
   SET_REDIRECT,
@@ -196,6 +196,37 @@ export const identities = (state = new Map(), action) => {
   }
 };
 
+export const identityFilter = (state, action) => {
+  if (!state) {
+    // NOTE: $^ - is a falsey regexp
+    state = { filter: /$^/, list: [] };
+  }
+
+  switch (action.type) {
+    case ADD_IDENTITY:
+      {
+        const list = state.list.concat([ action.identity.name ]);
+        const filter = computeIdentityFilter(list);
+
+        return { filter, list };
+      }
+    case REMOVE_IDENTITY:
+      {
+        const index = state.list.indexOf(action.identity.name);
+        if (index === -1) {
+          return state;
+        }
+
+        const list = state.list.slice();
+        list.splice(index, 1);
+        const filter = computeIdentityFilter(list);
+        return { filter, list };
+      }
+    default:
+      return state;
+  }
+};
+
 const updateChannel = (state, action, body) => {
   if (!state.has(action.channelId)) {
     return state;
@@ -291,5 +322,6 @@ export default combineReducers({
   notifications,
 
   identities,
+  identityFilter,
   channels,
 });

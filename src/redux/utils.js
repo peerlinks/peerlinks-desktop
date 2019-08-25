@@ -54,7 +54,9 @@ export function enrichMessage(message) {
   const text = remark().use(remarkReact).use(remarkEmoji).processSync(
         message.json.text || '').contents;
 
-  return Object.assign({}, message, {
+  // TODO(indutny): highlight mentions
+  return {
+    ...message,
     enriched: {
       displayPath,
       time: {
@@ -63,5 +65,14 @@ export function enrichMessage(message) {
       },
       text,
     },
+  };
+}
+
+export function computeIdentityFilter(list) {
+  const sanitized = list.map((name) => {
+    // NOTE: We are very conservative
+    return name.toLowerCase().replace(/([^a-z0-9])/g, '\\$1');
   });
+
+  return new RegExp(`(\\s|^)(${sanitized.join('|')})([\\s:]|$)`);
 }

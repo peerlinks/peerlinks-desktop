@@ -377,16 +377,80 @@ export function toggleSilence({ channelId }) {
   };
 }
 
+// Helper, not action
+function displayNotifications(dispatch, { filter, channel, messages }){
+  // NOTE: We track the notification height instead of just last height, because
+  // we want to give mentions from the merged branches more chances to become
+  // visible.
+  let lastNotificationHeight = channel.metadata.lastNotificationHeight || 0;
+
+  for (const message of messages) {
+    if (message.height <= lastNotificationHeight) {
+      continue;
+    }
+
+    if (!message.json || !message.json.text) {
+      continue;
+    }
+
+    // Has to mention us
+    // TODO(indutny): filter out self-mentions
+    if (!filter.test(message.json.text)) {
+      continue;
+    }
+
+    // Update last notification height right before displaying the notification
+    lastNotificationHeight = message.height;
+
+    const displayPath = message.author.displayPath;
+    let author;
+    if (displayPath.length === 0) {
+      author = `Channel owner`;
+    } else {
+      author = `"${displayPath[displayPath.length - 1]}"`;
+    }
+
+    if (channel.metadata.isSilenced) {
+      continue;
+    }
+
+    const notification = new Notification(`${author} in #${channel.name}`, {
+      body: `${message.json.text}`,
+    });
+
+    // Open the channel page on click
+    // TODO(indutny): scroll to the message?
+    notification.addEventListener('click', () => {
+      dispatch(setRedirect(`/channel/${channel.id}/`));
+    });
+  }
+
+  if (channel.metadata.lastNotificationHeight !== lastNotificationHeight) {
+    const metadata = { lastNotificationHeight };
+    dispatch(updateChannelMetadata({ channelId: channel.id, metadata }));
+  }
+}
+
 export const DEFAULT_LOAD_LIMIT = 1024;
 
 export function loadMessages(options) {
   const { channelId, offset = 0, limit = DEFAULT_LOAD_LIMIT } = options;
-  const load = async (dispatch) => {
+
+  const load = async (dispatch, getState) => {
+    const state = getState();
+    const channel = state.channels.get(channelId);
+    if (!channel) {
+      return;
+    }
+
     const messages = await network.getReverseMessagesAtOffset({
       channelId,
       offset,
       limit,
     });
+
+    const filter = state.identityFilter.filter;
+    displayNotifications(dispatch, { filter, channel, messages });
 
     dispatch(appendChannelMessages({ channelId, messages }));
 
@@ -394,8 +458,8 @@ export function loadMessages(options) {
     dispatch(trimChannelMessages({ channelId, count: DEFAULT_LOAD_LIMIT }));
   };
 
-  return (dispatch) => {
-    load(dispatch).catch((e) => {
+  return (dispatch, getState) => {
+    load(dispatch, getState).catch((e) => {
       dispatch(addNotification({
         kind: 'error',
         content: 'Failed to load messages: ' + e.message,
@@ -412,16 +476,15 @@ export function invite(params) {
   return (dispatch) => {
     run(dispatch).then((success) => {
       if (!success) {
-        return dispatch(addNotification({
-          kind: 'error',
-          content: `"${params.inviteeName}" did not accept the invite`,
-        }));
+        const n = new Notification(params.inviteeName, {
+          body: 'Did not accept the invite to the channel',
+        });
+        return;
       }
 
-      dispatch(addNotification({
-        kind: 'info',
-        content: `Invited "${params.inviteeName}" to the channel`,
-      }));
+      const n = new Notification(params.inviteeName, {
+        body: 'Has received the invite to the channel',
+      });
     }).catch((e) => {
       dispatch(addNotification({
         kind: 'error',
