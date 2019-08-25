@@ -223,8 +223,8 @@ export function addIdentity(identity) {
   return { type: ADD_IDENTITY, identity };
 }
 
-export function removeIdentity({ identityKey }) {
-  return { type: REMOVE_IDENTITY, identityKey };
+export function removeIdentity({ identity }) {
+  return { type: REMOVE_IDENTITY, identity };
 }
 
 //
@@ -282,8 +282,12 @@ export function removeIdentityPair({ channelId, identityKey }) {
   const remove = async (dispatch, getState) => {
     await network.removeIdentityPair({ channelId, identityKey });
 
+    const identity = getState().identities.get(identityKey);
+
     dispatch(removeChannel({ channelId }));
-    dispatch(removeIdentity({ identityKey }));
+    if (identity) {
+      dispatch(removeIdentity({ identity }));
+    }
     setInitialPage(dispatch, getState);
   };
 

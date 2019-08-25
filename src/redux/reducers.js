@@ -173,7 +173,7 @@ export const identities = (state = new Map(), action) => {
     case REMOVE_IDENTITY:
       {
         const copy = new Map(state);
-        copy.delete(action.identityKey);
+        copy.delete(action.identity.publicKey);
         return copy;
       }
     case IDENTITY_ADD_CHANNEL:
