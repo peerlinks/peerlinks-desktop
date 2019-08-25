@@ -74,5 +74,5 @@ export function computeIdentityFilter(list) {
     return name.toLowerCase().replace(/([^a-z0-9])/g, '\\$1');
   });
 
-  return new RegExp(`(\\s|^)(${sanitized.join('|')})([\\s:]|$)`);
+  return new RegExp(`(\\s|^)(${sanitized.join('|')})([\\s:!.,;]|$)`);
 }
