@@ -152,7 +152,7 @@ export default class Network {
         throw new Error('Channel not found: ' + channelId);
       }
 
-      channel.setMetadata(metadata);
+      channel.setMetadata(Object.assign({}, channel.metadata, metadata));
       await this.vowLink.saveChannel(channel);
     });
 

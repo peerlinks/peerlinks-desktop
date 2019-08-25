@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { channelMarkRead, loadMessages } from '../redux/actions';
+import {
+  channelMarkRead, loadMessages, toggleSilence,
+} from '../redux/actions';
 
 import MessageList from '../components/MessageList';
 import Compose from '../components/Compose';
 
 import './Channel.css';
 
-function Channel({ match, channels, markRead, loadMessages }) {
+function Channel({ match, channels, markRead, loadMessages, toggleSilence }) {
   const [ lastChannelId, setLastChannelId ] = useState(null);
   const [ isSticky, setIsSticky ] = useState(false);
 
@@ -39,11 +41,35 @@ function Channel({ match, channels, markRead, loadMessages }) {
     setIsSticky(true);
   };
 
+  const onToggleSilence = (e) => {
+    e.preventDefault();
+    toggleSilence({ channelId });
+  };
+
+  let silenceTitle;
+  let silenceContent;
+
+  if (channel.metadata.isSilenced) {
+    silenceTitle = 'Desilence notifications';
+    silenceContent = 'desilence';
+  } else {
+    silenceTitle = 'Silence notifications';
+    silenceContent = 'silence';
+  }
+
   return <div className='channel-container'>
     <header className='channel-info'>
       <div className='channel-info-container'>
         <div className='channel-name-container'>
           <div className='channel-name'>#{channel.name}</div>
+        </div>
+        <div className='channel-silence-container'>
+          <button
+            title={silenceTitle}
+            className='channel-silence button'
+            onClick={onToggleSilence}>
+            {silenceContent}
+          </button>
         </div>
         <div className='channel-delete-container'>
           <Link
@@ -74,6 +100,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     markRead: (...args) => dispatch(channelMarkRead(...args)),
     loadMessages: (...args) => dispatch(loadMessages(...args)),
+    toggleSilence: (...args) => dispatch(toggleSilence(...args)),
   };
 };
 

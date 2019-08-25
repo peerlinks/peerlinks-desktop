@@ -9,7 +9,6 @@
   background: #F9F9F9;
   border-bottom: 1px solid #E3E3E3;
   padding: 0.5rem;
-  line-height: 2rem;
 }
 
 .channel-info-container {
@@ -19,18 +18,26 @@
 }
 
 .channel-info .channel-name-container {
-  flex-grow: 0;
+  flex-grow: 1;
   font-weight: bold;
 }
 
 .channel-info .channel-name {
   vertical-align: middle;
+  line-height: 2rem;
+}
+
+.channel-info .button {
+  display: block;
+  height: 2rem;
+  line-height: 1rem;
+}
+
+.channel-info .channel-silence-container {
+  flex-grow: 0;
+  margin-right: 0.5rem;
 }
 
 .channel-info .channel-delete-container {
   flex-grow: 0;
-}
-
-.channel-info .channel-delete {
-  padding: 0 0.5rem;
 }

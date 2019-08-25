@@ -354,9 +354,24 @@ export function channelMarkRead({ channelId }) {
       return;
     }
 
-    const metadata = Object.assign({}, channel.metadata, {
+    const metadata = {
       readCount: channel.messageCount,
-    });
+    };
+
+    dispatch(updateChannelMetadata({ channelId, metadata }));
+  };
+}
+
+export function toggleSilence({ channelId }) {
+  return (dispatch, getState) => {
+    const channel = getState().channels.get(channelId);
+    if (!channel) {
+      return;
+    }
+
+    const metadata = {
+      isSilenced: !channel.metadata.isSilenced,
+    };
 
     dispatch(updateChannelMetadata({ channelId, metadata }));
   };

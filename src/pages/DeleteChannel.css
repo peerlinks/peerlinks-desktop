@@ -13,10 +13,6 @@
   line-height: 2rem;
 }
 
-.delete-channel .take-back-button {
-  display: -block;
-}
-
 .delete-channel .delete-button {
   margin-right: 0.5rem;
 }
