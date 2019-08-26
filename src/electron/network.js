@@ -138,6 +138,7 @@ export default class Network {
           ...channel.metadata,
           isFeed: true,
         });
+        await this.vowLink.saveChannel(channel);
       }
       this.runUpdateLoop(channel);
 
