@@ -9,8 +9,7 @@ export const NETWORK_LOADING = 'NETWORK_LOADING';
 export const NETWORK_ERROR = 'NETWORK_ERROR';
 
 export const NEW_CHANNEL_RESET = 'NEW_CHANNEL_RESET';
-export const NEW_CHANNEL_IN_PROGRESS = 'NEW_CHANNEL_IN_PROGRESS';
-export const NEW_CHANNEL_ERROR = 'NEW_CHANNEL_ERROR';
+export const NEW_CHANNEL_SET_IS_LOADING = 'NEW_CHANNEL_SET_IS_LOADING';
 
 export const INVITE_REQUEST_GENERATING = 'INVITE_REQUEST_GENERATING';
 export const INVITE_REQUEST_WAITING = 'INVITE_REQUEST_WAITING';
@@ -129,12 +128,8 @@ export function newChannelReset() {
   return { type: NEW_CHANNEL_RESET };
 }
 
-export function newChannelInProgress() {
-  return { type: NEW_CHANNEL_IN_PROGRESS };
-}
-
-export function newChannelError(error) {
-  return { type: NEW_CHANNEL_ERROR, error };
+export function newChannelSetIsLoading(isLoading) {
+  return { type: NEW_CHANNEL_SET_IS_LOADING, isLoading };
 }
 
 export function newChannel({ channelName }) {
@@ -150,9 +145,14 @@ export function newChannel({ channelName }) {
   };
 
   return (dispatch) => {
-    dispatch(newChannelInProgress());
+    dispatch(newChannelSetIsLoading(true));
     createChannel(dispatch).catch((e) => {
-      dispatch(newChannelError(e));
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to create new channel: ' + e.message,
+      }))
+    }).finally(() => {
+      dispatch(newChannelSetIsLoading(false));
     });
   };
 }
@@ -170,8 +170,12 @@ export function requestInvite({ identityKey }) {
         identityKey,
         request,
       });
+      dispatch(waitForInvite({ identityKey }));
     }).catch((e) => {
-      dispatch(newChannelError(e));
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to generate invite code: ' + e.message,
+      }));
     });
   };
 }
@@ -184,6 +188,11 @@ export function waitForInvite({ identityKey }) {
   return (dispatch) => {
     dispatch({ type: INVITE_REQUEST_WAITING });
     wait(dispatch).then((channel) => {
+      // Already waiting
+      if (!channel) {
+        return;
+      }
+
       // Allow posting to this channel
       dispatch({
         type: IDENTITY_ADD_CHANNEL,
@@ -194,7 +203,10 @@ export function waitForInvite({ identityKey }) {
       dispatch(inviteRequestReset());
       dispatch(setRedirect(`/channel/${channel.id}/`));
     }).catch((e) => {
-      dispatch(newChannelError(e));
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to wait for invite: ' + e.message,
+      }));
     });
   };
 }
@@ -259,7 +271,12 @@ export function addChannel(channel) {
     };
 
     const loop = () => {
-      network.waitForIncomingMessage({ channelId }).then(() => {
+      network.waitForIncomingMessage({ channelId }).then((isAlive) => {
+        // End the loop
+        if (!isAlive) {
+          return;
+        }
+
         update();
 
         loop();

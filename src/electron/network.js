@@ -145,6 +145,16 @@ export default class Network {
       if (identity) {
         await this.vowLink.removeIdentity(identity);
       }
+
+      this.waitList.resolve('update:' + channel.id.toString('hex'), false);
+
+      // Cancel pending invites
+      if (this.pendingInvites.has(identityKey)) {
+        const pending = this.pendingInvites.get(identityKey);
+        if (pending.waiter) {
+          pending.waiter.cancel();
+        }
+      }
     });
 
     handle('updateChannelMetadata', async ({ channelId, metadata }) => {
@@ -189,15 +199,16 @@ export default class Network {
       if (this.updatedChannels.has(channel)) {
         this.updatedChannels.delete(channel);
         log.info(`network: waitForIncomingMessage ${channelId} ... immediate`);
-        return;
+        return true;
       }
 
       // Otherwise - wait
       log.info(`network: waitForIncomingMessage ${channelId} ... wait`);
       const entry = this.waitList.waitFor(
         'update:' + channelId.toString('hex'), timeout);
-      await entry.promise;
+      const isAlive = await entry.promise;
       this.updatedChannels.delete(channel);
+      return isAlive;
     });
 
     handle('postMessage', async ({ channelId, identityKey, json }) => {
@@ -230,20 +241,23 @@ export default class Network {
 
       if (this.pendingInvites.has(identityKey)) {
         const existing = this.pendingInvites.get(identityKey);
-        if (existing.waiter) {
-          existing.waiter.cancel();
-        }
+        return {
+          request: existing.encoded,
+        };
       }
+
+      const encoded = bs58.encode(request);
       this.pendingInvites.set(identityKey, {
         requestId,
         decrypt,
+        encoded,
 
         // To be set below
         waiter: null,
       });
 
       return {
-        request: bs58.encode(request),
+        request: encoded,
       };
     });
 
@@ -258,11 +272,24 @@ export default class Network {
       }
 
       const entry = this.pendingInvites.get(identityKey);
-      if (!entry.waiter) {
-        entry.waiter = this.swarm.waitForInvite(entry.requestId);
+
+      // Already waiting
+      if (entry.waiter) {
+        return false;
       }
 
-      const encryptedInvite = await entry.waiter.promise;
+      entry.waiter = this.swarm.waitForInvite(entry.requestId);
+
+      let encryptedInvite;
+      try {
+        encryptedInvite = await entry.waiter.promise;
+      } catch (e) {
+        log.error(`network: waitForInvite error ${e.message}`);
+
+        // Likely canceled
+        return false;
+      }
+
       const invite = entry.decrypt(encryptedInvite);
 
       // Find suitable channel name
@@ -284,6 +311,9 @@ export default class Network {
       });
       this.swarm.joinChannel(channel);
       this.runUpdateLoop(channel);
+
+      // Cleanup
+      this.pendingInvites.delete(identityKey);
 
       return await this.serializeChannel(channel);
     });
@@ -332,15 +362,15 @@ export default class Network {
     const entry = channel.waitForIncomingMessage(timeout);
     this.updateLoops.set(channel, entry);
     try {
-      log.error(`network: waiting for ${channel.debugId} update`);
+      log.info(`network: waiting for ${channel.debugId} update`);
       await entry.promise;
-      log.error(`network: got ${channel.debugId} update`);
+      log.info(`network: got ${channel.debugId} update`);
 
       this.updatedChannels.add(channel);
 
-      this.waitList.resolve('update:' + channel.id.toString('hex'));
+      this.waitList.resolve('update:' + channel.id.toString('hex'), true);
     } catch (e) {
-      log.error(`network: channel update loop error ${e.stack}`);
+      log.info(`network: channel update loop error ${e.stack}`);
       return;
     } finally {
       this.updateLoops.delete(channel);

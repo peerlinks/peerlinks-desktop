@@ -7,8 +7,7 @@ import {
 
   NETWORK_READY, NETWORK_NOT_READY, NETWORK_LOADING, NETWORK_ERROR,
 
-  NEW_CHANNEL_RESET, NEW_CHANNEL_IN_PROGRESS,
-  NEW_CHANNEL_ERROR,
+  NEW_CHANNEL_RESET, NEW_CHANNEL_SET_IS_LOADING,
 
   INVITE_REQUEST_GENERATING, INVITE_REQUEST_WAITING,
   INVITE_REQUEST_SET_IDENTITY_KEY, INVITE_REQUEST_SET_REQUEST,
@@ -65,7 +64,6 @@ export const newChannel = (state, action) => {
   if (!state) {
     state = {
       isLoading: false,
-      error: null,
 
       // Invites
       identityKey: null,
@@ -80,13 +78,8 @@ export const newChannel = (state, action) => {
         isLoading: false,
         error: null,
       });
-    case NEW_CHANNEL_IN_PROGRESS:
-      return Object.assign({}, state, { isLoading: true });
-    case NEW_CHANNEL_ERROR:
-      return Object.assign({}, state, {
-        isLoading: false,
-        error: action.error,
-      });
+    case NEW_CHANNEL_SET_IS_LOADING:
+      return Object.assign({}, state, { isLoading: action.isLoading });
     default:
       return state;
   }

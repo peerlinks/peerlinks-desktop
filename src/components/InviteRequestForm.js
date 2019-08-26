@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  requestInvite, waitForInvite, inviteRequestReset,
+  requestInvite, inviteRequestReset,
 } from '../redux/actions';
 
 import './InviteRequestForm.css';
 
-function InviteRequestForm({ identities, request, wait, reset, state }) {
+function InviteRequestForm({ identities, request, reset, state }) {
   const [ identityKey, setIdentityKey ] = useState(null);
 
   const options = identities.map((identity) => {
@@ -30,12 +30,6 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
     setIdentityKey(e.target.value);
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-
-    wait({ identityKey });
-  };
-
   let requestData;
   if (state.request && state.requestKey === identityKey) {
     requestData = `/invite ${identity.name} ${state.request.request}`;
@@ -46,7 +40,7 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
     requestData = '...generating';
   }
 
-  return <form className='invite-request-form' onSubmit={onSubmit}>
+  return <div className='invite-request-form'>
     <div className='form-row'>
       <h3 className='title'>...or request invite for:</h3>
     </div>
@@ -59,8 +53,7 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
       </select>
     </div>
     <div className='form-row'>
-      Click "Wait for invite" and ask your peer to post the code below in
-      their channel:
+      Ask your peer to post the code below into their channel:
     </div>
     <div className='form-row'>
       <textarea
@@ -71,14 +64,7 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
         onClick={(e) => e.target.select()}
         onChange={(e) => e.preventDefault()}/>
     </div>
-    <div className='form-row'>
-      <input
-        type='submit'
-        disabled={state.isGenerating || state.isWaiting}
-        className='button'
-        value={state.isWaiting ? 'Waiting...' : 'Wait for invite'}/>
-    </div>
-  </form>;
+  </div>;
 }
 
 const mapStateToProps = (state) => {
@@ -91,7 +77,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     request: (...args) => dispatch(requestInvite(...args)),
-    wait: (...args) => dispatch(waitForInvite(...args)),
     reset: (...args) => dispatch(inviteRequestReset(...args)),
   };
 };

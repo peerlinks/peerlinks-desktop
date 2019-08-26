@@ -17,7 +17,6 @@ function NewChannelForm({ newChannel, reset, state }) {
   };
 
   return <form className='new-channel-form' onSubmit={onSubmit}>
-    {state.error && <p className='error'>{state.error.message}</p>}
     <div className='form-row'>
       <h3 className='title'>New channel and identity</h3>
     </div>

@@ -20,7 +20,7 @@ The best way to get started is to:
 with `npm install && npm run electron`
 2. Create a new channel for yourself (might be a good idea to use a nickname)
 4. Click new channel/identity button `(+)` next to the channel list title
-5. Select an identity, click "wait", and send the invite request over to someone
+5. Copy and send the invite request to someone
 6. Ask them to paste it in their channel
 7. Chat together!
 
