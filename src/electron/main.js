@@ -66,7 +66,9 @@ function createWindow() {
   } else {
     window.loadFile(path.join(__dirname, '..', '..', 'build', 'index.html'));
   }
+}
 
+app.on('ready', () => {
   // Allow only notifications
   session
     .defaultSession
@@ -78,9 +80,7 @@ function createWindow() {
         callback(false);
       }
     });
-}
 
-app.on('ready', () => {
   createWindow();
 
   setInterval(() => {
