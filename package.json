@@ -2,7 +2,7 @@
   "name": "VowLink",
   "description": "VowLink - Secure Distributed IRC",
   "author": "Fedor Indutny <fedor@indutny.com>",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "private": true,
   "main": "src/electron/main.js",
   "repository": "git@github.com:vowlink/vowlink-electron",
