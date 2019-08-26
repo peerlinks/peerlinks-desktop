@@ -133,6 +133,11 @@ export default class Network {
         publicKey,
         { name });
 
+      channel.setMetadata({
+        isFeed: true,
+      });
+      this.runUpdateLoop(channel);
+
       return await this.serializeChannel(channel);
     });
 

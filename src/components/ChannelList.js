@@ -37,7 +37,9 @@ const ChannelList = withRouter(({ history, channelList }) => {
     };
   });
 
-  const list = channelList.map((channel) => {
+  const channels = [];
+  const feeds = [];
+  for (const channel of channelList) {
     const unreadCount = channel.messageCount -
       (channel.metadata.readCount || 0);
 
@@ -45,7 +47,7 @@ const ChannelList = withRouter(({ history, channelList }) => {
     if (unreadCount > 0) {
       elemClass += ' channel-list-elem-unread';
     }
-    return <div className='channel-list-row' key={channel.id}>
+    const row = <div className='channel-list-row' key={channel.id}>
       <NavLink
         className={elemClass}
         activeClassName='channel-list-elem-active'
@@ -56,7 +58,13 @@ const ChannelList = withRouter(({ history, channelList }) => {
         </div>
       </NavLink>
     </div>;
-  });
+
+    if (channel.metadata.isFeed) {
+      feeds.push(row);
+    } else {
+      channels.push(row);
+    }
+  }
 
   const newChannel = <Link
     className='new-channel-button'
@@ -71,9 +79,14 @@ const ChannelList = withRouter(({ history, channelList }) => {
   </Link>;
 
   return <section className='channel-list'>
-    <h3 className='title'>channels {newChannel}</h3>
-    {list}
-    <h3 className='title'>feeds {newFeed}</h3>
+    <section className='channel-list-sub'>
+      <h3 className='title'>channels {newChannel}</h3>
+      {channels}
+    </section>
+    <section className='channel-list-sub'>
+      <h3 className='title'>feeds {newFeed}</h3>
+      {feeds}
+    </section>
   </section>;
 });
 
