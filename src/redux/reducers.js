@@ -189,6 +189,28 @@ export const identities = (state = new Map(), action) => {
         });
         return copy;
       }
+    case REMOVE_CHANNEL:
+      {
+        const copy = new Map(state);
+
+        // Remove access from channels
+        for (const [ key, identity ] of copy) {
+          let channelIds = identity.channelIds;
+          const index = channelIds.indexOf(action.channelId);
+          if (index === -1) {
+            continue;
+          }
+
+          channelIds = channelIds.slice();
+          channelIds.splice(index, 1);
+
+          copy.set(key, {
+            ...identity,
+            channelIds,
+          });
+        }
+        return copy;
+      }
     default:
       return state;
   }
