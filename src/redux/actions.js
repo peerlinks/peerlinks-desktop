@@ -207,7 +207,6 @@ export function waitForInvite({ identityKey }) {
   };
 
   return (dispatch) => {
-    dispatch({ type: INVITE_REQUEST_WAITING });
     wait(dispatch).then((channel) => {
       // Already waiting
       if (!channel) {

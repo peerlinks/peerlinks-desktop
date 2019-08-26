@@ -9,7 +9,7 @@ import {
 
   NEW_CHANNEL_RESET, NEW_CHANNEL_SET_IS_LOADING,
 
-  INVITE_REQUEST_GENERATING, INVITE_REQUEST_WAITING,
+  INVITE_REQUEST_GENERATING,
   INVITE_REQUEST_SET_IDENTITY_KEY, INVITE_REQUEST_SET_REQUEST,
   INVITE_REQUEST_RESET,
 
@@ -37,24 +37,27 @@ export const network = (state, action) => {
 
   switch (action.type) {
     case NETWORK_READY:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isReady: true,
         isLoading: false,
         error: null,
-      });
+      };
     case NETWORK_NOT_READY:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isReady: false,
         isLoading: false,
         error: null,
-      });
+      };
     case NETWORK_LOADING:
-      return Object.assign({}, state, { isLoading: true, error: null });
+      return { ...state, isLoading: true, error: null };
     case NETWORK_ERROR:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isLoading: false,
         error: action.error,
-      });
+      };
     default:
       return state;
   }
@@ -74,12 +77,13 @@ export const newChannel = (state, action) => {
 
   switch (action.type) {
     case NEW_CHANNEL_RESET:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isLoading: false,
         error: null,
-      });
+      };
     case NEW_CHANNEL_SET_IS_LOADING:
-      return Object.assign({}, state, { isLoading: action.isLoading });
+      return { ...state, isLoading: action.isLoading };
     default:
       return state;
   }
@@ -89,7 +93,6 @@ export const inviteRequest = (state, action) => {
   if (!state) {
     state = {
       isGenerating: false,
-      isWaiting: false,
 
       identityKey: null,
       requestKey: null,
@@ -99,27 +102,26 @@ export const inviteRequest = (state, action) => {
 
   switch (action.type) {
     case INVITE_REQUEST_GENERATING:
-      return Object.assign({}, state, { isGenerating: true });
-    case INVITE_REQUEST_WAITING:
-      return Object.assign({}, state, { isWaiting: true });
+      return { ...state, isGenerating: true };
     case INVITE_REQUEST_SET_IDENTITY_KEY:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         identityKey: action.identityKey,
-      });
+      };
     case INVITE_REQUEST_SET_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isGenerating: false,
-        isWaiting: false,
         requestKey: action.identityKey,
         request: action.request,
-      });
+      };
     case INVITE_REQUEST_RESET:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isGenerating: false,
-        isWaiting: false,
 
         request: null,
-      });
+      };
     default:
       return state;
   }
@@ -135,7 +137,8 @@ export const notifications = (state, action) => {
 
   switch (action.type) {
     case ADD_NOTIFICATION:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         nextId: state.nextId + 1,
         list: state.list.concat([ {
           id: state.nextId,
@@ -143,13 +146,14 @@ export const notifications = (state, action) => {
           kind: action.kind,
           content: action.content,
         } ]),
-      });
+      };
     case REMOVE_NOTIFICATION:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         list: state.list.filter((notification) => {
           return notification.id !== action.notificationId;
         }),
-      });
+      };
     default:
       return state;
   }
@@ -179,9 +183,10 @@ export const identities = (state = new Map(), action) => {
           channelIds.push(action.channelId);
         }
 
-        copy.set(action.identityKey, Object.assign({}, identity, {
+        copy.set(action.identityKey, {
+          ...identity,
           channelIds,
-        }));
+        });
         return copy;
       }
     default:
@@ -236,18 +241,28 @@ export const channels = (state = new Map(), action) => {
   switch (action.type) {
     case ADD_CHANNEL:
       {
-        // Do not overwrite existing messages for self-invite
         if (state.has(action.channel.id)) {
-          return state;
+          // Update only channel\'s metadata and messageCount
+          return updateChannel(state, {
+            channelId: action.channel.id,
+          }, (channel) => {
+            return {
+              ...channel,
+              metadata: action.channel.metadata,
+              messageCount: action.channel.messageCount,
+            };
+          });
         }
 
         const copy = new Map(state);
-        copy.set(action.channel.id, Object.assign({
+        copy.set(action.channel.id, {
           messages: [],
 
           // Start in all-read state
           messagesRead: action.channel.messageCount,
-        }, action.channel));
+
+          ...action.channel,
+        });
         return copy;
       }
     case REMOVE_CHANNEL:
@@ -258,28 +273,34 @@ export const channels = (state = new Map(), action) => {
       }
     case CHANNEL_SET_MESSAGE_COUNT:
       return updateChannel(state, action, (channel) => {
-        return Object.assign({}, channel, {
+        return {
+          ...channel,
           messageCount: action.messageCount,
-        });
+        };
       });
     case CHANNEL_UPDATE_METADATA:
       return updateChannel(state, action, (channel) => {
-        return Object.assign({}, channel, {
-          metadata: Object.assign({}, channel.metadata, action.metadata),
-        });
+        return {
+          ...channel,
+          metadata: {
+            ...channel.metadata,
+            ...action.metadata,
+          }
+        };
       });
     case APPEND_CHANNEL_MESSAGE:
       return updateChannel(state, action, (channel) => {
         const messages = channel.messages;
         appendMessage(messages, action.message);
 
-        return Object.assign({}, channel, {
+        return {
+          ...channel,
           messages,
 
           // Posting messages should increment the counter
           messageCount: action.isPosted ? channel.messageCount + 1 :
             channel.messageCount,
-        });
+        };
       });
     case APPEND_CHANNEL_MESSAGES:
       return updateChannel(state, action, (channel) => {
@@ -290,15 +311,17 @@ export const channels = (state = new Map(), action) => {
           appendMessage(messages, message);
         }
 
-        return Object.assign({}, channel, {
+        return {
+          ...channel,
           messages,
-        });
+        };
       });
     case TRIM_CHANNEL_MESSAGES:
       return updateChannel(state, action, (channel) => {
-        return Object.assign({}, channel, {
+        return {
+          ...channel,
           messages: channel.messages.slice(-action.count),
-        });
+        };
       });
     default:
       return state;

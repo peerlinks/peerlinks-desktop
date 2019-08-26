@@ -134,6 +134,7 @@ export default class Network {
         { name });
 
       channel.setMetadata({
+        ...channel.metadata,
         isFeed: true,
       });
       this.runUpdateLoop(channel);
@@ -183,7 +184,10 @@ export default class Network {
         throw new Error('Channel not found: ' + channelId);
       }
 
-      channel.setMetadata(Object.assign({}, channel.metadata, metadata));
+      channel.setMetadata({
+        ...channel.metadata,
+        ...metadata,
+      });
       await this.vowLink.saveChannel(channel);
     });
 
@@ -295,7 +299,7 @@ export default class Network {
 
       // Already waiting
       if (entry.waiter) {
-        return false;
+        entry.waiter.cancel();
       }
 
       entry.waiter = this.swarm.waitForInvite(entry.requestId);
@@ -308,6 +312,8 @@ export default class Network {
 
         // Likely canceled
         return false;
+      } finally {
+        entry.waiter = null;
       }
 
       const invite = entry.decrypt(encryptedInvite);
@@ -328,6 +334,10 @@ export default class Network {
 
       const channel = await this.vowLink.channelFromInvite(invite, identity, {
         name: channelName,
+      });
+      channel.setMetadata({
+        ...channel.metadata,
+        isFeed: false,
       });
       this.swarm.joinChannel(channel);
       this.runUpdateLoop(channel);
