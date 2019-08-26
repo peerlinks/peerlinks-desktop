@@ -7,6 +7,7 @@ import Swarm from '@vowlink/swarm';
 import log from 'electron-log';
 import * as sodium from 'sodium-universal';
 import WaitList from 'promise-waitlist';
+import * as bs58 from 'bs58';
 
 const INVITE_TIMEOUT = 15 * 60 * 1000; // 15 minutes
 
@@ -242,8 +243,7 @@ export default class Network {
       });
 
       return {
-        requestId: requestId.toString('hex'),
-        request: request.toString('hex'),
+        request: bs58.encode(request),
       };
     });
 
@@ -290,7 +290,7 @@ export default class Network {
 
     handle('invite', async (params) => {
       let {
-        identityKey, channelId, inviteeName, requestId, request,
+        identityKey, channelId, inviteeName, request,
       } = params;
 
       const channel = channelById(channelId);
@@ -299,8 +299,7 @@ export default class Network {
       }
 
       try {
-        requestId = Buffer.from(requestId, 'hex');
-        request = Buffer.from(request, 'hex');
+        request = bs58.decode(request);
       } catch (e) {
         throw new Error('Invalid encoding of invite');
       }
@@ -314,7 +313,6 @@ export default class Network {
         identity.issueInvite(channel, request, inviteeName);
 
       return await this.swarm.sendInvite({
-        requestId,
         peerId,
         encryptedInvite,
       }, INVITE_TIMEOUT).promise;

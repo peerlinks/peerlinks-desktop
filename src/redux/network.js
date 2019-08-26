@@ -70,12 +70,11 @@ export default class Network {
     return await this.request('network:waitForInvite', { identityKey });
   }
 
-  async invite({ identityKey, channelId, inviteeName, requestId, request }) {
+  async invite({ identityKey, channelId, inviteeName, request }) {
     return await this.request('network:invite', {
       identityKey,
       channelId,
       inviteeName,
-      requestId,
       request,
     });
   }

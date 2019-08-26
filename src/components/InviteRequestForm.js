@@ -38,8 +38,7 @@ function InviteRequestForm({ identities, request, wait, reset, state }) {
 
   let requestData;
   if (state.request && state.requestKey === identityKey) {
-    requestData = `/invite ${identity.name} ${state.request.requestId} ` +
-      `${state.request.request}`;
+    requestData = `/invite ${identity.name} ${state.request.request}`;
   } else {
     if (identityKey && !state.isGenerating) {
       request({ identityKey });
