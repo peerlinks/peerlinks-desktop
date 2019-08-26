@@ -13,6 +13,7 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
   const displayPath = enriched.displayPath.map((component, i) => {
     const style = { color: component.color };
     return <span
+      key={i}
       className='message-author-name'
       style={style}
       title={component.publicKey}>
