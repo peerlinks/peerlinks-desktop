@@ -40,11 +40,14 @@ export function enrichMessage(message) {
 
   const publicKeys = message.author.publicKeys;
   const displayPath = message.author.displayPath.map((component, i) => {
-    const name = component.trim().replace(/^#+/, '');
+    let name = component;
+    if (!message.author.isInternal) {
+      name = name.trim().replace(/^[#@]+/, '');
+    }
     const publicKey = publicKeys[i];
     return {
       color: keyToColor(publicKey),
-      publicKey: publicKey.toString('hex'),
+      publicKey,
       name,
     };
   });

@@ -359,6 +359,42 @@ export function appendChannelMessage({ channelId, message, isPosted = false }) {
   return { type: APPEND_CHANNEL_MESSAGE, channelId, message, isPosted };
 }
 
+export function appendInternalMessage({ channelId, text }) {
+  return (dispatch, getState) => {
+    const channel = getState().channels.get(channelId);
+    if (!channel) {
+      return;
+    }
+
+    // Don't break `loadMessages()` call
+    if (channel.messages.length === 0) {
+      return;
+    }
+
+    // NOTE: Start with `Z` to put message below the last one of this height
+    const hash = `Z:internal:${Date.now()}`;
+    const height = channel.messages.reduce((height, message) => {
+      return Math.max(height, message.height);
+    }, 0);
+
+    dispatch(appendChannelMessage({
+      channelId,
+      message: {
+        hash,
+        height,
+
+        author: {
+          isInternal: true,
+          displayPath: [ '@vowlink' ],
+          publicKeys: [ '@vowlink' ],
+        },
+        timestamp: Date.now(),
+        json: { text },
+      },
+    }));
+  };
+}
+
 export function appendChannelMessages({ channelId, messages }) {
   return { type: APPEND_CHANNEL_MESSAGES, channelId, messages };
 }
@@ -509,6 +545,7 @@ export function loadMessages(options) {
   };
 }
 
+// NOTE: Command
 export function invite(params) {
   const run = async (dispatch) => {
     return await network.invite(params);
@@ -532,6 +569,36 @@ export function invite(params) {
         content: `Failed to invite "${params.inviteeName}": ` + e.message,
       }));
     });
+  };
+}
+
+// NOTE: Command
+export function displayHelp({ channelId }) {
+  return appendInternalMessage({
+    channelId,
+    text: [
+      'Available commands:',
+      ' - **/help** - print this message',
+      ' - **/invite <invitee name> <invite request>** - ' +
+        'invite `<invitee name>`',
+      ' - **/get-feed-url** - get feed URL for this channel',
+    ].join('\n'),
+  });
+}
+
+// NOTE: Command
+export function displayFeedURL({ channelId }) {
+  return (dispatch, getState) => {
+    const channel = getState().channels.get(channelId);
+    if (!channel) {
+      return;
+    }
+
+    return dispatch(appendInternalMessage({
+      channelId,
+      text: `vowlink://feed/${channel.publicKey}?` +
+        `name=${encodeURIComponent(channel.name)}`,
+    }));
   };
 }
 

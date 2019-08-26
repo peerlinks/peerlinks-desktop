@@ -133,10 +133,12 @@ export default class Network {
         publicKey,
         { name });
 
-      channel.setMetadata({
-        ...channel.metadata,
-        isFeed: true,
-      });
+      if (channel.getMetadata().isFeed !== false) {
+        channel.setMetadata({
+          ...channel.metadata,
+          isFeed: true,
+        });
+      }
       this.runUpdateLoop(channel);
 
       return await this.serializeChannel(channel);
@@ -339,6 +341,8 @@ export default class Network {
         ...channel.metadata,
         isFeed: false,
       });
+      await this.vowLink.saveChannel(channel);
+
       this.swarm.joinChannel(channel);
       this.runUpdateLoop(channel);
 
@@ -412,7 +416,7 @@ export default class Network {
   serializeIdentity(identity) {
     return {
       name: identity.name,
-      publicKey: identity.publicKey.toString('hex'),
+      publicKey: bs58.encode(identity.publicKey),
       channelIds: identity.getChannelIds().map((id) => id.toString('hex')),
       metadata: identity.getMetadata() || {},
     };
@@ -421,7 +425,7 @@ export default class Network {
   async serializeChannel(channel) {
     return {
       id: channel.id.toString('hex'),
-      publicKey: channel.publicKey.toString('hex'),
+      publicKey: bs58.encode(channel.publicKey),
 
       name: channel.name,
       metadata: channel.getMetadata() || {},
