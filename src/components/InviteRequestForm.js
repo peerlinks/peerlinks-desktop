@@ -40,7 +40,11 @@ function InviteRequestForm({ identities, request, reset, state }) {
     requestData = '...generating';
   }
 
-  return <div className='invite-request-form'>
+  const onSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  return <form className='invite-request-form' onSubmit={onSubmit}>
     <div className='form-row'>
       <h3 className='title'>...or request invite for:</h3>
     </div>
@@ -56,7 +60,7 @@ function InviteRequestForm({ identities, request, reset, state }) {
       Ask your peer to post the code below into their channel:
     </div>
     <div className='form-row'>
-      <textarea
+      <input
         type='text'
         className='form-input invite-request-data'
         readOnly
@@ -67,7 +71,7 @@ function InviteRequestForm({ identities, request, reset, state }) {
     <div className='form-row'>
       <i>NOTE: Invite request expires after being successfully used.</i>
     </div>
-  </div>;
+  </form>;
 }
 
 const mapStateToProps = (state) => {
