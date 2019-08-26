@@ -57,7 +57,7 @@ function NewFeed({ newFeed }) {
 
   const form = <form className='new-feed-form' onSubmit={onSubmit}>
     <div className='form-row'>
-      <h3 className='title'>New read-only feed</h3>
+      <h3 className='title'>Import read-only feed</h3>
     </div>
     <div className='form-row'>
       <input
