@@ -64,6 +64,9 @@ function InviteRequestForm({ identities, request, reset, state }) {
         onClick={(e) => e.target.select()}
         onChange={(e) => e.preventDefault()}/>
     </div>
+    <div className='form-row'>
+      <i>NOTE: Invite request expires after being successfully used.</i>
+    </div>
   </div>;
 }
 
