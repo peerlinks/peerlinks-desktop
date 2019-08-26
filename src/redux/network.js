@@ -33,6 +33,11 @@ export default class Network {
     return await this.request('network:createIdentityPair', { name });
   }
 
+  async channelFromPublicKey({ publicKey, name }) {
+    return await this.request('network:channelFromPublicKey', 
+      { publicKey, name });
+  }
+
   async removeIdentityPair({ channelId, identityKey }) {
     return await this.request('network:removeIdentityPair',
       { channelId, identityKey });

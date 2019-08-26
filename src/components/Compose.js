@@ -55,7 +55,7 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
   if (availableIdentities.length === 0) {
     return <div className='channel-compose-container'>
       <p>
-        No write access to channel,
+        No write access to channel,&nbsp;
         <Link to='/new-channel'>request invite</Link>
       </p>
     </div>;

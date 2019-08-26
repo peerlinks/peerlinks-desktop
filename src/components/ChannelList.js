@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './ChannelList.css';
@@ -58,8 +58,22 @@ const ChannelList = withRouter(({ history, channelList }) => {
     </div>;
   });
 
+  const newChannel = <Link
+    className='new-channel-button'
+    to='/new-channel'
+    title='New channel and identity'>
+  </Link>;
+
+  const newFeed = <Link
+    className='new-channel-button'
+    to='/new-feed'
+    title='New read-only feed'>
+  </Link>;
+
   return <section className='channel-list'>
+    <h3 className='title'>channels {newChannel}</h3>
     {list}
+    <h3 className='title'>feeds {newFeed}</h3>
   </section>;
 });
 

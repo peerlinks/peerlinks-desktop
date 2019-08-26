@@ -121,6 +121,21 @@ export default class Network {
       };
     });
 
+    handle('channelFromPublicKey', async ({ publicKey, name }) => {
+      try {
+        publicKey = bs58.decode(publicKey);
+      } catch (e) {
+        throw new Error('Invalid encoding of publicKey');
+      }
+
+      log.info(`creating channel from public key=${publicKey.toString('hex')}`);
+      const channel = await this.vowLink.channelFromPublicKey(
+        publicKey,
+        { name });
+
+      return await this.serializeChannel(channel);
+    });
+
     const channelById = (id) => {
       id = Buffer.from(id, 'hex');
       return this.vowLink.channels.find((channel) => {

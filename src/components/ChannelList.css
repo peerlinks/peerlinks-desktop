@@ -1,3 +1,22 @@
+.channel-list .new-channel-button {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+
+  text-decoration: none;
+  background: url(../images/new-channel.svg);
+  background-size: contain;
+
+  transition: transform 0.25s;
+}
+
+.channel-list .new-channel-button:hover {
+  background: url(../images/new-channel-active.svg);
+  background-size: contain;
+
+  transform: rotate(90deg);
+}
+
 .channel-list-elem {
   display: flex;
   flex-direction: row;

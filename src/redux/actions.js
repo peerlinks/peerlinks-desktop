@@ -157,6 +157,27 @@ export function newChannel({ channelName }) {
   };
 }
 
+export function newFeed({ publicKey, channelName }) {
+  const importFeed = async (dispatch) => {
+    const channel = await network.channelFromPublicKey({
+      publicKey,
+      name: channelName,
+    });
+
+    dispatch(addChannel(channel));
+    dispatch(setRedirect(`/channel/${channel.id}/`));
+  };
+
+  return (dispatch) => {
+    importFeed(dispatch).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to add new feed: ' + e.message,
+      }))
+    });
+  };
+}
+
 export function requestInvite({ identityKey }) {
   const generate = async (dispatch) => {
     return await network.requestInvite({ identityKey });

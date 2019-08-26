@@ -43,7 +43,7 @@ function NewChannelForm({ newChannel, reset, state }) {
         sharing the name.
       </i>
     </div>
-  </form>
+  </form>;
 }
 
 const mapStateToProps = (state) => {
