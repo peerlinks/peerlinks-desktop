@@ -1,3 +1,5 @@
+import React from 'react';
+
 import moment from 'moment';
 import remark from 'remark';
 import remarkReact from 'remark-react';
@@ -33,6 +35,10 @@ export function appendMessage(messages, message) {
   messages.splice(index, 0, enrichMessage(message));
 }
 
+export function ExternalLink(props) {
+  return <a target='blank' href={props.href}>{props.children}</a>;
+}
+
 export function enrichMessage(message) {
   if (message.isRoot) {
     return Object.assign({}, message, { enriched: null });
@@ -54,8 +60,14 @@ export function enrichMessage(message) {
 
   const time = moment(message.timestamp * 1000);
 
-  const text = remark().use(remarkReact).use(remarkEmoji).processSync(
-        message.json.text || '').contents;
+  const text = remark()
+    .use(remarkReact, {
+      remarkReactComponents: {
+        a: ExternalLink,
+      }
+    })
+    .use(remarkEmoji)
+    .processSync(message.json.text || '').contents;
 
   // TODO(indutny): highlight mentions
   return {
