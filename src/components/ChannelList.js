@@ -81,11 +81,12 @@ const ChannelList = withRouter(({ history, identities, channelList }) => {
   let requestInvite;
   if (identities.size !== 0) {
     requestInvite = <section className='channel-list-sub'>
-      <Link
+      <NavLink
         className='channel-list-request-invite'
+        activeClassName='channel-list-request-invite-active'
         to='/request-invite'>
         request invite
-      </Link>
+      </NavLink>
     </section>;
   }
 
