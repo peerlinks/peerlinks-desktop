@@ -75,8 +75,8 @@ export function enrichMessage(message) {
     enriched: {
       displayPath,
       time: {
-        short: time.format('hh:mm:ss'),
-        full: time.format('LL'),
+        short: time.format('HH:mm:ss'),
+        full: time.format('lll'),
       },
       text,
     },
