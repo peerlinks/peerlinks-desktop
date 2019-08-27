@@ -19,6 +19,9 @@ The best way to get started is to:
 1. Install the application either from [releases][] page, or run it from source
 with `npm install && npm run electron`
 2. Create a new channel for yourself (might be a good idea to use a nickname)
+3. Click (+) button next to "feeds" and import this feed url to subscribe to
+   updates
+   `vowlink://feed/2VqJ9bmg4gjV9p97hsrRYLgS2jULjQKnhdGyUo4ti5EK?name=vowlink%3Areleases`
 4. Click "request invite" button at the bottom of the channel list
 5. Copy and send the invite request to someone
 6. Ask them to paste it in their channel
