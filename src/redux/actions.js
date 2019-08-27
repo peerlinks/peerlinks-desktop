@@ -606,14 +606,13 @@ export function displayFeedURL({ channelId }) {
 
 // NOTE: Command
 export function renameChannel({ channelId, channelName }) {
-  const save = async () => {
+  const save = async (dispatch) => {
     await network.renameChannel({ channelId, channelName });
+    dispatch({ type: RENAME_CHANNEL, channelId, channelName });
   };
 
   return (dispatch) => {
-    dispatch({ type: RENAME_CHANNEL, channelId, channelName });
-
-    save().catch((e) => {
+    save(dispatch).catch((e) => {
       dispatch(addNotification({
         kind: 'error',
         content: 'Failed to rename channel: ' + e.message,

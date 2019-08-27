@@ -392,6 +392,10 @@ export default class Network {
         throw new Error('Channel not found: ' + channelId);
       }
 
+      if (this.vowLink.getChannel(channelName)) {
+        throw new Error(`Channel with name: "${channelName}" already exists`);
+      }
+
       channel.name = channelName;
       await this.vowLink.saveChannel(channel);
     });
