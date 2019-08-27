@@ -3,7 +3,7 @@
 
 Desktop client for [VowLink][] protocol.
 
-![Screenshot](https://raw.githubusercontent.com/vowlink/vowlink-desktop/master/Artwork/desktop-screenshot.png)
+![Demo](https://raw.githubusercontent.com/vowlink/vowlink-desktop/master/Artwork/desktop-demo.gif)
 
 ## Usage
 
