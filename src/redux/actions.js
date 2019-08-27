@@ -371,8 +371,8 @@ export function appendInternalMessage({ channelId, text }) {
       return;
     }
 
-    // NOTE: Start with `Z` to put message below the last one of this height
-    const hash = `Z:internal:${Date.now()}`;
+    // NOTE: Start with `z` to put message below the last one of this height
+    const hash = `z:internal:${Date.now()}`;
     const height = channel.messages.reduce((height, message) => {
       return Math.max(height, message.height);
     }, 0);
