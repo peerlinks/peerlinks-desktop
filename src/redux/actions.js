@@ -48,8 +48,8 @@ export function networkReady() {
   return { type: NETWORK_READY };
 }
 
-export function networkNotReady() {
-  return { type: NETWORK_NOT_READY };
+export function networkNotReady({ isFirstRun }) {
+  return { type: NETWORK_NOT_READY, isFirstRun };
 }
 
 export function networkLoading() {
@@ -89,10 +89,10 @@ async function loadNetwork(dispatch, getState) {
 
 export function checkNetwork() {
   const check = async (dispatch, getState) => {
-    const isReady = await network.isReady();
+    const { isReady, isFirstRun } = await network.getStatus();
 
     if (!isReady) {
-      dispatch(networkNotReady());
+      dispatch(networkNotReady({ isFirstRun }));
       return;
     }
 
@@ -102,7 +102,7 @@ export function checkNetwork() {
   return (dispatch, getState) => {
     dispatch(networkLoading());
     check(dispatch, getState).catch((e) => {
-      dispatch(networkError(e));
+      dispatch(networkError(e.message));
     });
   };
 }
@@ -116,7 +116,21 @@ export function initNetwork({ passphrase }) {
   return (dispatch, getState) => {
     dispatch(networkLoading());
     init(dispatch, getState).catch((e) => {
-      dispatch(networkError(e));
+      dispatch(networkError(e.message));
+    });
+  };
+}
+
+export function eraseNetwork() {
+  const init = async (dispatch) => {
+    await network.erase();
+    dispatch(checkNetwork());
+  };
+
+  return (dispatch, getState) => {
+    dispatch(networkLoading());
+    init(dispatch, getState).catch((e) => {
+      dispatch(networkError(e.message));
     });
   };
 }

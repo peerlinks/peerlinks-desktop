@@ -1,4 +1,5 @@
 import { Buffer } from 'buffer';
+import { promises as fs } from 'fs';
 
 import VowLink, { Message } from '@vowlink/protocol';
 import SqliteStorage from '@vowlink/sqlite-storage';
@@ -34,7 +35,7 @@ export default class Network {
     // Map<identityKey, Function>
     this.pendingInvites = new Map();
 
-    this.ready = false;
+    this.isReady = false;
 
     this.initIPC();
   }
@@ -50,7 +51,7 @@ export default class Network {
 
     this.swarm = new Swarm(this.vowLink);
     this.waitList.resolve('ready');
-    this.ready = true;
+    this.isReady = true;
   }
 
   initIPC() {
@@ -60,7 +61,7 @@ export default class Network {
       ipc.on(`network:${type}`, (event, { seq, payload }) => {
         log.info(`network: got ${type}`);
 
-        if (!this.ready && requireReady) {
+        if (!this.isReady && requireReady) {
           log.info(`network: not ready to "${type}" seq=${seq}`);
           return event.reply('response', { seq, error: 'Not ready' });
         }
@@ -77,7 +78,8 @@ export default class Network {
     };
 
     handle('init', async ({ passphrase }) => {
-      if (this.ready) {
+      if (this.isReady) {
+        // Already initialized
         return;
       }
 
@@ -95,8 +97,13 @@ export default class Network {
       await this.waitList.waitFor('ready').promise;
     }, false);
 
-    handle('isReady', async () => {
-      return this.ready;
+    handle('erase', async () => {
+      await this.storage.clear();
+    }, false);
+
+    handle('getStatus', async () => {
+      const isFirstRun = (await this.storage.getEntityCount()) === 0;
+      return { isReady: this.isReady, isFirstRun };
     }, false);
 
     handle('getChannels', async () => {
@@ -470,9 +477,15 @@ export default class Network {
   }
 
   async close() {
-    await this.vowLink.close();
-    await this.swarm.destroy();
-    await this.storage.close();
+    if (this.vowLink) {
+      await this.vowLink.close();
+    }
+    if (this.swarm) {
+      await this.swarm.destroy();
+    }
+    if (this.storage) {
+      await this.storage.close();
+    }
 
     this.waitList.close(new Error('Closed'));
   }

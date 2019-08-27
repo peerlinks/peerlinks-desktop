@@ -4,7 +4,7 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 
 import './App.css';
 
-import { checkNetwork, initNetwork } from './redux/actions';
+import { checkNetwork } from './redux/actions';
 
 import FullScreen from './layouts/FullScreen';
 import ChannelLayout from './layouts/Channel';
@@ -18,7 +18,7 @@ import DeleteChannel from './pages/DeleteChannel';
 
 import RedirectOnce from './components/RedirectOnce';
 
-function App({ channels, network, checkNetwork, initNetwork }) {
+function App({ network, checkNetwork }) {
   // Check if the window as reopened and network is ready
   useEffect(() => {
     checkNetwork();
@@ -37,29 +37,20 @@ function App({ channels, network, checkNetwork, initNetwork }) {
     </Router>;
   }
 
-  const onPassphrase = (passphrase) => {
-    initNetwork({ passphrase });
-  };
-
   return <FullScreen>
-    {network.error && <p className='error'>
-      Got error: {network.error.message}
-    </p>}
-    <SignIn isLoading={network.isLoading} onPassphrase={onPassphrase}/>
+    <SignIn/>
   </FullScreen>;
 }
 
 const mapStateToProps = (state) => {
   return {
     network: state.network,
-    channels: state.channels,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     checkNetwork: (...args) => dispatch(checkNetwork(...args)),
-    initNetwork: (...args) => dispatch(initNetwork(...args)),
   };
 };
 

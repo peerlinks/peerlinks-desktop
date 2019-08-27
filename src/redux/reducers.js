@@ -33,7 +33,14 @@ export const redirect = (state = null, action) => {
 
 export const network = (state, action) => {
   if (!state) {
-    state = { isReady: false, isLoading: false, error: null };
+    state = {
+      isReady: false,
+      isLoading: false,
+      error: null,
+      isFirstRun: false,
+
+      decryptAttempts: 0,
+    };
   }
 
   switch (action.type) {
@@ -43,6 +50,8 @@ export const network = (state, action) => {
         isReady: true,
         isLoading: false,
         error: null,
+        isFirstRun: false,
+        decryptAttempts: 0,
       };
     case NETWORK_NOT_READY:
       return {
@@ -50,9 +59,16 @@ export const network = (state, action) => {
         isReady: false,
         isLoading: false,
         error: null,
+        isFirstRun: action.isFirstRun,
+        decryptAttempts: 0,
       };
     case NETWORK_LOADING:
-      return { ...state, isLoading: true, error: null };
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+        decryptAttempts: state.decryptAttempts + 1,
+      };
     case NETWORK_ERROR:
       return {
         ...state,
