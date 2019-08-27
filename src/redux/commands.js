@@ -1,4 +1,4 @@
-import { invite, displayHelp, displayFeedURL } from './actions';
+import { invite, displayHelp, displayFeedURL, renameChannel } from './actions';
 
 export default new Map([
   [
@@ -12,6 +12,10 @@ export default new Map([
   [
     'get-feed-url',
     { args: [ ], action: displayFeedURL },
+  ],
+  [
+    'rename',
+    { args: [ 'channelName' ], action: renameChannel },
   ],
 ]);
 

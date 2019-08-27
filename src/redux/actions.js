@@ -27,6 +27,7 @@ export const IDENTITY_ADD_CHANNEL = 'IDENTITY_ADD_CHANNEL';
 
 export const ADD_CHANNEL = 'ADD_CHANNEL';
 export const REMOVE_CHANNEL = 'REMOVE_CHANNEL';
+export const RENAME_CHANNEL = 'RENAME_CHANNEL';
 export const APPEND_CHANNEL_MESSAGE = 'APPEND_CHANNEL_MESSAGE';
 export const APPEND_CHANNEL_MESSAGES = 'APPEND_CHANNEL_MESSAGES';
 export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
@@ -582,6 +583,7 @@ export function displayHelp({ channelId }) {
       ' - **/invite <invitee name> <invite request>** - ' +
         'invite `<invitee name>`',
       ' - **/get-feed-url** - get feed URL for this channel',
+      ' - **/rename <channel name>** - rename current channel',
     ].join('\n'),
   });
 }
@@ -599,6 +601,24 @@ export function displayFeedURL({ channelId }) {
       text: `vowlink://feed/${channel.publicKeyB58}?` +
         `name=${encodeURIComponent(channel.name)}`,
     }));
+  };
+}
+
+// NOTE: Command
+export function renameChannel({ channelId, channelName }) {
+  const save = async () => {
+    await network.renameChannel({ channelId, channelName });
+  };
+
+  return (dispatch) => {
+    dispatch({ type: RENAME_CHANNEL, channelId, channelName });
+
+    save().catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to rename channel: ' + e.message,
+      }));
+    });
   };
 }
 

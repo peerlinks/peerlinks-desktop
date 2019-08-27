@@ -19,6 +19,7 @@ import {
 
   ADD_CHANNEL, REMOVE_CHANNEL, APPEND_CHANNEL_MESSAGE, APPEND_CHANNEL_MESSAGES,
   TRIM_CHANNEL_MESSAGES, CHANNEL_SET_MESSAGE_COUNT, CHANNEL_UPDATE_METADATA,
+  RENAME_CHANNEL,
 } from './actions';
 
 export const redirect = (state = null, action) => {
@@ -293,6 +294,13 @@ export const channels = (state = new Map(), action) => {
         copy.delete(action.channelId);
         return copy;
       }
+    case RENAME_CHANNEL:
+      return updateChannel(state, action, (channel) => {
+        return {
+          ...channel,
+          name: action.channelName,
+        };
+      });
     case CHANNEL_SET_MESSAGE_COUNT:
       return updateChannel(state, action, (channel) => {
         return {

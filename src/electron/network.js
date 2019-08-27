@@ -385,6 +385,16 @@ export default class Network {
         encryptedInvite,
       }, INVITE_TIMEOUT).promise;
     });
+
+    handle('renameChannel', async ({ channelId, channelName }) => {
+      const channel = channelById(channelId);
+      if (!channel) {
+        throw new Error('Channel not found: ' + channelId);
+      }
+
+      channel.name = channelName;
+      await this.vowLink.saveChannel(channel);
+    });
   }
 
   async runUpdateLoop(channel, timeout) {
