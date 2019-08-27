@@ -19,7 +19,7 @@ The best way to get started is to:
 1. Install the application either from [releases][] page, or run it from source
 with `npm install && npm run electron`
 2. Create a new channel for yourself (might be a good idea to use a nickname)
-4. Click new channel/identity button `(+)` next to the channel list title
+4. Click "request invite" button at the bottom of the channel list
 5. Copy and send the invite request to someone
 6. Ask them to paste it in their channel
 7. Chat together!
