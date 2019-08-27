@@ -388,7 +388,7 @@ export function appendInternalMessage({ channelId, text }) {
           displayPath: [ '@vowlink' ],
           publicKeys: [ '@vowlink' ],
         },
-        timestamp: Date.now(),
+        timestamp: Date.now() / 1000,
         json: { text },
       },
     }));
