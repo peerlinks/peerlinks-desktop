@@ -417,7 +417,8 @@ export default class Network {
   serializeIdentity(identity) {
     return {
       name: identity.name,
-      publicKey: bs58.encode(identity.publicKey),
+      publicKey: identity.publicKey.toString('hex'),
+      publicKeyB58: bs58.encode(identity.publicKey),
       channelIds: identity.getChannelIds().map((id) => id.toString('hex')),
       metadata: identity.getMetadata() || {},
     };
@@ -426,7 +427,8 @@ export default class Network {
   async serializeChannel(channel) {
     return {
       id: channel.id.toString('hex'),
-      publicKey: bs58.encode(channel.publicKey),
+      publicKey: channel.publicKey.toString('hex'),
+      publicKeyB58: bs58.encode(channel.publicKey),
 
       name: channel.name,
       metadata: channel.getMetadata() || {},

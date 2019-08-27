@@ -596,7 +596,7 @@ export function displayFeedURL({ channelId }) {
 
     return dispatch(appendInternalMessage({
       channelId,
-      text: `vowlink://feed/${channel.publicKey}?` +
+      text: `vowlink://feed/${channel.publicKeyB58}?` +
         `name=${encodeURIComponent(channel.name)}`,
     }));
   };
