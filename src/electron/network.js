@@ -133,7 +133,8 @@ export default class Network {
         publicKey,
         { name });
 
-      if (channel.getMetadata().isFeed !== false) {
+      const metadata = channel.getMetadata();
+      if (!metadata || metadata.isFeed !== false) {
         channel.setMetadata({
           ...channel.metadata,
           isFeed: true,
