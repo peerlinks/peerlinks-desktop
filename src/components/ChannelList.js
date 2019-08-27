@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import './ChannelList.css';
 
-const ChannelList = withRouter(({ history, channelList }) => {
+const ChannelList = withRouter(({ history, identities, channelList }) => {
   useEffect(() => {
     const onKeyDown = (e) => {
       if (!e.metaKey && !e.ctrlKey) {
@@ -78,6 +78,17 @@ const ChannelList = withRouter(({ history, channelList }) => {
     title='New read-only feed'>
   </Link>;
 
+  let requestInvite;
+  if (identities.size !== 0) {
+    requestInvite = <section className='channel-list-sub'>
+      <Link
+        className='channel-list-request-invite'
+        to='/request-invite'>
+        request invite
+      </Link>
+    </section>;
+  }
+
   return <section className='channel-list'>
     <section className='channel-list-sub'>
       <h3 className='title'>channels {newChannel}</h3>
@@ -87,18 +98,13 @@ const ChannelList = withRouter(({ history, channelList }) => {
       <h3 className='title'>feeds {newFeed}</h3>
       {feeds}
     </section>
-    <section className='channel-list-sub'>
-      <Link
-        className='channel-list-request-invite'
-        to='/request-invite'>
-        request invite
-      </Link>
-    </section>
+    {requestInvite}
   </section>;
 });
 
 const mapStateToProps = (state) => {
   return {
+    identities: state.identities,
     channelList: Array.from(state.channels.values()).sort((a, b) => {
       if (a.name < b.name) {
         return -1;
