@@ -5,7 +5,7 @@
   "version": "1.8.1",
   "private": true,
   "main": "src/electron/main.js",
-  "repository": "git@github.com:vowlink/vowlink-electron",
+  "repository": "git@github.com:vowlink/vowlink-desktop",
   "build": {
     "appId": "com.indutny.vowlink-electron",
     "productName": "VowLink",
