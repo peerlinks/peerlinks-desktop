@@ -1,3 +1,6 @@
+.channel-list {
+  padding-bottom: 0.5rem;
+}
 .channel-list .new-channel-button {
   display: inline-block;
   width: 1rem;
@@ -60,4 +63,16 @@
 }
 
 .channel-list-elem-title {
+}
+
+.channel-list-request-invite {
+  text-decoration: none;
+  color: #797e8b;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+.channel-list-request-invite:hover {
+  color: #E8E9EB;
 }

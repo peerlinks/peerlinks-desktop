@@ -63,7 +63,7 @@ function NewFeed({ newFeed }) {
       <input
         className='new-feed-name form-input'
         type='text'
-        placeholder='Feed link'
+        placeholder='Feed URL'
         value={link}
         onChange={onLinkChange}
         required/>
@@ -82,7 +82,7 @@ function NewFeed({ newFeed }) {
         disabled={isDisabled}
         type='submit'
         className='button new-feed-submit'
-        value='Add'/>
+        value='Import'/>
     </div>
   </form>;
 

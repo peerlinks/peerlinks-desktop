@@ -11,4 +11,6 @@
 .full-screen-layout-container .full-screen-layout {
   display: block;
   margin: 0 auto;
+  max-width: 32rem;
+  padding: 0.5rem;
 }

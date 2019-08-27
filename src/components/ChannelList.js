@@ -87,6 +87,13 @@ const ChannelList = withRouter(({ history, channelList }) => {
       <h3 className='title'>feeds {newFeed}</h3>
       {feeds}
     </section>
+    <section className='channel-list-sub'>
+      <Link
+        className='channel-list-request-invite'
+        to='/request-invite'>
+        request invite
+      </Link>
+    </section>
   </section>;
 });
 

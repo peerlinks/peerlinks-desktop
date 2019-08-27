@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
+import FullScreen from '../layouts/FullScreen';
+
 import {
   requestInvite, inviteRequestReset,
 } from '../redux/actions';
 
-import './InviteRequestForm.css';
+import './InviteRequest.css';
 
-function InviteRequestForm({ identities, request, reset, state }) {
+function InviteRequest({ identities, request, reset, state }) {
   const [ identityKey, setIdentityKey ] = useState(null);
 
   const options = identities.map((identity) => {
@@ -44,9 +46,9 @@ function InviteRequestForm({ identities, request, reset, state }) {
     e.preventDefault();
   };
 
-  return <form className='invite-request-form' onSubmit={onSubmit}>
+  const form = <form className='invite-request-form' onSubmit={onSubmit}>
     <div className='form-row'>
-      <h3 className='title'>...or request invite for:</h3>
+      <h3 className='title'>Request invite for</h3>
     </div>
     <div className='form-row'>
       <select
@@ -72,6 +74,12 @@ function InviteRequestForm({ identities, request, reset, state }) {
       <i>NOTE: Invite request expires after being successfully used.</i>
     </div>
   </form>;
+
+  return <FullScreen>
+    <div className='invite-request-page'>
+      {form}
+    </div>
+  </FullScreen>;
 }
 
 const mapStateToProps = (state) => {
@@ -88,4 +96,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(InviteRequestForm);
+export default connect(mapStateToProps, mapDispatchToProps)(InviteRequest);
