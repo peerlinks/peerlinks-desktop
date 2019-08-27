@@ -340,9 +340,9 @@ export function removeIdentityPair({ channelId, identityKey }) {
 
 export function updateChannelMetadata({ channelId, metadata }) {
   const update = async (dispatch) => {
-    await network.updateChannelMetadata({ channelId, metadata });
-
     dispatch({ type: CHANNEL_UPDATE_METADATA, channelId, metadata });
+
+    await network.updateChannelMetadata({ channelId, metadata });
   };
 
   return (dispatch) => {

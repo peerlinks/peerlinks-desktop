@@ -141,6 +141,8 @@ export default class Network {
         });
         await this.vowLink.saveChannel(channel);
       }
+
+      this.swarm.joinChannel(channel);
       this.runUpdateLoop(channel);
 
       return await this.serializeChannel(channel);
