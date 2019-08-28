@@ -623,7 +623,10 @@ export function renameIdentityPair({ channelId, newName }) {
   const save = async (dispatch, getState) => {
     const state = getState();
     const channel = state.channels.get(channelId);
-    const identityKey = channel.publicKey;
+    let identityKey;
+    if (state.identities.has(channel.publicKey)) {
+      identityKey = channel.publicKey;
+    }
 
     await network.renameIdentityPair({ channelId, identityKey, newName });
 
