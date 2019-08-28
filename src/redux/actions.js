@@ -619,8 +619,12 @@ export function displayFeedURL({ channelId }) {
 }
 
 // NOTE: Command
-export function renameIdentityPair({ channelId, identityKey, newName }) {
-  const save = async (dispatch) => {
+export function renameIdentityPair({ channelId, newName }) {
+  const save = async (dispatch, getState) => {
+    const state = getState();
+    const channel = state.channels.get(channelId);
+    const identityKey = channel.publicKey;
+
     await network.renameIdentityPair({ channelId, identityKey, newName });
 
     dispatch({
@@ -631,8 +635,8 @@ export function renameIdentityPair({ channelId, identityKey, newName }) {
     });
   };
 
-  return (dispatch) => {
-    save(dispatch).catch((e) => {
+  return (dispatch, getState) => {
+    save(dispatch, getState).catch((e) => {
       dispatch(addNotification({
         kind: 'error',
         content: 'Failed to rename channel: ' + e.message,
