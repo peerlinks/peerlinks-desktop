@@ -27,7 +27,7 @@ export const IDENTITY_ADD_CHANNEL = 'IDENTITY_ADD_CHANNEL';
 
 export const ADD_CHANNEL = 'ADD_CHANNEL';
 export const REMOVE_CHANNEL = 'REMOVE_CHANNEL';
-export const RENAME_CHANNEL = 'RENAME_CHANNEL';
+export const RENAME_IDENTITY_PAIR = 'RENAME_IDENTITY_PAIR';
 export const APPEND_CHANNEL_MESSAGE = 'APPEND_CHANNEL_MESSAGE';
 export const APPEND_CHANNEL_MESSAGES = 'APPEND_CHANNEL_MESSAGES';
 export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
@@ -619,10 +619,16 @@ export function displayFeedURL({ channelId }) {
 }
 
 // NOTE: Command
-export function renameChannel({ channelId, channelName }) {
+export function renameIdentityPair({ channelId, identityKey, newName }) {
   const save = async (dispatch) => {
-    await network.renameChannel({ channelId, channelName });
-    dispatch({ type: RENAME_CHANNEL, channelId, channelName });
+    await network.renameIdentityPair({ channelId, identityKey, newName });
+
+    dispatch({
+      type: RENAME_IDENTITY_PAIR,
+      channelId,
+      identityKey,
+      newName,
+    });
   };
 
   return (dispatch) => {

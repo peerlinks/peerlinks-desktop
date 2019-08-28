@@ -88,9 +88,9 @@ export default class Network {
     });
   }
 
-  async renameChannel({ channelId, channelName }) {
-    return await this.request('network:renameChannel',
-      { channelId, channelName });
+  async renameIdentityPair({ channelId, identityKey, newName }) {
+    return await this.request('network:renameIdentityPair',
+      { channelId, identityKey, newName });
   }
 
   // Internal

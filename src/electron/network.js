@@ -393,18 +393,39 @@ export default class Network {
       }, INVITE_TIMEOUT).promise;
     });
 
-    handle('renameChannel', async ({ channelId, channelName }) => {
-      const channel = channelById(channelId);
-      if (!channel) {
+    handle('renameIdentityPair', async (params) => {
+      const { channelId, identityKey, newName } = params;
+
+      const channel = channelId && channelById(channelId);
+      const identity = identityKey && identityByKey(identityKey);
+
+      if (channelId && !channel) {
         throw new Error('Channel not found: ' + channelId);
       }
 
-      if (this.vowLink.getChannel(channelName)) {
-        throw new Error(`Channel with name: "${channelName}" already exists`);
+      if (identityKey && !identity) {
+        throw new Error('Identity not found: ' + identityKey);
       }
 
-      channel.name = channelName;
-      await this.vowLink.saveChannel(channel);
+      if (this.vowLink.getChannel(newName)) {
+        throw new Error(`Channel with name: "${newName}" already exists`);
+      }
+
+      if (this.vowLink.getIdentity(newName)) {
+        throw new Error(`Identity with name: "${newName}" already exists`);
+      }
+
+      if (channel) {
+        log.info(`renaming channel "${channel.name}" => "${newName}"`);
+        channel.name = newName;
+        await this.vowLink.saveChannel(channel);
+      }
+
+      if (identity) {
+        log.info(`renaming identity "${identity.name}" => "${newName}"`);
+        identity.name = newName;
+        await this.vowLink.saveIdentity(identity);
+      }
     });
   }
 
