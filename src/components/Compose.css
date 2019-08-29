@@ -49,6 +49,7 @@
   padding: 0.75rem;
   font-size: 1rem;
   line-height: 1.5rem;
+  white-space: nowrap;
 }
 
 .channel-compose-container:focus-within .channel-compose-identity,
