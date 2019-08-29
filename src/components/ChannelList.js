@@ -4,6 +4,28 @@ import { connect } from 'react-redux';
 
 import './ChannelList.css';
 
+const renderChannel = (channel) => {
+  const unreadCount = channel.messageCount -
+    (channel.metadata.readCount || 0);
+
+  let elemClass = 'channel-list-elem';
+  if (unreadCount > 0) {
+    elemClass += ' channel-list-elem-unread';
+  }
+
+  return <div className='channel-list-row' key={channel.id}>
+    <NavLink
+      className={elemClass}
+      activeClassName='channel-list-elem-active'
+      to={`/channel/${channel.id}/`}>
+      <div className='channel-list-elem-left'>
+        <span className='channel-list-elem-hash'>#</span>
+        <span className='channel-list-elem-title'>{channel.name}</span>
+      </div>
+    </NavLink>
+  </div>;
+};
+
 const ChannelList = withRouter(({ history, identities, channelList }) => {
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -23,11 +45,11 @@ const ChannelList = withRouter(({ history, identities, channelList }) => {
         digit--;
       }
 
-      if (digit >= channelList.length) {
+      if (digit >= channels.length + feeds.length) {
         return;
       }
 
-      const channel = channelList[digit];
+      const channel = channels[digit] || feeds[digit - channels.length];
       history.replace(`/channel/${channel.id}/`);
     };
     document.addEventListener('keydown', onKeyDown);
@@ -40,29 +62,10 @@ const ChannelList = withRouter(({ history, identities, channelList }) => {
   const channels = [];
   const feeds = [];
   for (const channel of channelList) {
-    const unreadCount = channel.messageCount -
-      (channel.metadata.readCount || 0);
-
-    let elemClass = 'channel-list-elem';
-    if (unreadCount > 0) {
-      elemClass += ' channel-list-elem-unread';
-    }
-    const row = <div className='channel-list-row' key={channel.id}>
-      <NavLink
-        className={elemClass}
-        activeClassName='channel-list-elem-active'
-        to={`/channel/${channel.id}/`}>
-        <div className='channel-list-elem-left'>
-          <span className='channel-list-elem-hash'>#</span>
-          <span className='channel-list-elem-title'>{channel.name}</span>
-        </div>
-      </NavLink>
-    </div>;
-
     if (channel.metadata.isFeed) {
-      feeds.push(row);
+      feeds.push(channel);
     } else {
-      channels.push(row);
+      channels.push(channel);
     }
   }
 
@@ -93,11 +96,11 @@ const ChannelList = withRouter(({ history, identities, channelList }) => {
   return <section className='channel-list'>
     <section className='channel-list-sub'>
       <h3 className='title'>channels {newChannel}</h3>
-      {channels}
+      {channels.map(renderChannel)}
     </section>
     <section className='channel-list-sub'>
       <h3 className='title'>feeds {newFeed}</h3>
-      {feeds}
+      {feeds.map(renderChannel)}
     </section>
     {requestInvite}
   </section>;
