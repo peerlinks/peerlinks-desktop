@@ -102,7 +102,19 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
+  };
 
+  const onKeyDown = (e) => {
+    if (e.key !== 'Enter') {
+      return;
+    }
+
+    // [shift]+enter
+    if (e.shiftKey) {
+      return;
+    }
+
+    e.preventDefault();
     onBeforePost();
 
     postMessage({
@@ -113,6 +125,8 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
 
     setMessage('');
   };
+
+  const lineCount = message.split(/\r\n|\n|\r/g).length;
 
   return <form className='channel-compose-container' onSubmit={onSubmit}>
     <div className='channel-compose-identity-container'>
@@ -125,14 +139,17 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
       </SelectIdentity>
     </div>
     <div className='channel-compose-text-container'>
-      <input
-        ref={input}
+      <textarea
         className='channel-compose-text'
+        ref={input}
+        rows={lineCount}
         required
         type='text'
         placeholder='Write a message'
+        title='Press `Shift+Enter` for multiline text'
         value={message}
-        onChange={onMessageChange}/>
+        onChange={onMessageChange}
+        onKeyDown={onKeyDown}/>
     </div>
   </form>;
 }
