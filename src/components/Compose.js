@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -11,6 +11,24 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
   const [ savedState, setSavedState ] = useState(new Map());
   const [ message, setMessage ] = useState('');
   const [ lastChannel, setLastChannel ] = useState(null);
+  const input = useRef();
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (!e.key || e.metaKey || e.ctrlKey) {
+        return;
+      }
+
+      if (input.current) {
+        input.current.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  });
 
   const restore = (channelId) => {
     if (!channelId) {
@@ -106,6 +124,7 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
     </div>
     <div className='channel-compose-text-container'>
       <input
+        ref={input}
         className='channel-compose-text'
         required
         type='text'
