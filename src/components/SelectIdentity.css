@@ -1,0 +1,17 @@
+.form-select {
+  position: relative;
+}
+
+.form-select .form-select-hidden {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.form-select .form-select-hidden select {
+  width: 100%;
+  height: 100%;
+}

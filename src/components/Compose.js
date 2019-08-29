@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { postMessage } from '../redux/actions';
+import SelectIdentity, { Option } from './SelectIdentity';
 
 import './Compose.css';
 
@@ -80,9 +81,10 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
   }
 
   const options = availableIdentities.map((identity) => {
-    return <option key={identity.publicKey} value={identity.publicKey}>
-      {identity.name}
-    </option>
+    return <Option
+      key={identity.publicKey}
+      value={identity.publicKey}
+      label={identity.name}/>;
   });
 
   // Select first identity
@@ -90,8 +92,8 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
     setIdentityKey(availableIdentities[0].publicKey);
   }
 
-  const onIdentityChange = (e) => {
-    setIdentityKey(e.target.value);
+  const onIdentityChange = (value) => {
+    setIdentityKey(value);
   };
 
   const onMessageChange = (e) => {
@@ -114,13 +116,13 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
 
   return <form className='channel-compose-container' onSubmit={onSubmit}>
     <div className='channel-compose-identity-container'>
-      <select
+      <SelectIdentity
         className='channel-compose-identity'
         value={identityKey}
         onChange={onIdentityChange}
         title='select identity'>
         {options}
-      </select>
+      </SelectIdentity>
     </div>
     <div className='channel-compose-text-container'>
       <input
