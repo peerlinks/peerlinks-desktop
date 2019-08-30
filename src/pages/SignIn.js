@@ -67,7 +67,7 @@ const SignIn = ({ network, initNetwork, eraseNetwork }) => {
   }
 
   let eraseRow;
-  if (network.decryptAttempts > MAX_DECRYPT_ATTEMPTS) {
+  if (network.decryptAttempts >= MAX_DECRYPT_ATTEMPTS) {
     eraseRow = <div className='form-row'>
       <button
         className='button button-danger'
@@ -80,7 +80,9 @@ const SignIn = ({ network, initNetwork, eraseNetwork }) => {
   const form = <form onSubmit={onSubmit}>
     {errorRow}
     <div className='form-row'>
-      <h3 className='title'>Decrypt private keys</h3>
+      <h3 className='title'>{network.isFirstRun ?
+        'Encrypt private keys' :
+        'Decrypt private keys'}</h3>
     </div>
     <div className='form-row'>
       <input
