@@ -115,6 +115,12 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
     }
 
     e.preventDefault();
+
+    // Empty message is not allowed
+    if (!message) {
+      return;
+    }
+
     onBeforePost();
 
     postMessage({
@@ -143,7 +149,6 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
         className='channel-compose-text'
         ref={input}
         rows={lineCount}
-        required
         type='text'
         placeholder='Write a message'
         title='Press `Shift+Enter` for multiline text'
