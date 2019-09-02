@@ -31,6 +31,10 @@ let window = null;
 log.info(`database file=${DB_FILE}`);
 const network = new Network(ipc, {
   db: DB_FILE,
+
+  setBadgeCount(count) {
+    app.setBadgeCount(count);
+  },
 });
 
 network.init().then(() => {

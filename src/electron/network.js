@@ -19,6 +19,9 @@ export default class Network {
     if (!this.options.db) {
       throw new Error('Missing `options.db`');
     }
+    if (!this.options.setBadgeCount) {
+      throw new Error('Missing `options.setBadgeCount`');
+    }
 
     this.storage = null;
     this.vowLink = null;
@@ -147,6 +150,7 @@ export default class Network {
           isFeed: true,
         });
         await this.vowLink.saveChannel(channel);
+        await this.updateBadge();
       }
 
       this.swarm.joinChannel(channel);
@@ -202,6 +206,7 @@ export default class Network {
         ...metadata,
       });
       await this.vowLink.saveChannel(channel);
+      await this.updateBadge();
     });
 
     handle('getMessageCount', async ({ channelId }) => {
@@ -353,6 +358,7 @@ export default class Network {
         isFeed: false,
       });
       await this.vowLink.saveChannel(channel);
+      await this.updateBadge();
 
       this.swarm.joinChannel(channel);
       this.runUpdateLoop(channel);
@@ -419,6 +425,7 @@ export default class Network {
         log.info(`renaming channel "${channel.name}" => "${newName}"`);
         channel.name = newName;
         await this.vowLink.saveChannel(channel);
+        await this.updateBadge();
       }
 
       if (identity) {
@@ -445,6 +452,8 @@ export default class Network {
       log.info(`network: waiting for ${channel.debugId} update`);
       await entry.promise;
       log.info(`network: got ${channel.debugId} update`);
+
+      await this.updateBadge();
 
       this.updatedChannels.add(channel);
 
@@ -497,6 +506,18 @@ export default class Network {
       isRoot: message.isRoot,
       json: message.json,
     };
+  }
+
+  async updateBadge() {
+    let unread = 0;
+    for (const channel of this.vowLink.channels) {
+      const messageCount = await channel.getMessageCount();
+      const readCount = channel.metadata && channel.metadata.readCount || 0;
+
+      unread += Math.max(messageCount - readCount, 0);
+    }
+
+    this.options.setBadgeCount(unread);
   }
 
   async close() {
