@@ -37,7 +37,7 @@ const MessageList = React.memo((props) => {
   });
 
   if (marker > 0) {
-    rows.splice(marker, 0, <hr/>);
+    rows.splice(marker, 0, <hr key='unread-marker'/>);
   }
 
   const onScroll = ({ target }) => {
