@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
-  channelMarkRead, loadMessages, toggleSilence,
+  channelMarkRead, loadMessages, toggleSilence, channelUpdateReadHeight,
 } from '../redux/actions';
 
 import MessageList from '../components/MessageList';
@@ -11,7 +11,11 @@ import Compose from '../components/Compose';
 
 import './Channel.css';
 
-function Channel({ match, channels, markRead, loadMessages, toggleSilence }) {
+function Channel(props) {
+  const {
+    match, channels, markRead, loadMessages,
+    toggleSilence, updateReadHeight,
+  } = props;
   const [ lastChannelId, setLastChannelId ] = useState(null);
   const [ isSticky, setIsSticky ] = useState(false);
 
@@ -22,6 +26,10 @@ function Channel({ match, channels, markRead, loadMessages, toggleSilence }) {
   }
 
   if (lastChannelId !== channelId) {
+    if (lastChannelId) {
+      updateReadHeight({ channelId: lastChannelId });
+    }
+
     setLastChannelId(channelId);
 
     // Load only once per channel
@@ -82,6 +90,7 @@ function Channel({ match, channels, markRead, loadMessages, toggleSilence }) {
     </header>
     <MessageList
       channelName={channel.name}
+      readHeight={channel.readHeight}
       messages={channel.messages}
       isSticky={isSticky}
       setIsSticky={setIsSticky}/>
@@ -102,6 +111,7 @@ const mapDispatchToProps = (dispatch) => {
     markRead: (...args) => dispatch(channelMarkRead(...args)),
     loadMessages: (...args) => dispatch(loadMessages(...args)),
     toggleSilence: (...args) => dispatch(toggleSilence(...args)),
+    updateReadHeight: (...args) => dispatch(channelUpdateReadHeight(...args)),
   };
 };
 

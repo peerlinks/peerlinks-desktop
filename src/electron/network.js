@@ -470,6 +470,7 @@ export default class Network {
   }
 
   async serializeChannel(channel) {
+    const [ last ] =  await channel.getReverseMessagesAtOffset(0);
     return {
       id: channel.id.toString('hex'),
       publicKey: channel.publicKey.toString('hex'),
@@ -478,6 +479,7 @@ export default class Network {
       name: channel.name,
       metadata: channel.getMetadata() || {},
       messageCount: await channel.getMessageCount(),
+      maxHeight: last ? last.height : 0,
     };
   }
 

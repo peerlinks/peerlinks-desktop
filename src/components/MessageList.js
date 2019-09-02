@@ -6,7 +6,7 @@ import Message from './Message';
 import './MessageList.css';
 
 const MessageList = React.memo((props) => {
-  const { channelName, messages, isSticky, setIsSticky } = props;
+  const { channelName, readHeight, messages, isSticky, setIsSticky } = props;
 
   const [ expandAuthorFor, setExpandAuthorFor ] = useState(null);
   const view = useRef();
@@ -31,6 +31,14 @@ const MessageList = React.memo((props) => {
       isExpanded={isExpanded}
       setExpandAuthorFor={setExpandAuthorFor}/>;
   });
+
+  const marker = messages.findIndex((message) => {
+    return message.height > readHeight;
+  });
+
+  if (marker > 0) {
+    rows.splice(marker, 0, <hr/>);
+  }
 
   const onScroll = ({ target }) => {
     const scrollTop = target.scrollTop;

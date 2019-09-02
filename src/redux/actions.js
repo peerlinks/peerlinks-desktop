@@ -33,6 +33,7 @@ export const APPEND_CHANNEL_MESSAGES = 'APPEND_CHANNEL_MESSAGES';
 export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
 export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
 export const CHANNEL_UPDATE_METADATA = 'CHANNEL_UPDATE_METADATA';
+export const CHANNEL_UPDATE_READ_HEIGHT = 'CHANNEL_UPDATE_READ_HEIGHT';
 
 const network = new Network();
 
@@ -452,6 +453,10 @@ export function channelMarkRead({ channelId }) {
 
     dispatch(updateChannelMetadata({ channelId, metadata }));
   };
+}
+
+export function channelUpdateReadHeight({ channelId }) {
+  return { type: CHANNEL_UPDATE_READ_HEIGHT, channelId };
 }
 
 export function toggleSilence({ channelId }) {

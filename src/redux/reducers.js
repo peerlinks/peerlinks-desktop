@@ -20,6 +20,7 @@ import {
   ADD_CHANNEL, REMOVE_CHANNEL, APPEND_CHANNEL_MESSAGE, APPEND_CHANNEL_MESSAGES,
   TRIM_CHANNEL_MESSAGES, CHANNEL_SET_MESSAGE_COUNT, CHANNEL_UPDATE_METADATA,
   RENAME_IDENTITY_PAIR,
+  CHANNEL_UPDATE_READ_HEIGHT,
 } from './actions';
 
 export const redirect = (state = null, action) => {
@@ -292,14 +293,17 @@ export const channels = (state = new Map(), action) => {
     case ADD_CHANNEL:
       {
         if (state.has(action.channel.id)) {
-          // Update only channel\'s metadata and messageCount
           return updateChannel(state, {
             channelId: action.channel.id,
           }, (channel) => {
             return {
               ...channel,
-              metadata: action.channel.metadata,
-              messageCount: action.channel.messageCount,
+              ...action.channel,
+
+              readHeight: action.channel.maxHeight,
+
+              // NOTE: Do not update channel messages
+              messages: channel.messages,
             };
           });
         }
@@ -310,6 +314,7 @@ export const channels = (state = new Map(), action) => {
 
           // Start in all-read state
           messagesRead: action.channel.messageCount,
+          readHeight: action.channel.maxHeight,
 
           ...action.channel,
         });
@@ -343,6 +348,18 @@ export const channels = (state = new Map(), action) => {
             ...channel.metadata,
             ...action.metadata,
           }
+        };
+      });
+    case CHANNEL_UPDATE_READ_HEIGHT:
+      return updateChannel(state, action, (channel) => {
+        if (channel.messages.length === 0) {
+          return channel;
+        }
+
+        const last = channel.messages[channel.messages.length - 1];
+        return {
+          ...channel,
+          readHeight: Math.max(channel.readHeight, last.height),
         };
       });
     case APPEND_CHANNEL_MESSAGE:
