@@ -5,7 +5,9 @@ import Message from './Message';
 
 import './MessageList.css';
 
-function MessageList({ channel, isSticky, setIsSticky }) {
+const MessageList = React.memo((props) => {
+  const { channelName, messages, isSticky, setIsSticky } = props;
+
   const [ expandAuthorFor, setExpandAuthorFor ] = useState(null);
   const view = useRef();
 
@@ -19,26 +21,15 @@ function MessageList({ channel, isSticky, setIsSticky }) {
     }
   });
 
-  const messages = channel.messages.map((message) => {
+  const rows = messages.map((message) => {
     const isExpanded = expandAuthorFor === message.hash;
 
-    const expandAuthor = (e) => {
-      e.preventDefault();
-
-      // Toggle
-      if (isExpanded) {
-        setExpandAuthorFor(null);
-      } else {
-        setExpandAuthorFor(message.hash);
-      }
-    };
-
     return <Message
-      channel={channel}
+      channelName={channelName}
       message={message}
       key={message.hash}
       isExpanded={isExpanded}
-      onExpand={expandAuthor}/>;
+      setExpandAuthorFor={setExpandAuthorFor}/>;
   });
 
   const onScroll = ({ target }) => {
@@ -50,9 +41,9 @@ function MessageList({ channel, isSticky, setIsSticky }) {
   };
 
   return <div className='message-list' onScroll={onScroll} ref={view}>
-    {messages}
+    {rows}
   </div>;
-}
+});
 
 const mapStateToProps = (state) => {
   return {

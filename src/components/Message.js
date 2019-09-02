@@ -2,7 +2,8 @@ import React from 'react';
 
 import './Message.css';
 
-export default function Message({ channel, message, isExpanded, onExpand }) {
+export default React.memo(function Message(props) {
+  const { channelName, message, isExpanded, setExpandAuthorFor } = props;
   if (message.isRoot) {
     return null;
   }
@@ -25,7 +26,7 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
   let authorClass = 'message-author';
   if (displayPath.length === 0) {
     authorClass += ' message-author-root';
-    author = `#${channel.name}`;
+    author = `#${channelName}`;
   } else if (isExpanded) {
     author = [];
     for (const component of displayPath) {
@@ -36,6 +37,17 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
   } else {
     author = displayPath[displayPath.length - 1];
   }
+
+  const onExpand = (e) => {
+    e.preventDefault();
+
+    // Toggle
+    if (isExpanded) {
+      setExpandAuthorFor(null);
+    } else {
+      setExpandAuthorFor(message.hash);
+    }
+  };
 
   return <div className='message'>
     <div className='message-time-container'>
@@ -50,4 +62,4 @@ export default function Message({ channel, message, isExpanded, onExpand }) {
       </div>
     </div>
   </div>;
-}
+});

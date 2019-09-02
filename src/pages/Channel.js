@@ -81,7 +81,8 @@ function Channel({ match, channels, markRead, loadMessages, toggleSilence }) {
       </div>
     </header>
     <MessageList
-      channel={channel}
+      channelName={channel.name}
+      messages={channel.messages}
       isSticky={isSticky}
       setIsSticky={setIsSticky}/>
     <footer className='channel-compose'>
