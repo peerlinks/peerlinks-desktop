@@ -26,7 +26,7 @@ const renderChannel = (channel) => {
   </div>;
 };
 
-const ChannelList = withRouter(({ history, identities, channelList }) => {
+const ChannelList = withRouter(({ history, identityCount, channelList }) => {
   useEffect(() => {
     const onKeyDown = (e) => {
       if (!e.metaKey && !e.ctrlKey) {
@@ -82,7 +82,7 @@ const ChannelList = withRouter(({ history, identities, channelList }) => {
   </Link>;
 
   let requestInvite;
-  if (identities.size !== 0) {
+  if (identityCount !== 0) {
     requestInvite = <section className='channel-list-sub'>
       <NavLink
         className='channel-list-request-invite'
@@ -108,7 +108,7 @@ const ChannelList = withRouter(({ history, identities, channelList }) => {
 
 const mapStateToProps = (state) => {
   return {
-    identities: state.identities,
+    identityCount: state.identities.size,
     channelList: Array.from(state.channels.values()).sort((a, b) => {
       if (a.name < b.name) {
         return -1;
