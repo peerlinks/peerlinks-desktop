@@ -84,7 +84,15 @@ function InviteRequest({ identities, request, reset, state }) {
 
 const mapStateToProps = (state) => {
   return {
-    identities: Array.from(state.identities.values()),
+    identities: Array.from(state.identities.values()).sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      } else if (a.name > b.name) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }),
     state: state.inviteRequest,
   };
 };
