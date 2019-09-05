@@ -27,6 +27,7 @@ function Channel(props) {
 
   if (lastChannelId !== channelId) {
     if (lastChannelId) {
+      markRead({ channelId: lastChannelId });
       updateReadHeight({ channelId: lastChannelId });
     }
 

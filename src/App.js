@@ -4,7 +4,7 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 
 import './App.css';
 
-import { checkNetwork } from './redux/actions';
+import { checkNetwork, setFocus } from './redux/actions';
 
 import FullScreen from './layouts/FullScreen';
 import ChannelLayout from './layouts/Channel';
@@ -18,11 +18,30 @@ import DeleteChannel from './pages/DeleteChannel';
 
 import RedirectOnce from './components/RedirectOnce';
 
-function App({ network, checkNetwork }) {
+function App({ network, checkNetwork, setFocus }) {
   // Check if the window as reopened and network is ready
   useEffect(() => {
     checkNetwork();
   }, [ checkNetwork ]);
+
+  // Propagate focus/blur state changes to redux
+  useEffect(() => {
+    const onFocus = () => {
+      setFocus(true);
+    };
+
+    const onBlur = () => {
+      setFocus(false);
+    };
+
+    window.addEventListener('focus', onFocus);
+    window.addEventListener('blur', onBlur);
+
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener('blur', onBlur);
+    };
+  }, [ setFocus ]);
 
   if (network.isReady) {
     return <Router>
@@ -51,6 +70,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     checkNetwork: (...args) => dispatch(checkNetwork(...args)),
+    setFocus: (...args) => dispatch(setFocus(...args)),
   };
 };
 

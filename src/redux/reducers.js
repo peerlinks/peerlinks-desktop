@@ -3,6 +3,8 @@ import { combineReducers } from 'redux';
 import { appendMessage, computeIdentityFilter } from './utils';
 
 import {
+  SET_FOCUS,
+
   SET_REDIRECT,
 
   NETWORK_READY, NETWORK_NOT_READY, NETWORK_LOADING, NETWORK_ERROR,
@@ -22,6 +24,13 @@ import {
   RENAME_IDENTITY_PAIR,
   CHANNEL_UPDATE_READ_HEIGHT,
 } from './actions';
+
+export const focus = (state = true, action) => {
+  switch (action.type) {
+    case SET_FOCUS: return action.focus;
+    default: return state;
+  }
+};
 
 export const redirect = (state = null, action) => {
   switch (action.type) {
@@ -403,6 +412,7 @@ export const channels = (state = new Map(), action) => {
 };
 
 export default combineReducers({
+  focus,
   redirect,
 
   // Various asynchronous states

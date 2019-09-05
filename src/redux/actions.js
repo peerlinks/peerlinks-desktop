@@ -2,6 +2,7 @@ import Network from './network';
 import COMMANDS from './commands';
 
 export const SET_REDIRECT = 'SET_REDIRECT';
+export const SET_FOCUS = 'SET_FOCUS';
 
 export const NETWORK_READY = 'NETWORK_READY';
 export const NETWORK_NOT_READY = 'NETWORK_NOT_READY';
@@ -39,6 +40,10 @@ const network = new Network();
 
 export function setRedirect(to) {
   return { type: SET_REDIRECT, to };
+}
+
+export function setFocus(focus) {
+  return { type: SET_FOCUS, focus };
 }
 
 //
@@ -437,7 +442,12 @@ export function updateMessageCount({ channelId }) {
 
 export function channelMarkRead({ channelId }) {
   return (dispatch, getState) => {
-    const channel = getState().channels.get(channelId);
+    const { focus, channels } = getState();
+    if (!focus) {
+      return;
+    }
+
+    const channel = channels.get(channelId);
     if (!channel) {
       return;
     }
