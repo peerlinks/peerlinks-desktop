@@ -67,9 +67,17 @@
   padding: 0.75rem;
 }
 
+.channel-compose .emoji-mart {
+  position: absolute;
+  bottom: 4rem;
+  right: 1rem;
+}
+
 .channel-compose-emoji .channel-compose-emoji-button {
+  display: block;
   font-size: 1rem;
   padding: 0;
+  margin-top: 0.25rem;
 
   background: url(../images/cabal-emoji-picker.svg);
   width: 1rem;
@@ -78,16 +86,6 @@
 
   border: none;
   cursor: pointer;
-}
-
-.channel-compose .emoji-mart {
-  position: absolute;
-  bottom: 4rem;
-  right: 1rem;
-}
-
-.channel-compose-emoji .channel-compose-emoji-button:focus {
-  outline: 0;
 }
 
 .channel-compose-container:focus-within .channel-compose-identity,
