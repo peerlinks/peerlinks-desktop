@@ -1,4 +1,4 @@
-require = require("esm")(module);
+require = require('esm')(module);
 
 const path = require('path');
 const fs = require('fs');
@@ -7,7 +7,8 @@ const {
 } = require('electron');
 const log = require('electron-log');
 const isDev = require('electron-is-dev');
-const { autoUpdater } = require("electron-updater");
+const { autoUpdater } = require('electron-updater');
+const windowStateKeeper = require('electron-window-state');
 
 // Request update every 4 hours for those who run it over prolonged periods
 // of time.
@@ -26,6 +27,7 @@ autoUpdater.logger.transports.file.level = 'info';
 
 const Network = require('./network').default;
 
+let windowState = null;
 let window = null;
 
 log.info(`database file=${DB_FILE}`);
@@ -50,6 +52,10 @@ function createWindow() {
   }
 
   window = new BrowserWindow({
+    x: windowState.x,
+    y: windowState.y,
+    width: windowState.width,
+    height: windowState.height,
     webPreferences: {
       contextIsolation: true,
       enableRemoteModule: false,
@@ -61,8 +67,7 @@ function createWindow() {
 
   window.once('closed', () => window = null);
 
-  // We need more screen space
-  window.maximize();
+  windowState.manage(window)
 
   // Development
   if (isDev) {
@@ -73,6 +78,11 @@ function createWindow() {
 }
 
 app.on('ready', () => {
+  windowState = windowStateKeeper({
+    defaultWidth: 800,
+    defaultHeight: 600,
+  });
+
   // Allow only notifications
   session
     .defaultSession
