@@ -184,6 +184,7 @@ export default class Network {
         await this.vowLink.removeIdentity(identity);
       }
 
+      await this.updateBadge();
       this.waitList.resolve('update:' + channel.id.toString('hex'), false);
 
       // Cancel pending invites
