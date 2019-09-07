@@ -38,6 +38,14 @@
   white-space: nowrap;
   background: none;
   appearance: none;
+
+  max-width: 16rem;
+}
+
+.channel-compose-identity .form-select-label {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .channel-compose-text {
