@@ -1,6 +1,7 @@
 .channel-list {
   padding-bottom: 0.5rem;
 }
+
 .channel-list .new-channel-button {
   display: inline-block;
   width: 1rem;
@@ -21,8 +22,7 @@
 }
 
 .channel-list .channel-list-elem {
-  display: flex;
-  flex-direction: row;
+  display: block;
 
   padding: 0.5rem 0.5rem 0.5rem 2rem;
   margin-right: 1rem;
@@ -40,10 +40,6 @@
   transition: color 0.25s, background 0.25s;
 }
 
-.channel-list .channel-list-elem-left {
-  flex-grow: 1;
-}
-
 .channel-list .channel-list-elem-unread {
   color: #E8E9EB;
   font-weight: bold;
@@ -57,12 +53,6 @@
 .channel-list .button {
   width: 100%;
   display: block;
-}
-
-.channel-list .channel-list-elem-hash {
-}
-
-.channel-list .channel-list-elem-title {
 }
 
 .channel-list .channel-list-request-invite {

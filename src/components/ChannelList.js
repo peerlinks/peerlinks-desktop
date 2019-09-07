@@ -18,10 +18,8 @@ const renderChannel = (channel) => {
       className={elemClass}
       activeClassName='channel-list-elem-active'
       to={`/channel/${channel.id}/`}>
-      <div className='channel-list-elem-left'>
-        <span className='channel-list-elem-hash'>#</span>
-        <span className='channel-list-elem-title'>{channel.name}</span>
-      </div>
+      <span className='channel-list-elem-hash'>#</span>
+      <span className='channel-list-elem-title'>{channel.name}</span>
     </NavLink>
   </div>;
 };

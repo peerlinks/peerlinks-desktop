@@ -33,7 +33,7 @@ const DeleteChannel = withRouter((props) => {
         <h3 className='title'>Are you sure you want to delete?</h3>
       </div>
       <div className='delete-channel-row delete-channel-name'>
-        <h2 className='channel-name'>#{channel.name}</h2>
+        <span className='channel-name'>#{channel.name}</span>
       </div>
 
       <div className='delete-channel-row'>
