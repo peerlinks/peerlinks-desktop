@@ -41,9 +41,8 @@ function NewChannel({ isFeed, createChannel, reset, state }) {
     </div>
     <div className='form-row new-channel-note'>
       <i>
-        NOTE: Same-named operator identity will be created together with the
-        &nbsp;
-        {isFeed ? 'feed' : 'channel'}.
+        NOTE: Same-named operator identity will be created together with
+        the {isFeed ? 'feed' : 'channel'}.
       </i>
     </div>
   </form>;
