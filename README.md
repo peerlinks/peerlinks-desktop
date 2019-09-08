@@ -26,7 +26,7 @@ with `npm install && npm run electron`
 
 ## Community
 
-* Update feed: `vowlink://feed/2VqJ9bmg4gjV9p97hsrRYLgS2jULjQKnhdGyUo4ti5EK?name=vowlink%3Areleases`
+* Release feed: `vowlink://feed/Lqd1Q85ceGs2o3M8ksvednaWnTbjbU53fHfriLz2qjR?name=vowlink%3Areleases`
 * [#vowlink][comm-irc] IRC Channel on FreeNode
 * [Slack][] channel.
 
