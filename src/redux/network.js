@@ -33,12 +33,12 @@ export default class Network {
     return await this.request('network:getIdentities');
   }
 
-  async createIdentityPair({ name }) {
-    return await this.request('network:createIdentityPair', { name });
+  async createIdentityPair({ name, isFeed }) {
+    return await this.request('network:createIdentityPair', { name, isFeed });
   }
 
-  async channelFromPublicKey({ publicKey, name }) {
-    return await this.request('network:channelFromPublicKey', 
+  async feedFromPublicKey({ publicKey, name }) {
+    return await this.request('network:feedFromPublicKey',
       { publicKey, name });
   }
 

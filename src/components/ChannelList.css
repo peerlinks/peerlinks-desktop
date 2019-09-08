@@ -55,15 +55,21 @@
   display: block;
 }
 
-.channel-list .channel-list-request-invite {
+.channel-list .channel-list-request-invite,
+.channel-list .channel-list-import-feed {
+  display: inline-block;
+
   text-decoration: none;
   color: #797e8b;
   font-size: 1.5rem;
   font-weight: bold;
   margin-left: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .channel-list .channel-list-request-invite-active,
-.channel-list .channel-list-request-invite:hover {
+.channel-list .channel-list-request-invite:hover,
+.channel-list .channel-list-import-feed-active,
+.channel-list .channel-list-import-feed:hover {
   color: #E8E9EB;
 }

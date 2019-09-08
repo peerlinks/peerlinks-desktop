@@ -35,6 +35,7 @@ export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
 export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
 export const CHANNEL_UPDATE_METADATA = 'CHANNEL_UPDATE_METADATA';
 export const CHANNEL_UPDATE_READ_HEIGHT = 'CHANNEL_UPDATE_READ_HEIGHT';
+export const MAKE_CHANNEL_PUBLIC = 'MAKE_CHANNEL_PUBLIC';
 
 const network = new Network();
 
@@ -153,10 +154,11 @@ export function newChannelSetIsLoading(isLoading) {
   return { type: NEW_CHANNEL_SET_IS_LOADING, isLoading };
 }
 
-export function newChannel({ channelName }) {
+export function createChannel({ channelName, isFeed }) {
   const createChannel = async (dispatch) => {
     const { identity, channel } = await network.createIdentityPair({
       name: channelName,
+      isFeed,
     });
 
     dispatch(addChannel(channel));
@@ -178,9 +180,9 @@ export function newChannel({ channelName }) {
   };
 }
 
-export function newFeed({ publicKey, channelName }) {
+export function importFeed({ publicKey, channelName }) {
   const importFeed = async (dispatch) => {
-    const channel = await network.channelFromPublicKey({
+    const channel = await network.feedFromPublicKey({
       publicKey,
       name: channelName,
     });
@@ -611,18 +613,25 @@ export function displayHelp({ channelId }) {
       ' - **/help** - print this message',
       ' - **/invite <invitee name> <invite request>** - ' +
         'invite `<invitee name>`',
-      ' - **/get-feed-url** - get feed URL for this channel',
+      ' - **/get-feed-url** - get feed url for current feed',
       ' - **/rename <channel name>** - rename current channel',
     ].join('\n'),
   });
 }
 
 // NOTE: Command
-export function displayFeedURL({ channelId }) {
-  return (dispatch, getState) => {
+export function getFeedURL({ channelId, channelName }) {
+  const run = async (dispatch, getState) => {
     const channel = getState().channels.get(channelId);
     if (!channel) {
       return;
+    }
+
+    if (!channel.isFeed) {
+      return dispatch(appendInternalMessage({
+        channelId,
+        text: '/get-feed-url works only on feeds, not channels',
+      }));
     }
 
     return dispatch(appendInternalMessage({
@@ -630,6 +639,15 @@ export function displayFeedURL({ channelId }) {
       text: `vowlink://feed/${channel.publicKeyB58}?` +
         `name=${encodeURIComponent(channel.name)}`,
     }));
+  };
+
+  return (dispatch, getState) => {
+    run(dispatch, getState).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to make channel public: ' + e.message,
+      }));
+    });
   };
 }
 
@@ -672,13 +690,19 @@ export function postMessage({ channelId, identityKey, text }) {
     const args = parts;
 
     if (!COMMANDS.has(commandName)) {
-      throw new Error(`Unknown command: /${commandName}`);
+      return dispatch(appendInternalMessage({
+        channelId,
+        text: `Unknown command: /${commandName}`,
+      }));
     }
 
     const command = COMMANDS.get(commandName);
     if (command.args.length !== args.length) {
-      throw new Error('Invalid command arguments. ' +
-        `Expected: /${commandName} ${command.args.join(' ')}`);
+      return dispatch(appendInternalMessage({
+        channelId,
+        text: 'Invalid command arguments. ' +
+        `Expected: /${commandName} ${command.args.join(' ')}`
+      }));
     }
 
     const params = Object.create(null);

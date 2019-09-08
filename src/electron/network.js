@@ -121,8 +121,9 @@ export default class Network {
       });
     });
 
-    handle('createIdentityPair', async ({ name }) => {
-      const [ identity, channel ] = await this.vowLink.createIdentityPair(name);
+    handle('createIdentityPair', async ({ name, isFeed }) => {
+      const [ identity, channel ] =
+        await this.vowLink.createIdentityPair(name, { isFeed });
       this.runUpdateLoop(channel);
 
       return {
@@ -131,7 +132,7 @@ export default class Network {
       };
     });
 
-    handle('channelFromPublicKey', async ({ publicKey, name }) => {
+    handle('feedFromPublicKey', async ({ publicKey, name }) => {
       try {
         publicKey = bs58.decode(publicKey);
       } catch (e) {
@@ -139,21 +140,11 @@ export default class Network {
       }
 
       log.info(`creating channel from public key=${publicKey.toString('hex')}`);
-      const channel = await this.vowLink.channelFromPublicKey(
-        publicKey,
-        { name });
-
-      const metadata = channel.getMetadata();
-      if (!metadata || metadata.isFeed !== false) {
-        channel.setMetadata({
-          ...channel.metadata,
-          isFeed: true,
-        });
-        await this.vowLink.saveChannel(channel);
-        await this.updateBadge();
-      }
+      const channel = await this.vowLink.feedFromPublicKey(
+        publicKey, { name });
 
       this.swarm.joinChannel(channel);
+      await this.updateBadge();
       this.runUpdateLoop(channel);
 
       return await this.serializeChannel(channel);
@@ -487,6 +478,8 @@ export default class Network {
       publicKeyB58: bs58.encode(channel.publicKey),
 
       name: channel.name,
+      isFeed: channel.isFeed,
+
       metadata: channel.getMetadata() || {},
       messageCount: await channel.getMessageCount(),
       maxHeight: last ? last.height : 0,
@@ -503,7 +496,7 @@ export default class Network {
         publicKeys: author.publicKeys.map((key) => key.toString('hex')),
         displayPath: author.displayPath,
       },
-      timestamp: message.content.timestamp,
+      timestamp: message.timestamp,
       isRoot: message.isRoot,
       json: message.json,
     };

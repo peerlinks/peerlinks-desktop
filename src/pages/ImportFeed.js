@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 
 import FullScreen from '../layouts/FullScreen';
 
-import { newFeed } from '../redux/actions';
+import { importFeed } from '../redux/actions';
 
-import './NewFeed.css';
+import './ImportFeed.css';
 
-function NewFeed({ newFeed }) {
+function ImportFeed({ importFeed }) {
   const [ link, setLink ] = useState('');
   const [ publicKey, setPublicKey ] = useState('');
   const [ name, setName ] = useState('');
@@ -52,7 +52,7 @@ function NewFeed({ newFeed }) {
       return;
     }
 
-    newFeed({ publicKey, channelName: name });
+    importFeed({ publicKey, channelName: name });
   };
 
   const form = <form className='new-feed-form' onSubmit={onSubmit}>
@@ -100,8 +100,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    newFeed: (...args) => dispatch(newFeed(...args)),
+    importFeed: (...args) => dispatch(importFeed(...args)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewFeed);
+export default connect(mapStateToProps, mapDispatchToProps)(ImportFeed);

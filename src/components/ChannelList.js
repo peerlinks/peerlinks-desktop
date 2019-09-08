@@ -60,7 +60,7 @@ const ChannelList = withRouter(({ history, identityCount, channelList }) => {
   const channels = [];
   const feeds = [];
   for (const channel of channelList) {
-    if (channel.metadata.isFeed) {
+    if (channel.isFeed) {
       feeds.push(channel);
     } else {
       channels.push(channel);
@@ -101,6 +101,14 @@ const ChannelList = withRouter(({ history, identityCount, channelList }) => {
       {feeds.map(renderChannel)}
     </section>
     {requestInvite}
+    <section className='channel-list-sub'>
+      <NavLink
+        className='channel-list-import-feed'
+        activeClassName='channel-list-import-feed-active'
+        to='/import-feed'>
+        import feed
+      </NavLink>
+    </section>
   </section>;
 });
 

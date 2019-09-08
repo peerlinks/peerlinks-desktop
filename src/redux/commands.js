@@ -1,5 +1,5 @@
 import {
-  invite, displayHelp, displayFeedURL, renameIdentityPair,
+  invite, displayHelp, getFeedURL, renameIdentityPair,
 } from './actions';
 
 export default new Map([
@@ -13,7 +13,7 @@ export default new Map([
   ],
   [
     'get-feed-url',
-    { args: [ ], action: displayFeedURL },
+    { args: [ ], action: getFeedURL },
   ],
   [
     'rename',

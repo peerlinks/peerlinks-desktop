@@ -12,7 +12,7 @@ import ChannelLayout from './layouts/Channel';
 import Channel from './pages/Channel';
 import SignIn from './pages/SignIn';
 import NewChannel from './pages/NewChannel';
-import NewFeed from './pages/NewFeed';
+import ImportFeed from './pages/ImportFeed';
 import InviteRequest from './pages/InviteRequest';
 import DeleteChannel from './pages/DeleteChannel';
 
@@ -47,8 +47,13 @@ function App({ network, checkNetwork, setFocus }) {
     return <Router>
       <ChannelLayout>
         <RedirectOnce/>
-        <Route path='/new-channel' exact component={NewChannel}/>
-        <Route path='/new-feed' exact component={NewFeed}/>
+        <Route path='/new-channel' exact render={() => {
+          return <NewChannel isFeed={false}/>;
+        }}/>
+        <Route path='/new-feed' exact render={() => {
+          return <NewChannel isFeed={true}/>;
+        }}/>
+        <Route path='/import-feed' exact component={ImportFeed}/>
         <Route path='/request-invite' exact component={InviteRequest}/>
         <Route path='/channel/:id/' exact component={Channel}/>
         <Route path='/channel/:id/delete' exact component={DeleteChannel}/>

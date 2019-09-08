@@ -4,23 +4,23 @@ import { connect } from 'react-redux';
 import FullScreen from '../layouts/FullScreen';
 
 import {
-  newChannel, newChannelReset,
+  createChannel, newChannelReset,
 } from '../redux/actions';
 
 import './NewChannel.css';
 
-function NewChannel({ newChannel, reset, state }) {
+function NewChannel({ isFeed, createChannel, reset, state }) {
   const [ channelName, setChannelName ] = useState('');
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    newChannel({ channelName });
+    createChannel({ channelName, isFeed });
   };
 
   const form = <form className='new-channel-form' onSubmit={onSubmit}>
     <div className='form-row'>
-      <h3 className='title'>New channel and identity</h3>
+      <h3 className='title'>New {isFeed ? 'feed' : 'channel'} and identity</h3>
     </div>
     <div className='form-row'>
       <input
@@ -41,8 +41,8 @@ function NewChannel({ newChannel, reset, state }) {
     </div>
     <div className='form-row new-channel-note'>
       <i>
-        NOTE: Identity will be created together with the channel, both
-        sharing the name.
+        NOTE: Same-named operator identity will be created together with the
+        {isFeed ? 'feed' : 'channel'}.
       </i>
     </div>
   </form>;
@@ -62,7 +62,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    newChannel: (...args) => dispatch(newChannel(...args)),
+    createChannel: (...args) => dispatch(createChannel(...args)),
     reset: (...args) => dispatch(newChannelReset(...args)),
   };
 };
