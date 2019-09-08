@@ -15,7 +15,8 @@ const windowStateKeeper = require('electron-window-state');
 const UPDATE_FREQUENCY = 4 * 3600 * 1000;
 
 const USER_DATA_DIR = app.getPath('userData');
-const DB_FILE = path.join(USER_DATA_DIR, isDev ? 'db-dev.sqlite' : 'db.sqlite');
+const DB_FILE = path.join(
+  USER_DATA_DIR, isDev ? 'db-dev.sqlite' : 'db-v2.sqlite');
 
 // Create `userData` folder if it doesn't exist
 if (!fs.existsSync(USER_DATA_DIR)) {
