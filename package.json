@@ -24,7 +24,7 @@
   },
   "homepage": "./",
   "dependencies": {
-    "@vowlink/protocol": "^5.0.0-1",
+    "@vowlink/protocol": "^5.0.0-2",
     "@vowlink/sqlite-storage": "^2.0.0-0",
     "@vowlink/swarm": "^2.0.4",
     "binary-search": "^1.3.6",
