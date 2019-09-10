@@ -56,6 +56,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [VowLink]: https://github.com/vowlink/vowlink
-[releases]: https://github.com/vowlink/vowlink-electron/releases
+[releases]: https://github.com/vowlink/vowlink-desktop/releases
 [comm-irc]: https://www.irccloud.com/invite?channel=%23vowlink&hostname=irc.freenode.net&port=6697&ssl=1
 [Slack]: https://join.slack.com/t/vowlink/shared_invite/enQtNzM1MjEzMjM1Njg2LTg2NGM2YjI0ODA0YWQ3ZDJhMGE5NTU2YTc0MTZhZGNjY2EzYjc2NmUzMTFmNTZlOGE0ZmZkMTQxMGNkMTdhYzQ
