@@ -106,6 +106,13 @@ app.on('ready', () => {
 
   setInterval(checkForUpdates, UPDATE_FREQUENCY);
   checkForUpdates();
+
+  autoUpdater.on('update-downloaded', () => {
+    // Install updates automatically when not focused
+    if (window && !window.isFocused()) {
+      autoUpdater.quitAndInstall();
+    }
+  });
 });
 app.on('activate', createWindow);
 
