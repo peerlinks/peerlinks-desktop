@@ -35,6 +35,9 @@ export default class Network {
     // WeakSet<Channel>
     this.updatedChannels = new WeakSet();
 
+    // `true` when chain map was recently updated
+    this.chainMapUpdated = false;
+
     // Map<identityKey, Function>
     this.pendingInvites = new Map();
 
@@ -51,6 +54,8 @@ export default class Network {
     for (const channel of this.vowLink.channels) {
       this.runUpdateLoop(channel);
     }
+
+    this.runChainLoop();
 
     this.swarm = new Swarm(this.vowLink);
     this.waitList.resolve('ready');
@@ -426,6 +431,41 @@ export default class Network {
         await this.vowLink.saveIdentity(identity);
       }
     });
+
+    handle('waitForChainMapUpdate', async ({ timeout }) => {
+      // We might have been already updated between `waitForIncomingMessage`
+      // calls.
+      if (this.chainMapUpdated) {
+        this.chainMapUpdated = false;
+        log.info(`network: waitForChainMapUpdate ... immediate`);
+        return;
+      }
+
+      // Otherwise - wait
+      log.info(`network: waitForChainMapUpdate ... wait`);
+      const entry = this.waitList.waitFor('chain-map-update', timeout);
+      await entry.promise;
+      this.chainMapUpdated = false;
+    });
+
+    handle('computeChainMap', async () => {
+      const chainMap = this.vowLink.computeChainMap();
+
+      const result = [];
+      for (const [ channel, chains ] of chainMap) {
+        result.push({
+          channelId: channel.id.toString('hex'),
+          chains: chains.map((chain) => {
+            return {
+              publicKeys: chain.getPublicKeys()
+                .map((key) => key.toString('hex')),
+              displayPath: chain.getDisplayPath(),
+            };
+          }),
+        });
+      }
+      return result;
+    });
   }
 
   async runUpdateLoop(channel, timeout) {
@@ -458,6 +498,20 @@ export default class Network {
     }
 
     return await this.runUpdateLoop(channel, timeout);
+  }
+
+  async runChainLoop() {
+    for (;;) {
+      try {
+        await this.vowLink.waitForChainMapUpdate().promise;
+      } catch (e) {
+        log.error(`chain loop error: ${e.stack}`);
+        break;
+      }
+
+      this.chainMapUpdated = true;
+      this.waitList.resolve('chain-map-update');
+    }
   }
 
   serializeIdentity(identity) {

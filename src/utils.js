@@ -10,3 +10,14 @@ export function keyToColor(publicKey) {
 
   return `rgb(${r},${g},${b})`;
 }
+
+export function prerenderUserName({ name, publicKey, isInternal = false }) {
+  if (!isInternal) {
+    name = name.trim().replace(/^[#@]+/, '');
+  }
+
+  return {
+    name,
+    color: keyToColor(publicKey),
+  };
+}

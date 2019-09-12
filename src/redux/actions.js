@@ -35,7 +35,7 @@ export const TRIM_CHANNEL_MESSAGES = 'TRIM_MESSAGES';
 export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
 export const CHANNEL_UPDATE_METADATA = 'CHANNEL_UPDATE_METADATA';
 export const CHANNEL_UPDATE_READ_HEIGHT = 'CHANNEL_UPDATE_READ_HEIGHT';
-export const MAKE_CHANNEL_PUBLIC = 'MAKE_CHANNEL_PUBLIC';
+export const CHANNEL_SET_CHAIN_MAP = 'CHANNEL_SET_CHAIN_MAP';
 
 const network = new Network();
 
@@ -78,6 +78,14 @@ async function setInitialPage(dispatch, getState) {
   }
 }
 
+async function runChainMapLoop(dispatch) {
+  for (;;) {
+    const map = await network.computeChainMap();
+    dispatch({ type: CHANNEL_SET_CHAIN_MAP, map });
+    await network.waitForChainMapUpdate();
+  }
+}
+
 // Not really an action, but a helper
 async function loadNetwork(dispatch, getState) {
   const channels = await network.getChannels();
@@ -92,6 +100,13 @@ async function loadNetwork(dispatch, getState) {
 
   dispatch(networkReady());
   setInitialPage(dispatch, getState);
+
+  runChainMapLoop(dispatch).catch((e) => {
+    dispatch(addNotification({
+      kind: 'error',
+      content: 'Failed to wait for an chain map: ' + e.message,
+    }));
+  });
 }
 
 export function checkNetwork() {

@@ -8,6 +8,7 @@ import {
 
 import MessageList from '../components/MessageList';
 import Compose from '../components/Compose';
+import UserList from '../components/UserList';
 
 import './Channel.css';
 
@@ -18,6 +19,7 @@ function Channel(props) {
   } = props;
   const [ lastChannelId, setLastChannelId ] = useState(null);
   const [ isSticky, setIsSticky ] = useState(false);
+  const [ isUserListVisible, setIsUserListVisible ] = useState(false);
 
   const channelId = match.params.id;
   const channel = channels.get(channelId);
@@ -66,12 +68,43 @@ function Channel(props) {
     silenceContent = 'silence';
   }
 
+  let activeUsers;
+  let userList;
+
+  if (!channel.isFeed) {
+    const toggleUserList = (e) => {
+      e.preventDefault();
+
+      setIsUserListVisible(!isUserListVisible);
+    };
+
+    activeUsers = <div className='channel-user-count-container'>
+      <div
+        className='channel-user-count'
+        title='Display user list'
+        onClick={toggleUserList}>
+        <span role='img' aria-label='person'>
+          👤
+        </span>
+        {channel.activeUsers.length}
+      </div>
+    </div>;
+
+    if (isUserListVisible) {
+      userList = <div className='channel-content-user-list'>
+        <UserList channelName={channel.name} users={channel.activeUsers}/>
+      </div>;
+    }
+  }
+
   return <div className='channel-container'>
     <header className='channel-info'>
       <div className='channel-info-container'>
         <div className='channel-name-container'>
           <div className='channel-name'>#{channel.name}</div>
         </div>
+        {activeUsers}
+        <div className='channel-info-fill'></div>
         <div className='channel-silence-container'>
           <button
             title={silenceTitle}
@@ -89,12 +122,17 @@ function Channel(props) {
         </div>
       </div>
     </header>
-    <MessageList
-      channelName={channel.name}
-      readHeight={channel.readHeight}
-      messages={channel.messages}
-      isSticky={isSticky}
-      setIsSticky={setIsSticky}/>
+    <div className='channel-content-container'>
+      <div className='channel-content'>
+        <MessageList
+          channelName={channel.name}
+          readHeight={channel.readHeight}
+          messages={channel.messages}
+          isSticky={isSticky}
+          setIsSticky={setIsSticky}/>
+        {userList}
+      </div>
+    </div>
     <footer className='channel-compose'>
       <Compose channelId={channelId} onBeforePost={onBeforePost}/>
     </footer>

@@ -6,7 +6,7 @@ import remarkReact from 'remark-react';
 import remarkEmoji from 'remark-emoji';
 
 import binarySearch from 'binary-search';
-import { keyToColor } from '../utils';
+import { prerenderUserName } from '../utils';
 
 export function compareMessages(a, b) {
   if (a.height < b.height) {
@@ -46,15 +46,17 @@ export function enrichMessage(message) {
 
   const publicKeys = message.author.publicKeys;
   const displayPath = message.author.displayPath.map((component, i) => {
-    let name = component;
-    if (!message.author.isInternal) {
-      name = name.trim().replace(/^[#@]+/, '');
-    }
+    const { name, color } = prerenderUserName({
+      name: component,
+      publicKey: publicKeys[i],
+      isInternal: message.author.isInternal,
+    });
+
     const publicKey = publicKeys[i];
     return {
-      color: keyToColor(publicKey),
       publicKey,
       name,
+      color,
     };
   });
 

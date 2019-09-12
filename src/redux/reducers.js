@@ -21,7 +21,7 @@ import {
 
   ADD_CHANNEL, REMOVE_CHANNEL, APPEND_CHANNEL_MESSAGE, APPEND_CHANNEL_MESSAGES,
   TRIM_CHANNEL_MESSAGES, CHANNEL_SET_MESSAGE_COUNT, CHANNEL_UPDATE_METADATA,
-  CHANNEL_UPDATE_READ_HEIGHT,
+  CHANNEL_UPDATE_READ_HEIGHT, CHANNEL_SET_CHAIN_MAP,
 
   RENAME_IDENTITY_PAIR,
 } from './actions';
@@ -312,6 +312,9 @@ export const channels = (state = new Map(), action) => {
 
               readHeight: action.channel.maxHeight,
 
+              // NOTE: See CHANNEL_SET_CHAIN_MAP below
+              activeUsers: [],
+
               // NOTE: Do not update channel messages
               messages: channel.messages,
             };
@@ -321,6 +324,9 @@ export const channels = (state = new Map(), action) => {
         const copy = new Map(state);
         copy.set(action.channel.id, {
           messages: [],
+
+          // NOTE: See CHANNEL_SET_CHAIN_MAP below
+          activeUsers: [],
 
           // Start in all-read state
           messagesRead: action.channel.messageCount,
@@ -407,6 +413,37 @@ export const channels = (state = new Map(), action) => {
           messages: channel.messages.slice(-action.count),
         };
       });
+    case CHANNEL_SET_CHAIN_MAP:
+      {
+        const copy = new Map(state);
+        const updated = new Set();
+        for (const { channelId, chains } of action.map) {
+          updated.add(channelId);
+          if (!copy.has(channelId)) {
+            continue;
+          }
+
+          copy.set(channelId, {
+            ...copy.get(channelId),
+
+            activeUsers: chains,
+          });
+        }
+
+        for (const [ channelId, channel ] of copy) {
+          if (updated.has(channelId)) {
+            continue;
+          }
+
+          copy.set(channelId, {
+            ...channel,
+
+            activeUsers: [],
+          });
+        }
+
+        return copy;
+      }
     default:
       return state;
   }

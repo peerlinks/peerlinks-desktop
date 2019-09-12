@@ -93,6 +93,14 @@ export default class Network {
       { channelId, identityKey, newName });
   }
 
+  async waitForChainMapUpdate({ timeout } = {}) {
+    return await this.request('network:waitForChainMapUpdate', { timeout });
+  }
+
+  async computeChainMap() {
+    return await this.request('network:computeChainMap', {});
+  }
+
   // Internal
 
   async request(type, payload, timeout) {
