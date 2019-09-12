@@ -17,7 +17,6 @@
   justify-content: space-between;
 }
 
-
 .channel-info .channel-info-fill {
   flex-grow: 1;
 }
@@ -77,5 +76,4 @@
 .channel-container .channel-content .channel-content-user-list {
   flex: 0 0 16rem;
   border-left: 1px solid #E3E3E3;
-  padding: 0.5rem;
 }

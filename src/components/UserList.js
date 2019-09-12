@@ -2,6 +2,8 @@ import React from 'react';
 
 import { prerenderUserName } from '../utils';
 
+import './UserList.css';
+
 export default function UserList({ channelName, users }) {
   const renderUser = (user, index) => {
     if (user.displayPath.length === 0) {
@@ -18,6 +20,9 @@ export default function UserList({ channelName, users }) {
   };
 
   return <div className='user-list'>
+    <div className='user-list-title'>
+      Active peers:
+    </div>
     {users.map(renderUser)}
   </div>;
 }

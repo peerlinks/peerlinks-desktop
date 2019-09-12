@@ -81,7 +81,7 @@ function Channel(props) {
     activeUsers = <div className='channel-user-count-container'>
       <div
         className='channel-user-count'
-        title='Display user list'
+        title={isUserListVisible ? 'Hide user list' : 'Display user list'}
         onClick={toggleUserList}>
         <span role='img' aria-label='person'>
           👤

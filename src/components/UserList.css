@@ -1,16 +1,27 @@
 .user-list {
   height: 100%;
+  background: #f9f9f9;
+
   overflow-y: auto;
+}
+
+.user-list .user-list-title {
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #E3E3E3;
+
+  font-weight: bold;
+  font-size: 1.25rem;
 }
 
 .user-list .user-list-elem {
   display: block;
 
-  padding: 0.5rem 0.5rem 0.5rem 2rem;
-  margin-right: 1rem;
   margin-bottom: 0.25rem;
-  text-decoration: none;
+  margin-left: 0.5rem;
   font-size: 1rem;
+  font-weight: bold;
 
   text-overflow: ellipsis;
   white-space: nowrap;
