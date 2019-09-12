@@ -19,6 +19,8 @@ export const INVITE_REQUEST_SET_IDENTITY_KEY =
 export const INVITE_REQUEST_SET_REQUEST = 'INVITE_REQUEST_SET_REQUEST';
 export const INVITE_REQUEST_RESET = 'INVITE_REQUEST_RESET';
 
+export const COMPOSE_UPDATE = 'COMPOSE_UPDATE';
+
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
 
@@ -271,6 +273,14 @@ export function waitForInvite({ identityKey }) {
 
 export function inviteRequestReset() {
   return { type: INVITE_REQUEST_RESET };
+}
+
+export function updateComposeState({ channelId, state }) {
+  return {
+    type: COMPOSE_UPDATE,
+    channelId,
+    state,
+  };
 }
 
 //

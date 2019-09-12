@@ -15,6 +15,8 @@ import {
   INVITE_REQUEST_SET_IDENTITY_KEY, INVITE_REQUEST_SET_REQUEST,
   INVITE_REQUEST_RESET,
 
+  COMPOSE_UPDATE,
+
   ADD_NOTIFICATION, REMOVE_NOTIFICATION,
 
   ADD_IDENTITY, REMOVE_IDENTITY, IDENTITY_ADD_CHANNEL,
@@ -153,6 +155,46 @@ export const inviteRequest = (state, action) => {
     default:
       return state;
   }
+};
+
+export const compose = (state, action) => {
+  if (!state) {
+    try {
+      state = JSON.parse(window.localStorage.getItem('vowlink:compose'));
+    } catch (_) {
+      // Ignore
+    }
+  }
+  if (!state) {
+    state = {};
+  }
+
+  let next;
+  switch (action.type) {
+    case COMPOSE_UPDATE:
+      next = {
+        ...state,
+        [action.channelId]: {
+          ...(state[action.channelId] || {}),
+          ...action.state,
+        },
+      };
+      break;
+    case REMOVE_CHANNEL:
+      next = { ...state };
+      delete next[action.channelId];
+      break;
+    default:
+      next = state;
+      break;
+  }
+
+  // XXX(indutny): hash identity keys?!
+  if (next !== state) {
+    window.localStorage.setItem('vowlink:compose', JSON.stringify(next));
+  }
+
+  return next;
 };
 
 export const notifications = (state, action) => {
@@ -452,6 +494,7 @@ export const channels = (state = new Map(), action) => {
 export default combineReducers({
   focus,
   redirect,
+  compose,
 
   // Various asynchronous states
   network,

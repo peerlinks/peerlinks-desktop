@@ -3,18 +3,39 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Picker } from 'emoji-mart'
 
-import { postMessage } from '../redux/actions';
+import { postMessage, updateComposeState } from '../redux/actions';
 import SelectIdentity, { Option } from './SelectIdentity';
 
 import 'emoji-mart/css/emoji-mart.css'
 
 import './Compose.css';
 
-function Compose({ identities, channelId, postMessage, onBeforePost }) {
-  const [ identityKey, setIdentityKey ] = useState(null);
-  const [ savedState, setSavedState ] = useState(new Map());
-  const [ message, setMessage ] = useState('');
-  const [ lastChannel, setLastChannel ] = useState(null);
+function Compose(props) {
+  const {
+    identities,
+    channelId,
+    postMessage,
+    onBeforePost,
+
+    state,
+    updateState,
+  } = props;
+
+  const { identityKey = null, message = '' } = state[channelId] || {};
+
+  const setMessage = (newMessage) => {
+    if (message === newMessage) {
+      return;
+    }
+    updateState({ channelId, state: { message: newMessage } });
+  };
+  const setIdentityKey = (newIdentityKey) => {
+    if (identityKey === newIdentityKey) {
+      return;
+    }
+    updateState({ channelId, state: { identityKey: newIdentityKey } });
+  };
+
   const [ isPickerVisible, setIsPickerVisible ] = useState(false);
   const input = useRef();
 
@@ -34,39 +55,6 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
       document.removeEventListener('keydown', onKeyDown);
     };
   });
-
-  const restore = (channelId) => {
-    if (!channelId) {
-      return;
-    }
-
-    const state = savedState.get(channelId);
-    if (state) {
-      setMessage(state.message);
-      setIdentityKey(state.identityKey);
-    } else {
-      setMessage('');
-      setIdentityKey(null);
-    }
-  };
-
-  const save = (channelId) => {
-    if (!channelId) {
-      return;
-    }
-
-    const copy = new Map(savedState);
-    copy.set(channelId, { message, identityKey });
-    setSavedState(copy);
-  };
-
-  // Reset on channelId change
-  if (lastChannel !== channelId) {
-    save(lastChannel);
-    restore(channelId);
-
-    setLastChannel(channelId);
-  }
 
   // Filter identities that can post to the channel
   // TODO(indutny): expiration
@@ -207,12 +195,14 @@ function Compose({ identities, channelId, postMessage, onBeforePost }) {
 const mapStateToProps = (state) => {
   return {
     identities: state.identities,
+    state: state.compose,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     postMessage: (...args) => dispatch(postMessage(...args)),
+    updateState: (...args) => dispatch(updateComposeState(...args)),
   };
 };
 
