@@ -157,44 +157,25 @@ export const inviteRequest = (state, action) => {
   }
 };
 
-export const compose = (state, action) => {
-  if (!state) {
-    try {
-      state = JSON.parse(window.localStorage.getItem('vowlink:compose'));
-    } catch (_) {
-      // Ignore
-    }
-  }
-  if (!state) {
-    state = {};
-  }
-
-  let next;
+export const compose = (state = {}, action) => {
   switch (action.type) {
     case COMPOSE_UPDATE:
-      next = {
+      return {
         ...state,
         [action.channelId]: {
           ...(state[action.channelId] || {}),
           ...action.state,
         },
       };
-      break;
     case REMOVE_CHANNEL:
-      next = { ...state };
-      delete next[action.channelId];
-      break;
+      {
+        const copy = { ...state };
+        delete copy[action.channelId];
+        return copy;
+      }
     default:
-      next = state;
-      break;
+      return state;
   }
-
-  // XXX(indutny): hash identity keys?!
-  if (next !== state) {
-    window.localStorage.setItem('vowlink:compose', JSON.stringify(next));
-  }
-
-  return next;
 };
 
 export const notifications = (state, action) => {
