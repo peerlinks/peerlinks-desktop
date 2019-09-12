@@ -98,15 +98,14 @@ app.on('ready', () => {
 
   createWindow();
 
-  setInterval(() => {
+  function checkForUpdates() {
     autoUpdater.checkForUpdatesAndNotify().catch(() => {
       // Ignore
     });
-  }, UPDATE_FREQUENCY);
+  }
 
-  autoUpdater.checkForUpdatesAndNotify().catch(() => {
-    // Ignore
-  });
+  setInterval(checkForUpdates, UPDATE_FREQUENCY);
+  checkForUpdates();
 });
 app.on('activate', createWindow);
 
