@@ -26,4 +26,5 @@
 
 .channel-layout .channel-layout-main {
   flex: 1 1 32rem;
+  overflow: hidden;
 }

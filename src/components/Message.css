@@ -6,35 +6,66 @@
   line-height: 1.5rem;
 }
 
-.message-time-container {
+.message .message-time-container {
   flex-grow: 0;
 }
 
-.message-content-container {
+.message .message-content-container {
   flex-grow: 1;
+
   user-select: text;
+  overflow: hidden;
 }
 
-.message-time {
+.message .message-time {
   margin-right: 0.5rem;
   color: #727272;
 }
 
-.message-content {
+.message .message-content {
   margin: 0;
   word-break: break-word;
 }
 
-.message-author {
+.message .message-author {
   font-weight: bold;
   cursor: pointer;
 }
 
-.message-author-root {
+.message .message-author-root {
   font-style: italic;
 }
 
-.message-text > p {
+.message .message-text > p {
   margin: 0;
   display: inline;
+}
+
+.message .message-text ol {
+  margin: 0;
+}
+
+.message .message-text pre,
+.message .message-text blockquote {
+  word-break: break-word;
+  overflow-x: auto;
+}
+
+.message .message-text pre {
+  display: block;
+  background: #F9F9F9;
+  border: 1px solid #E3E3E3;
+  padding: 0.25rem;
+  margin: 0;
+}
+
+.message .message-text blockquote {
+  display: block;
+  border-left: 0.25rem solid #E3E3E3;
+  padding-left: 0.5rem;
+  margin: 0;
+}
+
+.message .message-text blockquote p {
+  margin: 0;
 }
