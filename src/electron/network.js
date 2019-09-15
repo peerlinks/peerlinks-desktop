@@ -50,7 +50,7 @@ export default class Network {
     this.storage = new SqliteStorage({ file: this.options.db });
     await this.storage.open();
 
-    this.vowLink = await this.waitList.waitFor('init').promise;
+    this.vowLink = await this.waitList.waitFor('init');
     for (const channel of this.vowLink.channels) {
       this.runUpdateLoop(channel);
     }
@@ -102,7 +102,7 @@ export default class Network {
 
       this.waitList.resolve('init', vowLink);
 
-      await this.waitList.waitFor('ready').promise;
+      await this.waitList.waitFor('ready');
     }, false);
 
     handle('erase', async () => {
@@ -245,7 +245,7 @@ export default class Network {
       log.info(`network: waitForIncomingMessage ${channelId} ... wait`);
       const entry = this.waitList.waitFor(
         'update:' + channelId.toString('hex'), timeout);
-      const isAlive = await entry.promise;
+      const isAlive = await entry;
       this.updatedChannels.delete(channel);
       return isAlive;
     });
@@ -321,7 +321,7 @@ export default class Network {
 
       let encryptedInvite;
       try {
-        encryptedInvite = await entry.waiter.promise;
+        encryptedInvite = await entry.waiter;
       } catch (e) {
         log.error(`network: waitForInvite error ${e.message}`);
 
@@ -393,7 +393,7 @@ export default class Network {
       return await this.swarm.sendInvite({
         peerId,
         encryptedInvite,
-      }, INVITE_TIMEOUT).promise;
+      }, INVITE_TIMEOUT);
     });
 
     handle('renameIdentityPair', async (params) => {
@@ -444,7 +444,7 @@ export default class Network {
       // Otherwise - wait
       log.info(`network: waitForChainMapUpdate ... wait`);
       const entry = this.waitList.waitFor('chain-map-update', timeout);
-      await entry.promise;
+      await entry;
       this.chainMapUpdated = false;
     });
 
@@ -482,7 +482,7 @@ export default class Network {
     this.updateLoops.set(channel, entry);
     try {
       log.info(`network: waiting for ${channel.debugId} update`);
-      await entry.promise;
+      await entry;
       log.info(`network: got ${channel.debugId} update`);
 
       await this.updateBadge();
@@ -503,7 +503,7 @@ export default class Network {
   async runChainLoop() {
     for (;;) {
       try {
-        await this.vowLink.waitForChainMapUpdate().promise;
+        await this.vowLink.waitForChainMapUpdate();
       } catch (e) {
         log.error(`chain loop error: ${e.stack}`);
         break;

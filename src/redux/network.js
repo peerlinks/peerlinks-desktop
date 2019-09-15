@@ -115,7 +115,7 @@ export default class Network {
     });
 
     const { error, stack, payload: response } =
-      await this.waitList.waitFor(seq, timeout).promise;
+      await this.waitList.waitFor(seq, timeout);
     if (error) {
       const e = new Error(error);
       e.stack = stack;
