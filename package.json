@@ -1,14 +1,14 @@
 {
-  "name": "VowLink",
-  "description": "VowLink - Secure Distributed IRC",
+  "name": "PeerLinks",
+  "description": "PeerLinks - Secure Distributed IRC",
   "author": "Fedor Indutny <fedor@indutny.com>",
   "version": "2.2.7",
   "private": true,
   "main": "src/electron/main.js",
-  "repository": "git@github.com:vowlink/vowlink-desktop",
+  "repository": "git@github.com:peerlinks/peerlinks-desktop",
   "build": {
-    "appId": "com.indutny.vowlink-electron",
-    "productName": "VowLink",
+    "appId": "com.indutny.peerlinks-electron",
+    "productName": "PeerLinks",
     "mac": {
       "category": "public.app-category.social-networking"
     },
@@ -24,9 +24,9 @@
   },
   "homepage": "./",
   "dependencies": {
-    "@vowlink/protocol": "^5.4.0",
-    "@vowlink/sqlite-storage": "^2.0.0",
-    "@vowlink/swarm": "^2.2.0",
+    "@peerlinks/protocol": "^6.0.0",
+    "@peerlinks/sqlite-storage": "^3.0.0",
+    "@peerlinks/swarm": "^3.0.0",
     "binary-search": "^1.3.6",
     "bs58": "^4.0.1",
     "electron-is-dev": "^1.1.0",

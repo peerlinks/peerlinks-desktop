@@ -20,7 +20,7 @@ function ImportFeed({ importFeed }) {
     let url;
     try {
       url = new URL(value);
-      if (url.protocol !== 'vowlink:') {
+      if (url.protocol !== 'peerlinks:') {
         throw new Error('Invalid protocol');
       }
 

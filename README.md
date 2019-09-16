@@ -1,16 +1,16 @@
-# vowlink-desktop
-[![IRC Channel](https://img.shields.io/badge/IRC-%23vowlink-1e72ff.svg?style=flat)][comm-irc]
+# peerlinks-desktop
+[![IRC Channel](https://img.shields.io/badge/IRC-%23peerlinks-1e72ff.svg?style=flat)][comm-irc]
 
-Desktop client for [VowLink][] protocol.
+Desktop client for [PeerLinks][] protocol.
 
-![Demo](https://raw.githubusercontent.com/vowlink/vowlink-desktop/master/Artwork/desktop-demo.gif)
+![Demo](https://raw.githubusercontent.com/peerlinks/peerlinks-desktop/master/Artwork/desktop-demo.gif)
 
 ## Usage
 
 See [releases][] for the latest prebuilt binaries or run from source:
 ```sh
-git clone git://github.com/vowlink/vowlink-desktop
-cd vowlink-desktop
+git clone git://github.com/peerlinks/peerlinks-desktop
+cd peerlinks-desktop
 npm install
 npm start
 ```
@@ -26,9 +26,8 @@ with `npm install && npm run electron`
 
 ## Community
 
-* Release feed: `vowlink://feed/Lqd1Q85ceGs2o3M8ksvednaWnTbjbU53fHfriLz2qjR?name=vowlink%3Areleases`
-* [#vowlink][comm-irc] IRC Channel on FreeNode
-* [Slack][] channel.
+* Release feed: `peerlinks://feed/Lqd1Q85ceGs2o3M8ksvednaWnTbjbU53fHfriLz2qjR?name=peerlinks%3Areleases`
+* [#peerlinks][comm-irc] IRC Channel on FreeNode.
 
 ## LICENSE
 
@@ -55,7 +54,6 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[VowLink]: https://github.com/vowlink/vowlink
-[releases]: https://github.com/vowlink/vowlink-desktop/releases
-[comm-irc]: https://www.irccloud.com/invite?channel=%23vowlink&hostname=irc.freenode.net&port=6697&ssl=1
-[Slack]: https://join.slack.com/t/vowlink/shared_invite/enQtNzM1MjEzMjM1Njg2LTg2NGM2YjI0ODA0YWQ3ZDJhMGE5NTU2YTc0MTZhZGNjY2EzYjc2NmUzMTFmNTZlOGE0ZmZkMTQxMGNkMTdhYzQ
+[peerlinks]: https://github.com/peerlinks/peerlinks
+[releases]: https://github.com/peerlinks/peerlinks-desktop/releases
+[comm-irc]: https://www.irccloud.com/invite?channel=%23peerlinks&hostname=irc.freenode.net&port=6697&ssl=1

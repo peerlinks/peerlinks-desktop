@@ -433,8 +433,8 @@ export function appendInternalMessage({ channelId, text }) {
 
         author: {
           isInternal: true,
-          displayPath: [ '@vowlink' ],
-          publicKeys: [ '@vowlink' ],
+          displayPath: [ '@peerlinks' ],
+          publicKeys: [ '@peerlinks' ],
         },
         timestamp: Date.now() / 1000,
         json: { text },
@@ -661,7 +661,7 @@ export function getFeedURL({ channelId, channelName }) {
 
     return dispatch(appendInternalMessage({
       channelId,
-      text: `vowlink://feed/${channel.publicKeyB58}?` +
+      text: `peerlinks://feed/${channel.publicKeyB58}?` +
         `name=${encodeURIComponent(channel.name)}`,
     }));
   };

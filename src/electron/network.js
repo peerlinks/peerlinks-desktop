@@ -1,9 +1,9 @@
 import { Buffer } from 'buffer';
 import { promises as fs } from 'fs';
 
-import VowLink, { Message } from '@vowlink/protocol';
-import SqliteStorage from '@vowlink/sqlite-storage';
-import Swarm from '@vowlink/swarm';
+import PeerLinks, { Message } from '@peerlinks/protocol';
+import SqliteStorage from '@peerlinks/sqlite-storage';
+import Swarm from '@peerlinks/swarm';
 
 import log from 'electron-log';
 import * as sodium from 'sodium-universal';
@@ -24,7 +24,7 @@ export default class Network {
     }
 
     this.storage = null;
-    this.vowLink = null;
+    this.peerLinks = null;
     this.swarm = null;
 
     this.waitList = new WaitList();
@@ -50,14 +50,14 @@ export default class Network {
     this.storage = new SqliteStorage({ file: this.options.db });
     await this.storage.open();
 
-    this.vowLink = await this.waitList.waitFor('init');
-    for (const channel of this.vowLink.channels) {
+    this.peerLinks = await this.waitList.waitFor('init');
+    for (const channel of this.peerLinks.channels) {
       this.runUpdateLoop(channel);
     }
 
     this.runChainLoop();
 
-    this.swarm = new Swarm(this.vowLink);
+    this.swarm = new Swarm(this.peerLinks);
     this.waitList.resolve('ready');
     this.isReady = true;
   }
@@ -91,16 +91,16 @@ export default class Network {
         return;
       }
 
-      const vowLink = new VowLink({
+      const peerLinks = new PeerLinks({
         sodium,
         storage: this.storage,
         passphrase,
       });
-      if (!await vowLink.load()) {
+      if (!await peerLinks.load()) {
         throw new Error('Invalid passphrase');
       }
 
-      this.waitList.resolve('init', vowLink);
+      this.waitList.resolve('init', peerLinks);
 
       await this.waitList.waitFor('ready');
     }, false);
@@ -115,20 +115,20 @@ export default class Network {
     }, false);
 
     handle('getChannels', async () => {
-      return await Promise.all(this.vowLink.channels.map(async (channel) => {
+      return await Promise.all(this.peerLinks.channels.map(async (channel) => {
         return await this.serializeChannel(channel);
       }));
     });
 
     handle('getIdentities', async () => {
-      return this.vowLink.identities.map((identity) => {
+      return this.peerLinks.identities.map((identity) => {
         return this.serializeIdentity(identity);
       });
     });
 
     handle('createIdentityPair', async ({ name, isFeed }) => {
       const [ identity, channel ] =
-        await this.vowLink.createIdentityPair(name, { isFeed });
+        await this.peerLinks.createIdentityPair(name, { isFeed });
       this.runUpdateLoop(channel);
 
       return {
@@ -145,7 +145,7 @@ export default class Network {
       }
 
       log.info(`creating channel from public key=${publicKey.toString('hex')}`);
-      const channel = await this.vowLink.feedFromPublicKey(
+      const channel = await this.peerLinks.feedFromPublicKey(
         publicKey, { name });
 
       this.swarm.joinChannel(channel);
@@ -157,14 +157,14 @@ export default class Network {
 
     const channelById = (id) => {
       id = Buffer.from(id, 'hex');
-      return this.vowLink.channels.find((channel) => {
+      return this.peerLinks.channels.find((channel) => {
         return channel.id.equals(id);
       });
     };
 
     const identityByKey = (key) => {
       key = Buffer.from(key, 'hex');
-      return this.vowLink.identities.find((identity) => {
+      return this.peerLinks.identities.find((identity) => {
         return identity.publicKey.equals(key);
       });
     };
@@ -172,12 +172,12 @@ export default class Network {
     handle('removeIdentityPair', async ({ channelId, identityKey }) => {
       const channel = channelById(channelId);
       if (channel) {
-        await this.vowLink.removeChannel(channel);
+        await this.peerLinks.removeChannel(channel);
       }
 
       const identity = identityByKey(identityKey);
       if (identity) {
-        await this.vowLink.removeIdentity(identity);
+        await this.peerLinks.removeIdentity(identity);
       }
 
       await this.updateBadge();
@@ -202,7 +202,7 @@ export default class Network {
         ...channel.metadata,
         ...metadata,
       });
-      await this.vowLink.saveChannel(channel);
+      await this.peerLinks.saveChannel(channel);
       await this.updateBadge();
     });
 
@@ -276,7 +276,7 @@ export default class Network {
       log.info(`network: requestInvite id=${identity.name}`);
 
       const { requestId, request, decrypt } =
-        identity.requestInvite(this.vowLink.id);
+        identity.requestInvite(this.peerLinks.id);
 
       if (this.pendingInvites.has(identityKey)) {
         const existing = this.pendingInvites.get(identityKey);
@@ -337,7 +337,7 @@ export default class Network {
       let channelName = invite.channelName;
       let counter = 0;
       let existing;
-      while (existing = this.vowLink.getChannel(channelName)) {
+      while (existing = this.peerLinks.getChannel(channelName)) {
         if (existing.id.equals(invite.channelPubKey)) {
           // Just add the chain, the `channelFromInvite` will not throw
           break;
@@ -347,14 +347,14 @@ export default class Network {
         channelName = `${invite.channelName}-${counter}`;
       }
 
-      const channel = await this.vowLink.channelFromInvite(invite, identity, {
+      const channel = await this.peerLinks.channelFromInvite(invite, identity, {
         name: channelName,
       });
       channel.setMetadata({
         ...channel.metadata,
         isFeed: false,
       });
-      await this.vowLink.saveChannel(channel);
+      await this.peerLinks.saveChannel(channel);
       await this.updateBadge();
 
       this.swarm.joinChannel(channel);
@@ -410,25 +410,25 @@ export default class Network {
         throw new Error('Identity not found: ' + identityKey);
       }
 
-      if (this.vowLink.getChannel(newName)) {
+      if (this.peerLinks.getChannel(newName)) {
         throw new Error(`Channel with name: "${newName}" already exists`);
       }
 
-      if (this.vowLink.getIdentity(newName)) {
+      if (this.peerLinks.getIdentity(newName)) {
         throw new Error(`Identity with name: "${newName}" already exists`);
       }
 
       if (channel) {
         log.info(`renaming channel "${channel.name}" => "${newName}"`);
         channel.name = newName;
-        await this.vowLink.saveChannel(channel);
+        await this.peerLinks.saveChannel(channel);
         await this.updateBadge();
       }
 
       if (identity) {
         log.info(`renaming identity "${identity.name}" => "${newName}"`);
         identity.name = newName;
-        await this.vowLink.saveIdentity(identity);
+        await this.peerLinks.saveIdentity(identity);
       }
     });
 
@@ -449,7 +449,7 @@ export default class Network {
     });
 
     handle('computeChainMap', async () => {
-      const chainMap = this.vowLink.computeChainMap();
+      const chainMap = this.peerLinks.computeChainMap();
 
       const result = [];
       for (const [ channel, chains ] of chainMap) {
@@ -470,7 +470,7 @@ export default class Network {
 
   async runUpdateLoop(channel, timeout) {
     // Channel removed
-    if (!this.vowLink.channels.includes(channel)) {
+    if (!this.peerLinks.channels.includes(channel)) {
       return;
     }
 
@@ -503,7 +503,7 @@ export default class Network {
   async runChainLoop() {
     for (;;) {
       try {
-        await this.vowLink.waitForChainMapUpdate();
+        await this.peerLinks.waitForChainMapUpdate();
       } catch (e) {
         log.error(`chain loop error: ${e.stack}`);
         break;
@@ -558,7 +558,7 @@ export default class Network {
 
   async updateBadge() {
     let unread = 0;
-    for (const channel of this.vowLink.channels) {
+    for (const channel of this.peerLinks.channels) {
       const messageCount = await channel.getMessageCount();
       const readCount = channel.metadata && channel.metadata.readCount || 0;
 
@@ -569,8 +569,8 @@ export default class Network {
   }
 
   async close() {
-    if (this.vowLink) {
-      await this.vowLink.close();
+    if (this.peerLinks) {
+      await this.peerLinks.close();
     }
     if (this.swarm) {
       await this.swarm.destroy();
