@@ -26,7 +26,7 @@ with `npm install && npm run electron`
 
 ## Community
 
-* Release feed: `peerlinks://feed/Lqd1Q85ceGs2o3M8ksvednaWnTbjbU53fHfriLz2qjR?name=peerlinks%3Areleases`
+* Release feed: `peerlinks://feed/BoitGGvRExLxGFibzjQpZqS3ZnefhyoudGEEXDvGpRRG?name=peerlinks%3Areleases`
 * [#peerlinks][comm-irc] IRC Channel on FreeNode.
 
 ## LICENSE
