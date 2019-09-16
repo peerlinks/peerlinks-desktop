@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="256"
+   width="512"
    height="256"
-   viewBox="0 0 67.733331 67.733331"
+   viewBox="0 0 135.46666 67.733331"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.2 5c3e80d, 2017-08-06"
-   sodipodi:docname="logo.svg"
+   sodipodi:docname="banner.svg"
    inkscape:export-filename="/Users/findutnyy/Code/indutny/vowlink-desktop/Artwork/logo-1024x1024.png"
    inkscape:export-xdpi="384"
    inkscape:export-ydpi="384">
@@ -23,10 +23,10 @@
      id="defs2">
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="7.2525053 : 30.031632 : 1"
+       inkscape:vp_x="7.2525052 : 30.031632 : 1"
        inkscape:vp_y="0 : 1017.2235 : 0"
-       inkscape:vp_z="76.43111 : 30.031632 : 1"
-       inkscape:persp3d-origin="41.841809 : 18.548308 : 1"
+       inkscape:vp_z="76.431109 : 30.031632 : 1"
+       inkscape:persp3d-origin="41.841808 : 18.548308 : 1"
        id="perspective819" />
   </defs>
   <sodipodi:namedview
@@ -37,8 +37,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2"
-     inkscape:cx="129.57972"
-     inkscape:cy="79.722279"
+     inkscape:cx="244.74999"
+     inkscape:cy="119.72228"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -104,5 +104,32 @@
          d="M 33.866671,284.77067 8.8820153,241.496 l 24.9199117,3.7e-4 c -18.678675,10.78325 0.06474,43.27431 0.06474,43.27431 z"
          style="fill:#00cecb;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
-  </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot987"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,-2.1166669,229.68121)"><flowRegion
+         id="flowRegion989"
+         style="text-align:end;text-anchor:end"><rect
+           id="rect991"
+           width="512.5"
+           height="206.5"
+           x="-27.500004"
+           y="37"
+           style="text-align:end;text-anchor:end"
+           ry="1" /></flowRegion><flowPara
+         id="flowPara993"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:77.33335876px;font-family:Futura;-inkscape-font-specification:Futura;text-align:end;text-anchor:end">PEER</flowPara><flowPara
+         id="flowPara995"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:77.33335876px;font-family:Futura;-inkscape-font-specification:Futura;text-align:end;text-anchor:end">LINKS</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot997"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion999"><rect
+           id="rect1001"
+           width="114.5"
+           height="87"
+           x="327"
+           y="92" /></flowRegion><flowPara
+         id="flowPara1003"></flowPara></flowRoot>  </g>
 </svg>
