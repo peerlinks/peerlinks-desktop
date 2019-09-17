@@ -88,6 +88,15 @@ export default class Network {
     });
   }
 
+  async acceptInvite({ requestId, box }) {
+    return await this.request('network:acceptInvite', { requestId, box });
+  }
+
+  async sendInvite({ encryptedInvite, peerId }) {
+    return await this.request('network:sendInvite',
+      { encryptedInvite, peerId });
+  }
+
   async renameIdentityPair({ channelId, identityKey, newName }) {
     return await this.request('network:renameIdentityPair',
       { channelId, identityKey, newName });

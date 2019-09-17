@@ -1,5 +1,5 @@
 import {
-  invite, displayHelp, getFeedURL, renameIdentityPair,
+  invite, acceptInvite, displayHelp, getFeedURL, renameIdentityPair,
 } from './actions';
 
 export default new Map([
@@ -10,6 +10,10 @@ export default new Map([
   [
     'invite',
     { args: [ 'inviteeName', 'request' ], action: invite },
+  ],
+  [
+    'accept-invite',
+    { args: [ 'requestId', 'box' ], action: acceptInvite },
   ],
   [
     'get-feed-url',
