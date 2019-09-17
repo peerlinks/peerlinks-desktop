@@ -62,6 +62,7 @@
   font-size: 1rem;
   line-height: 1.5rem;
   white-space: nowrap;
+  font-family: 'Source Code Pro';
 }
 
 .channel-compose-emoji {
