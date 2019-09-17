@@ -24,7 +24,7 @@
   },
   "homepage": "./",
   "dependencies": {
-    "@peerlinks/protocol": "^6.0.2",
+    "@peerlinks/protocol": "^6.0.3",
     "@peerlinks/sqlite-storage": "^3.0.0",
     "@peerlinks/swarm": "^3.0.0",
     "binary-search": "^1.3.6",
@@ -44,7 +44,8 @@
     "react:build": "react-scripts build",
     "react:test": "react-scripts test",
     "react:eject": "react-scripts eject",
-    "electron:dev": "concurrently \"BROWSER=none npm run react:start\" \"wait-on http://localhost:3000/ && electron .\"",
+    "electron:dev": "concurrently \"BROWSER=none npm run react:start\" \"wait-on http://localhost:3000/ && npm run electron:dev-standalone\"",
+    "electron:dev-standalone": "electron .",
     "electron:build": "npm run react:build && electron-builder -mlw",
     "electron:publish": "npm run electron:build -- -p always"
   },

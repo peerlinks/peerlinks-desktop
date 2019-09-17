@@ -390,8 +390,36 @@ export default class Network {
       const { encryptedInvite, peerId } =
         identity.issueInvite(channel, request, inviteeName);
 
+      return {
+        encryptedInvite: {
+          box: bs58.encode(encryptedInvite.box),
+          requestId: bs58.encode(encryptedInvite.requestId),
+        },
+        peerId: peerId.toString('hex'),
+      };
+    });
+
+    handle('sendInvite', async ({ peerId, encryptedInvite }) => {
+      peerId = Buffer.from(peerId, 'hex');
+      encryptedInvite = {
+        box: bs58.decode(encryptedInvite.box),
+        requestId: bs58.decode(encryptedInvite.requestId),
+      };
+
       return await this.swarm.sendInvite({
         peerId,
+        encryptedInvite,
+      }, INVITE_TIMEOUT);
+    });
+
+    handle('acceptInvite', async ({ requestId, box }) => {
+      const encryptedInvite = {
+        requestId: bs58.decode(requestId),
+        box: bs58.decode(box),
+      };
+
+      return await this.swarm.sendInvite({
+        peerId: this.peerLinks.id,
         encryptedInvite,
       }, INVITE_TIMEOUT);
     });

@@ -603,7 +603,29 @@ export function loadMessages(options) {
 // NOTE: Command
 export function invite(params) {
   const run = async (dispatch) => {
-    return await network.invite(params);
+    const { encryptedInvite, peerId } = await network.invite(params);
+
+    const post = (text) => {
+      dispatch(appendInternalMessage({
+        channelId: params.channelId,
+        text,
+      }));
+    };
+
+    post('(Sending invite...)');
+
+    const delay = setTimeout(() => {
+      post('It took unusually long to send an invite...');
+      post(
+        'As a fallback - consider asking your peer to run following command ' +
+        'in any channel:');
+      post(`\`/accept-invite ${encryptedInvite.requestId} ` +
+            `${encryptedInvite.box}\``);
+    }, 5000);
+
+    const isSuccess = await network.sendInvite({ encryptedInvite, peerId });
+    clearTimeout(delay);
+    return isSuccess;
   };
 
   return (dispatch) => {
@@ -622,6 +644,27 @@ export function invite(params) {
       dispatch(addNotification({
         kind: 'error',
         content: `Failed to invite "${params.inviteeName}": ` + e.message,
+      }));
+    });
+  };
+}
+
+
+// NOTE: Command
+export function acceptInvite(params) {
+  const run = async (dispatch) => {
+    return await network.acceptInvite(params);
+  };
+
+  return (dispatch) => {
+    run(dispatch).then((success) => {
+      if (!success) {
+        throw new Error('Was not waiting for an invite...');
+      }
+    }).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: `Failed to accept invite: ` + e.message,
       }));
     });
   };
