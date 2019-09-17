@@ -1,4 +1,5 @@
-# peerlinks-desktop
+![peerlinks-desktop](https://raw.githubusercontent.com/peerlinks/peerlinks-desktop/master/Artwork/banner-slim-desktop-1280x320.png)
+
 [![IRC Channel](https://img.shields.io/badge/IRC-%23peerlinks-1e72ff.svg?style=flat)][comm-irc]
 
 Desktop client for [PeerLinks][] protocol.
