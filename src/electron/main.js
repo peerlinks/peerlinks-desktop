@@ -9,6 +9,7 @@ const log = require('electron-log');
 const isDev = require('electron-is-dev');
 const { autoUpdater } = require('electron-updater');
 const windowStateKeeper = require('electron-window-state');
+const contextMenu = require('electron-context-menu');
 
 // Request update every 4 hours for those who run it over prolonged periods
 // of time.
@@ -25,13 +26,23 @@ if (!fs.existsSync(USER_DATA_DIR)) {
   fs.mkdirSync(USER_DATA_DIR);
 }
 
+//
+// Configure auto updater
+//
+
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
-const Network = require('./network').default;
+//
+// Configure context menu (right-click)
+//
+contextMenu({});
 
-let windowState = null;
-let window = null;
+//
+// Configure network
+//
+
+const Network = require('./network').default;
 
 log.info(`database file=${DB_FILE}`);
 const network = new Network(ipc, {
@@ -48,6 +59,13 @@ network.init().then(() => {
   log.error(e.stack);
   process.exit(1);
 });
+
+//
+// Window state
+//
+
+let windowState = null;
+let window = null;
 
 function createWindow() {
   if (window !== null) {
