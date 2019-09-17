@@ -11,6 +11,9 @@ const { autoUpdater } = require('electron-updater');
 const windowStateKeeper = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
 
+const { Menu } = require('electron');
+const { createMenu } = require('./menu');
+
 // Request update every 4 hours for those who run it over prolonged periods
 // of time.
 const UPDATE_FREQUENCY = 4 * 3600 * 1000;
@@ -96,6 +99,8 @@ function createWindow() {
   } else {
     window.loadFile(path.join(__dirname, '..', '..', 'build', 'index.html'));
   }
+
+  return window;
 }
 
 app.on('ready', () => {
@@ -117,6 +122,10 @@ app.on('ready', () => {
     });
 
   createWindow();
+
+  const menu = createMenu(window);
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
 
   function checkForUpdates() {
     autoUpdater.checkForUpdatesAndNotify().catch(() => {
