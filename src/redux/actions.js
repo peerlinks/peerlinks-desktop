@@ -625,11 +625,7 @@ export function invite(params) {
         'in any channel:');
       post(`\`/accept-invite ${encryptedInvite.requestId} ` +
             `${encryptedInvite.box}\``);
-<<<<<<< HEAD
     }, INVITE_FALLBACK_DELAY);
-=======
-    }, 5000);
->>>>>>> invite: fallback mode for failing connectivity
 
     const isSuccess = await network.sendInvite({ encryptedInvite, peerId });
     clearTimeout(delay);
