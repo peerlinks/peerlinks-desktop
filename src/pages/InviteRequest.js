@@ -51,9 +51,6 @@ function InviteRequest({ identities, request, state }) {
       <h3 className='title'>Request invite for</h3>
     </div>
     <div className='form-row'>
-      <i>Getting invited to a channel grants read and write access to it</i>
-    </div>
-    <div className='form-row'>
       <select
         className='form-input invite-request-identity'
         value={identityKey}
@@ -73,8 +70,15 @@ function InviteRequest({ identities, request, state }) {
         onClick={(e) => e.target.select()}
         onChange={(e) => e.preventDefault()}/>
     </div>
-    <div className='form-row'>
-      <i>NOTE: Invite request expires after being successfully used.</i>
+    <div className='form-row invite-request-tips'>
+      <i>
+        <b>Tips</b>:
+        <ul>
+          <li>Invite request expires after being successfully used.</li>
+          <li>Getting invited to a channel grants read and write access</li>
+          <li>You can invite your other identity to your own channel</li>
+        </ul>
+      </i>
     </div>
   </form>;
 
