@@ -51,6 +51,7 @@ export const network = (state, action) => {
       isLoading: false,
       error: null,
       isFirstRun: false,
+      peerId: null,
 
       decryptAttempts: 0,
     };
@@ -65,6 +66,7 @@ export const network = (state, action) => {
         error: null,
         isFirstRun: false,
         decryptAttempts: 0,
+        peerId: action.peerId,
       };
     case NETWORK_NOT_READY:
       return {

@@ -103,6 +103,10 @@ export default class Network {
       this.waitList.resolve('init', peerLinks);
 
       await this.waitList.waitFor('ready');
+
+      return {
+        peerId: this.peerLinks.id.toString('hex'),
+      };
     }, false);
 
     handle('erase', async () => {
@@ -111,7 +115,12 @@ export default class Network {
 
     handle('getStatus', async () => {
       const isFirstRun = (await this.storage.getEntityCount()) === 0;
-      return { isReady: this.isReady, isFirstRun };
+      return {
+        isReady: this.isReady,
+        isFirstRun,
+        peerId: this.isReady ?
+          this.peerLinks.id.toString('hex') : null,
+      };
     }, false);
 
     handle('getChannels', async () => {

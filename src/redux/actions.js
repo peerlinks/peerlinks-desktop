@@ -51,8 +51,8 @@ export function setFocus(focus) {
 // network
 //
 
-export function networkReady() {
-  return { type: NETWORK_READY };
+export function networkReady({ peerId }) {
+  return { type: NETWORK_READY, peerId };
 }
 
 export function networkNotReady({ isFirstRun }) {
@@ -87,7 +87,7 @@ async function runChainMapLoop(dispatch) {
 }
 
 // Not really an action, but a helper
-async function loadNetwork(dispatch, getState) {
+async function loadNetwork(dispatch, getState, { peerId }) {
   const channels = await network.getChannels();
   for (const channel of channels) {
     dispatch(addChannel(channel));
@@ -98,7 +98,7 @@ async function loadNetwork(dispatch, getState) {
     dispatch(addIdentity(identity));
   }
 
-  dispatch(networkReady());
+  dispatch(networkReady({ peerId }));
   setInitialPage(dispatch, getState);
 
   runChainMapLoop(dispatch).catch((e) => {
@@ -111,14 +111,14 @@ async function loadNetwork(dispatch, getState) {
 
 export function checkNetwork() {
   const check = async (dispatch, getState) => {
-    const { isReady, isFirstRun } = await network.getStatus();
+    const { isReady, isFirstRun, peerId } = await network.getStatus();
 
     if (!isReady) {
       dispatch(networkNotReady({ isFirstRun }));
       return;
     }
 
-    await loadNetwork(dispatch, getState);
+    await loadNetwork(dispatch, getState, { peerId });
   };
 
   return (dispatch, getState) => {
@@ -131,8 +131,8 @@ export function checkNetwork() {
 
 export function initNetwork({ passphrase }) {
   const init = async (dispatch, getState) => {
-    await network.init({ passphrase });
-    await loadNetwork(dispatch, getState);
+    const { peerId } = await network.init({ passphrase });
+    await loadNetwork(dispatch, getState, { peerId });
   };
 
   return (dispatch, getState) => {
@@ -651,7 +651,6 @@ export function invite(params) {
   };
 }
 
-
 // NOTE: Command
 export function acceptInvite(params) {
   const run = async (dispatch) => {
@@ -673,16 +672,30 @@ export function acceptInvite(params) {
 }
 
 // NOTE: Command
+export function getPeerID(params) {
+  return (dispatch, getState) => {
+    const peerId = getState().network.peerId;
+    dispatch(appendInternalMessage({
+      channelId: params.channelId,
+      text: 'Your id is: ' + peerId,
+    }));
+  };
+}
+
+// NOTE: Command
 export function displayHelp({ channelId }) {
   return appendInternalMessage({
     channelId,
     text: [
       'Available commands:',
       ' - **/help** - print this message',
+      ' - **/get-feed-url** - get feed url for current feed',
+      ' - **/get-peer-id** - get peer id for debugging purposes',
+      ' - **/rename <channel name>** - rename current channel',
       ' - **/invite <invitee name> <invite request>** - ' +
         'invite `<invitee name>`',
-      ' - **/get-feed-url** - get feed url for current feed',
-      ' - **/rename <channel name>** - rename current channel',
+      ' - **/accept-invite <internal> <internal>** - ' +
+        'fallback mechanism for accepting invites',
     ].join('\n'),
   });
 }

@@ -149,7 +149,7 @@ function Compose(props) {
     <div className='channel-compose-identity-container'>
       <SelectIdentity
         className='channel-compose-identity'
-        value={identityKey}
+        value={identityKey || ''}
         onChange={onIdentityChange}
         title='select identity'>
         {options}

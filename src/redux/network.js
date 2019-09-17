@@ -14,11 +14,11 @@ export default class Network {
   }
 
   async init({ passphrase }) {
-    await this.request('network:init', { passphrase });
+    return await this.request('network:init', { passphrase });
   }
 
   async erase() {
-    await this.request('network:erase');
+    return await this.request('network:erase');
   }
 
   async getStatus() {

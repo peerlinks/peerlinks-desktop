@@ -1,5 +1,6 @@
 import {
   invite, acceptInvite, displayHelp, getFeedURL, renameIdentityPair,
+  getPeerID,
 } from './actions';
 
 export default new Map([
@@ -22,6 +23,10 @@ export default new Map([
   [
     'rename',
     { args: [ 'newName' ], action: renameIdentityPair },
+  ],
+  [
+    'get-peer-id',
+    { args: [ ], action: getPeerID },
   ],
 ]);
 
