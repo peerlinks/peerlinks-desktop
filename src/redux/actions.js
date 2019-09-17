@@ -600,6 +600,8 @@ export function loadMessages(options) {
   };
 }
 
+const INVITE_FALLBACK_DELAY = 5 * 1000;
+
 // NOTE: Command
 export function invite(params) {
   const run = async (dispatch) => {
@@ -621,7 +623,7 @@ export function invite(params) {
         'in any channel:');
       post(`\`/accept-invite ${encryptedInvite.requestId} ` +
             `${encryptedInvite.box}\``);
-    }, 5000);
+    }, INVITE_FALLBACK_DELAY);
 
     const isSuccess = await network.sendInvite({ encryptedInvite, peerId });
     clearTimeout(delay);
