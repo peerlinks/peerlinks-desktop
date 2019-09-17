@@ -3,13 +3,16 @@ require = require('esm')(module);
 const path = require('path');
 const fs = require('fs');
 const {
-  app, session, BrowserWindow, ipcMain: ipc, shell,
+  app, session, BrowserWindow, ipcMain: ipc, shell
 } = require('electron');
 const log = require('electron-log');
 const isDev = require('electron-is-dev');
 const { autoUpdater } = require('electron-updater');
 const windowStateKeeper = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
+
+const { Menu } = require('electron');
+const { createMenu } = require('./menu');
 
 // Request update every 4 hours for those who run it over prolonged periods
 // of time.
@@ -96,6 +99,8 @@ function createWindow() {
   } else {
     window.loadFile(path.join(__dirname, '..', '..', 'build', 'index.html'));
   }
+
+  return window
 }
 
 app.on('ready', () => {
@@ -116,7 +121,10 @@ app.on('ready', () => {
       }
     });
 
-  createWindow();
+  const win = createWindow();
+  const menu = createMenu(win);
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
 
   function checkForUpdates() {
     autoUpdater.checkForUpdatesAndNotify().catch(() => {
