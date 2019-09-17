@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { getFeedURL } from '../utils';
+
 import {
   channelMarkRead, loadMessages, toggleSilence, channelUpdateReadHeight,
+  displayFeedURL, displayHelp,
 } from '../redux/actions';
 
 import MessageList from '../components/MessageList';
@@ -16,6 +19,7 @@ function Channel(props) {
   const {
     match, channels, markRead, loadMessages,
     toggleSilence, updateReadHeight,
+    displayFeedURL, displayHelp,
   } = props;
   const [ lastChannelId, setLastChannelId ] = useState(null);
   const [ isSticky, setIsSticky ] = useState(false);
@@ -97,11 +101,41 @@ function Channel(props) {
     }
   }
 
+  let channelLink = `#${channel.name}`;
+  if (channel.isFeed) {
+    const onFeedURLClick = (e) => {
+      e.preventDefault();
+      displayFeedURL({ channelId: channel.id, channelName: channel.name });
+    };
+
+    channelLink = <a
+      className='channel-name-link'
+      href={getFeedURL(channel)}
+      title='Print feed URL'
+      onClick={onFeedURLClick}>
+      channelLink
+    </a>;
+  } else {
+    const onHelpClick = (e) => {
+      e.preventDefault();
+      displayHelp({ channelId: channel.id });
+    };
+
+    channelLink = <span
+      className='channel-name-link'
+      title='Display help'
+      onClick={onHelpClick}>
+      channelLink
+    </span>;
+  }
+
   return <div className='channel-container'>
     <header className='channel-info'>
       <div className='channel-info-container'>
         <div className='channel-name-container'>
-          <div className='channel-name'>#{channel.name}</div>
+          <div className='channel-name'>
+            {channelLink}
+          </div>
         </div>
         {activeUsers}
         <div className='channel-info-fill'></div>
@@ -151,6 +185,9 @@ const mapDispatchToProps = (dispatch) => {
     loadMessages: (...args) => dispatch(loadMessages(...args)),
     toggleSilence: (...args) => dispatch(toggleSilence(...args)),
     updateReadHeight: (...args) => dispatch(channelUpdateReadHeight(...args)),
+
+    displayFeedURL: (...args) => dispatch(displayFeedURL(...args)),
+    displayHelp: (...args) => dispatch(displayHelp(...args)),
   };
 };
 

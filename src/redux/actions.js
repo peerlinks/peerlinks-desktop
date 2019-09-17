@@ -1,3 +1,5 @@
+import { getFeedURL } from '../utils';
+
 import Network from './network';
 import COMMANDS from './commands';
 
@@ -672,7 +674,7 @@ export function acceptInvite(params) {
 }
 
 // NOTE: Command
-export function getPeerID(params) {
+export function displayPeerID(params) {
   return (dispatch, getState) => {
     const peerId = getState().network.peerId;
     dispatch(appendInternalMessage({
@@ -701,7 +703,7 @@ export function displayHelp({ channelId }) {
 }
 
 // NOTE: Command
-export function getFeedURL({ channelId, channelName }) {
+export function displayFeedURL({ channelId, channelName }) {
   const run = async (dispatch, getState) => {
     const channel = getState().channels.get(channelId);
     if (!channel) {
@@ -717,8 +719,12 @@ export function getFeedURL({ channelId, channelName }) {
 
     return dispatch(appendInternalMessage({
       channelId,
-      text: `peerlinks://feed/${channel.publicKeyB58}?` +
-        `name=${encodeURIComponent(channel.name)}`,
+      text: [
+        'Feed URL is:',
+        '```',
+        getFeedURL(channel),
+        '```',
+      ].join('\n'),
     }));
   };
 

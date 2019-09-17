@@ -21,3 +21,8 @@ export function prerenderUserName({ name, publicKey, isInternal = false }) {
     color: keyToColor(publicKey),
   };
 }
+
+export function getFeedURL(feed) {
+  return `peerlinks://feed/${feed.publicKeyB58}?` +
+    `name=${encodeURIComponent(feed.name)}`;
+}
