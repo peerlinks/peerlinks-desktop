@@ -25,6 +25,15 @@ with `npm install && npm run electron`
 5. Ask them to paste it in their channel
 6. Chat together!
 
+## Contributing
+
+To start the application in development mode:
+```sh
+DEBUG="peerlinks*" npm run electron:dev
+```
+Either `Ctrl+R` or `Cmd+R` could be used to refresh the UI after updating the
+source files.
+
 ## Community
 
 * Release feed: `peerlinks://feed/BoitGGvRExLxGFibzjQpZqS3ZnefhyoudGEEXDvGpRRG?name=peerlinks%3Areleases`
