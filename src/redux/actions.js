@@ -675,26 +675,6 @@ export function acceptInvite(params) {
 }
 
 // NOTE: Command
-export function acceptInvite(params) {
-  const run = async (dispatch) => {
-    return await network.acceptInvite(params);
-  };
-
-  return (dispatch) => {
-    run(dispatch).then((success) => {
-      if (!success) {
-        throw new Error('Was not waiting for an invite...');
-      }
-    }).catch((e) => {
-      dispatch(addNotification({
-        kind: 'error',
-        content: `Failed to accept invite: ` + e.message,
-      }));
-    });
-  };
-}
-
-// NOTE: Command
 export function displayPeerID(params) {
   return (dispatch, getState) => {
     const peerId = getState().network.peerId;
