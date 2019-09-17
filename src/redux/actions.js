@@ -693,10 +693,10 @@ export function displayHelp({ channelId }) {
       ' - **/help** - print this message',
       ' - **/get-feed-url** - get feed url for current feed',
       ' - **/get-peer-id** - get peer id for debugging purposes',
-      ' - **/rename <channel name>** - rename current channel',
-      ' - **/invite <invitee name> <invite request>** - ' +
+      ' - **/rename `<channel name>`** - rename current channel',
+      ' - **/invite `<invitee name>` `<invite request>`** - ' +
         'invite `<invitee name>`',
-      ' - **/accept-invite <internal> <internal>** - ' +
+      ' - **/accept-invite `<internal>` `<internal>`** - ' +
         'fallback mechanism for accepting invites',
     ].join('\n'),
   });
