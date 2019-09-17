@@ -275,15 +275,15 @@ export default class Network {
 
       log.info(`network: requestInvite id=${identity.name}`);
 
-      const { requestId, request, decrypt } =
-        identity.requestInvite(this.peerLinks.id);
-
       if (this.pendingInvites.has(identityKey)) {
         const existing = this.pendingInvites.get(identityKey);
         return {
           request: existing.encoded,
         };
       }
+
+      const { requestId, request, decrypt } =
+        identity.requestInvite(this.peerLinks.id);
 
       const encoded = bs58.encode(request);
       this.pendingInvites.set(identityKey, {

@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import FullScreen from '../layouts/FullScreen';
 
 import {
-  requestInvite, inviteRequestReset,
+  requestInvite,
 } from '../redux/actions';
 
 import './InviteRequest.css';
 
-function InviteRequest({ identities, request, reset, state }) {
+function InviteRequest({ identities, request, state }) {
   const [ identityKey, setIdentityKey ] = useState(null);
 
   const options = identities.map((identity) => {
@@ -33,7 +33,7 @@ function InviteRequest({ identities, request, reset, state }) {
   };
 
   let requestData;
-  if (state.request && state.requestKey === identityKey) {
+  if (state.request && state.identityKey === identityKey) {
     requestData = `/invite ${identity.name} ${state.request.request}`;
   } else {
     if (identityKey && !state.isGenerating) {
@@ -49,6 +49,9 @@ function InviteRequest({ identities, request, reset, state }) {
   const form = <form className='invite-request-form' onSubmit={onSubmit}>
     <div className='form-row'>
       <h3 className='title'>Request invite for</h3>
+    </div>
+    <div className='form-row'>
+      <i>Getting invited to a channel grants read and write access to it</i>
     </div>
     <div className='form-row'>
       <select
@@ -100,7 +103,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     request: (...args) => dispatch(requestInvite(...args)),
-    reset: (...args) => dispatch(inviteRequestReset(...args)),
   };
 };
 

@@ -12,7 +12,7 @@ import {
   NEW_CHANNEL_RESET, NEW_CHANNEL_SET_IS_LOADING,
 
   INVITE_REQUEST_GENERATING,
-  INVITE_REQUEST_SET_IDENTITY_KEY, INVITE_REQUEST_SET_REQUEST,
+  INVITE_REQUEST_SET_REQUEST,
   INVITE_REQUEST_RESET,
 
   COMPOSE_UPDATE,
@@ -125,7 +125,6 @@ export const inviteRequest = (state, action) => {
       isGenerating: false,
 
       identityKey: null,
-      requestKey: null,
       request: null,
     };
   }
@@ -133,16 +132,11 @@ export const inviteRequest = (state, action) => {
   switch (action.type) {
     case INVITE_REQUEST_GENERATING:
       return { ...state, isGenerating: true };
-    case INVITE_REQUEST_SET_IDENTITY_KEY:
-      return {
-        ...state,
-        identityKey: action.identityKey,
-      };
     case INVITE_REQUEST_SET_REQUEST:
       return {
         ...state,
         isGenerating: false,
-        requestKey: action.identityKey,
+        identityKey: action.identityKey,
         request: action.request,
       };
     case INVITE_REQUEST_RESET:
