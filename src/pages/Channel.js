@@ -113,7 +113,7 @@ function Channel(props) {
       href={getFeedURL(channel)}
       title='Print feed URL'
       onClick={onFeedURLClick}>
-      channelLink
+      {channelLink}
     </a>;
   } else {
     const onHelpClick = (e) => {
@@ -125,7 +125,7 @@ function Channel(props) {
       className='channel-name-link'
       title='Display help'
       onClick={onHelpClick}>
-      channelLink
+      {channelLink}
     </span>;
   }
 
