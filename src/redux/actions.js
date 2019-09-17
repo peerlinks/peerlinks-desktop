@@ -625,7 +625,11 @@ export function invite(params) {
         'in any channel:');
       post(`\`/accept-invite ${encryptedInvite.requestId} ` +
             `${encryptedInvite.box}\``);
+<<<<<<< HEAD
     }, INVITE_FALLBACK_DELAY);
+=======
+    }, 5000);
+>>>>>>> invite: fallback mode for failing connectivity
 
     const isSuccess = await network.sendInvite({ encryptedInvite, peerId });
     clearTimeout(delay);
@@ -648,6 +652,27 @@ export function invite(params) {
       dispatch(addNotification({
         kind: 'error',
         content: `Failed to invite "${params.inviteeName}": ` + e.message,
+      }));
+    });
+  };
+}
+
+
+// NOTE: Command
+export function acceptInvite(params) {
+  const run = async (dispatch) => {
+    return await network.acceptInvite(params);
+  };
+
+  return (dispatch) => {
+    run(dispatch).then((success) => {
+      if (!success) {
+        throw new Error('Was not waiting for an invite...');
+      }
+    }).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: `Failed to accept invite: ` + e.message,
       }));
     });
   };

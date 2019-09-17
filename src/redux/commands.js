@@ -1,6 +1,10 @@
 import {
+<<<<<<< HEAD
   invite, acceptInvite, displayHelp, displayFeedURL, renameIdentityPair,
   displayPeerID,
+=======
+  invite, acceptInvite, displayHelp, getFeedURL, renameIdentityPair,
+>>>>>>> invite: fallback mode for failing connectivity
 } from './actions';
 
 export default new Map([
