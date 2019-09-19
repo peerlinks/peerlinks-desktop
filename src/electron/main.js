@@ -1,5 +1,7 @@
 require = require('esm')(module);
 
+const debug = require('debug');
+
 const path = require('path');
 const fs = require('fs');
 const {
@@ -32,6 +34,8 @@ if (!fs.existsSync(USER_DATA_DIR)) {
 //
 // Configure auto updater
 //
+
+debug.enable('peerlinks*');
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
