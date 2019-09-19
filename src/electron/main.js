@@ -32,10 +32,17 @@ if (!fs.existsSync(USER_DATA_DIR)) {
 }
 
 //
-// Configure auto updater
+// Configure logs
 //
 
+debug.log = (...args) => {
+  log.debug(...args);
+};
 debug.enable((process.env.DEBUG || '') + ' peerlinks*');
+
+//
+// Configure auto updater
+//
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
