@@ -89,6 +89,7 @@ const SignIn = ({ network, initNetwork, eraseNetwork }) => {
         className='form-input'
         type='password'
         required
+        autoFocus
         value={passphrase}
         onChange={onPassphraseChange}
         placeholder='Enter passphrase'/>
