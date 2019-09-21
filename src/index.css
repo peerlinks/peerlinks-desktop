@@ -92,7 +92,7 @@ hr {
   color: #afafaf;
 }
 
-.button:hover:not(:disabled) {
+.button:hover:not(:disabled), .button:focus:not(:disabled) {
   background: #4c4c9d;
   color: #f9f9f9;
 }
