@@ -635,13 +635,13 @@ export function invite(params) {
   return (dispatch) => {
     run(dispatch).then((success) => {
       if (!success) {
-        const n = new Notification(params.inviteeName, {
+        new Notification(params.inviteeName, {
           body: 'Did not accept the invite to the channel',
         });
         return;
       }
 
-      const n = new Notification(params.inviteeName, {
+      new Notification(params.inviteeName, {
         body: 'Has received the invite to the channel',
       });
     }).catch((e) => {

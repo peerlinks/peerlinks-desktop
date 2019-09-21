@@ -10,7 +10,6 @@ export default React.memo(function Message(props) {
 
   const enriched = message.enriched;
 
-  const publicKeys = enriched.publicKeys;
   const displayPath = enriched.displayPath.map((component, i) => {
     const style = { color: component.color };
     return <span
