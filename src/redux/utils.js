@@ -4,6 +4,7 @@ import moment from 'moment';
 import remark from 'remark';
 import remarkReact from 'remark-react';
 import remarkEmoji from 'remark-emoji';
+import breaks from 'remark-breaks';
 
 import binarySearch from 'binary-search';
 import { prerenderUserName } from '../utils';
@@ -68,6 +69,7 @@ export function enrichMessage(message) {
         a: ExternalLink,
       }
     })
+    .use(breaks)
     .use(remarkEmoji)
     .processSync(message.json.text || '').contents;
 
