@@ -53,8 +53,8 @@ export function setFocus(focus) {
 // network
 //
 
-export function networkReady({ peerId }) {
-  return { type: NETWORK_READY, peerId };
+export function networkReady({ peerId, isFirstRun }) {
+  return { type: NETWORK_READY, peerId, isFirstRun };
 }
 
 export function networkNotReady({ isFirstRun }) {
@@ -89,7 +89,7 @@ async function runChainMapLoop(dispatch) {
 }
 
 // Not really an action, but a helper
-async function loadNetwork(dispatch, getState, { peerId }) {
+async function loadNetwork(dispatch, getState, { peerId, isFirstRun }) {
   const channels = await network.getChannels();
   for (const channel of channels) {
     dispatch(addChannel(channel));
@@ -100,7 +100,7 @@ async function loadNetwork(dispatch, getState, { peerId }) {
     dispatch(addIdentity(identity));
   }
 
-  dispatch(networkReady({ peerId }));
+  dispatch(networkReady({ peerId, isFirstRun }));
   setInitialPage(dispatch, getState);
 
   runChainMapLoop(dispatch).catch((e) => {
@@ -120,7 +120,7 @@ export function checkNetwork() {
       return;
     }
 
-    await loadNetwork(dispatch, getState, { peerId });
+    await loadNetwork(dispatch, getState, { peerId, isFirstRun });
   };
 
   return (dispatch, getState) => {

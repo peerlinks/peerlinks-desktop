@@ -9,7 +9,7 @@ import {
 
 import './NewChannel.css';
 
-function NewChannel({ isFeed, createChannel, reset, state }) {
+function NewChannel({ isFeed, createChannel, reset, state, network }) {
   const [ channelName, setChannelName ] = useState('');
 
   const isValid = /^[^\s#@]+$/.test(channelName);
@@ -24,17 +24,31 @@ function NewChannel({ isFeed, createChannel, reset, state }) {
 
     createChannel({ channelName, isFeed });
   };
+  console.log(network);
+
+  let title;
+  let placeholder;
+  if (isFeed) {
+    title = 'New feed and identity';
+    placeholder = 'Feed name';
+  } else if (network.isFirstRun) {
+    title = 'New identity';
+    placeholder = 'Identity name';
+  } else {
+    title = 'New channel and identity';
+    placeholder = 'Channel name';
+  }
 
   const form = <form className='new-channel-form' onSubmit={onSubmit}>
     <div className='form-row'>
-      <h3 className='title'>New {isFeed ? 'feed' : 'channel'} and identity</h3>
+      <h3 className='title'>{title}</h3>
     </div>
     <div className='form-row'>
       <input
         className='new-channel-name form-input'
         type='text'
         disabled={state.isLoading}
-        placeholder='Channel name'
+        placeholder={placeholder}
         required
         value={channelName}
         onChange={(e) => setChannelName(e.target.value)}/>
@@ -63,6 +77,7 @@ function NewChannel({ isFeed, createChannel, reset, state }) {
 
 const mapStateToProps = (state) => {
   return {
+    network: state.network,
     state: state.newChannel,
   };
 };

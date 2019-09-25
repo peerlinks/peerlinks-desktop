@@ -64,7 +64,7 @@ export const network = (state, action) => {
         isReady: true,
         isLoading: false,
         error: null,
-        isFirstRun: false,
+        isFirstRun: action.isFirstRun,
         decryptAttempts: 0,
         peerId: action.peerId,
       };
