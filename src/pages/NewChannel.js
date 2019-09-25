@@ -12,8 +12,15 @@ import './NewChannel.css';
 function NewChannel({ isFeed, createChannel, reset, state }) {
   const [ channelName, setChannelName ] = useState('');
 
+  const isValid = /^[^\s#@]+$/.test(channelName);
+  const disabled = !isValid || state.isLoading;
+
   const onSubmit = (e) => {
     e.preventDefault();
+
+    if (disabled) {
+      return;
+    }
 
     createChannel({ channelName, isFeed });
   };
@@ -35,7 +42,7 @@ function NewChannel({ isFeed, createChannel, reset, state }) {
     <div className='form-row'>
       <input
         type='submit'
-        disabled={state.isLoading}
+        disabled={disabled}
         className='button new-channel-submit'
         value='Create'/>
     </div>
