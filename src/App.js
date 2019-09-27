@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
+import './Fonts.css';
 import './App.css';
 
 import { checkNetwork, setFocus } from './redux/actions';
