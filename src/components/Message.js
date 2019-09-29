@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './Message.css';
+import File from '../components/ui/File';
 
 export default React.memo(function Message(props) {
   const { channelName, message, isExpanded, setExpandAuthorFor } = props;
@@ -57,7 +58,7 @@ export default React.memo(function Message(props) {
     <div className='message-content-container'>
       <div className='message-content'>
         <span className={authorClass} onClick={onExpand}>{author}</span>:&nbsp;
-        <span className='message-text'>{enriched.text}</span>
+        <span className='message-text'>{enriched.file ? <File {...enriched.file} /> : enriched.text}</span>
       </div>
     </div>
   </div>;

@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Picker } from 'emoji-mart'
 
-import { postMessage, updateComposeState } from '../redux/actions';
+import { postMessage, updateComposeState, postFile, addNotification } from '../redux/actions';
+import { convertFileToBase64, getAttachmentsPayload } from '../redux/utils';
 import SelectIdentity, { Option } from './SelectIdentity';
 
 import 'emoji-mart/css/emoji-mart.css'
-
 import './Compose.css';
+
 
 function Compose(props) {
   const {
@@ -16,6 +17,8 @@ function Compose(props) {
     channelId,
     postMessage,
     onBeforePost,
+    postFile,
+    addNotification,
 
     state,
     updateState,
@@ -146,6 +149,38 @@ function Compose(props) {
     setMessage('');
   };
 
+  const handleUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = handleInputChange;
+    input.click();
+  }
+
+  const handleInputChange = (e) => {
+    e.preventDefault();
+    const { type, name, size } = e.target.files[0];
+
+    if (size > 2097152) {
+      addNotification({
+        kind: 'error',
+        content: 'This file is to big (2mo max) !'
+      });
+    } else {
+      convertFileToBase64(e.target.files[0])
+        .then(data => {
+          onBeforePost();
+          postFile({
+            channelId,
+            identityKey,
+            files: [{
+              ...getAttachmentsPayload(name, type || 'default', data)
+            }],
+          });
+          setMessage('');
+        });
+    }
+  }
+
   const lineCount = message.split(/\r\n|\n|\r/g).length;
 
   return <form className='channel-compose-container' onSubmit={onSubmit}>
@@ -173,6 +208,11 @@ function Compose(props) {
     </div>
     <div className='channel-compose-emoji-container'>
       <div className='channel-compose-emoji'>
+        <button
+          className='channel-compose-upload-button'
+          title="upload"
+          onClick={handleUpload}
+        />
         <button
           className='channel-compose-emoji-button'
           title='emoji'
@@ -206,6 +246,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     postMessage: (...args) => dispatch(postMessage(...args)),
     updateState: (...args) => dispatch(updateComposeState(...args)),
+    postFile: (...args) => dispatch(postFile(...args)),
+    addNotification: (...args) => dispatch(addNotification(...args))
   };
 };
 

@@ -81,13 +81,37 @@
   right: 1rem;
 }
 
-.channel-compose-emoji .channel-compose-emoji-button {
+.channel-compose-emoji {
+  display: flex;
+  justify-content: space-between;
+}
+
+.channel-compose-emoji > button {
+  margin-left: 5px;
+}
+
+.channel-compose-emoji-button {
   display: block;
   font-size: 1rem;
   padding: 0;
   margin-top: 0.25rem;
 
   background: url(../images/cabal-emoji-picker.svg);
+  width: 1rem;
+  height: 1rem;
+  background-size: contain;
+
+  border: none;
+  cursor: pointer;
+}
+
+.channel-compose-upload-button {
+  display: block;
+  font-size: 1rem;
+  padding: 0;
+  margin-top: 0.25rem;
+
+  background: url(../images/new-channel.svg);
   width: 1rem;
   height: 1rem;
   background-size: contain;
