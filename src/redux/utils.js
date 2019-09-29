@@ -59,17 +59,21 @@ export function enrichMessage(message) {
       color,
     };
   });
-
   const time = moment(message.timestamp * 1000);
+  const enrichedPayload = {};
 
-  const text = remark()
-    .use(remarkReact, {
-      remarkReactComponents: {
-        a: ExternalLink,
-      }
-    })
-    .use(remarkEmoji)
-    .processSync(message.json.text || '').contents;
+  if (message.json['content-type']) {
+    enrichedPayload.file = message.json;
+  } else {
+    enrichedPayload.text = remark()
+      .use(remarkReact, {
+        remarkReactComponents: {
+          a: ExternalLink,
+        }
+      })
+      .use(remarkEmoji)
+      .processSync(message.json.text || '').contents;
+  }
 
   // TODO(indutny): highlight mentions
   return {
@@ -80,7 +84,7 @@ export function enrichMessage(message) {
         short: time.format('HH:mm:ss'),
         full: time.format('lll'),
       },
-      text,
+      ...enrichedPayload
     },
   };
 }
@@ -92,4 +96,22 @@ export function computeIdentityFilter(list) {
   });
 
   return new RegExp(`(\\s|^)(${sanitized.join('|')})([\\s:!.,;]|$)`);
+}
+
+
+export function convertFileToBase64 (file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+export function getAttachmentsPayload (name, type = 'default', data) {
+  return {
+    name,
+    "content-type": type,
+    data
+  }
 }
