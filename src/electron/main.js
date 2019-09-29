@@ -36,7 +36,8 @@ if (!fs.existsSync(USER_DATA_DIR)) {
 //
 
 debug.log = (...args) => {
-  log.debug(...args);
+  // Quite verbose, but useful for resolving problems
+  log.info(...args);
 };
 debug.enable((process.env.DEBUG || '') + ' peerlinks*');
 
