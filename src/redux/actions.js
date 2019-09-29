@@ -768,6 +768,32 @@ export function renameIdentityPair({ channelId, newName }) {
   };
 }
 
+export function postFile({ channelId, identityKey, files}) {
+
+  // this function handle one file upload only
+  const post = async (dispatch) => {
+
+    const message = await network.postMessage({
+      channelId,
+      identityKey,
+      json: files[0],
+    });
+
+    console.log('from postFile action', message);
+    dispatch(appendChannelMessage({ channelId, message, isPosted: true }));
+  };
+
+  return (dispatch) => {
+    post(dispatch).catch((e) => {
+      dispatch(addNotification({
+        kind: 'error',
+        content: 'Failed to post message: ' + e.message,
+      }));
+    });
+  };
+
+}
+
 export function postMessage({ channelId, identityKey, text }) {
   // Execute commands
   async function runCommand(dispatch, { channelId, identityKey, text }) {
@@ -803,6 +829,7 @@ export function postMessage({ channelId, identityKey, text }) {
   }
 
   const post = async (dispatch) => {
+
     if (text.startsWith('/')) {
       return await runCommand(dispatch, { channelId, identityKey, text });
     }
