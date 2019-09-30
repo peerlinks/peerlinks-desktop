@@ -37,8 +37,7 @@
 }
 
 .message .message-text > p {
-  margin: 0;
-  display: inline;
+  margin: 0 0 1em 0;
 }
 
 .message .message-text ol {
