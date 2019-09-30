@@ -3,7 +3,7 @@
   margin-bottom: 0.25rem;
   padding: 0.25rem;
 
-  line-height: 1.5rem;
+  line-height: 1.7rem;
 }
 
 .message .message-time-container {
@@ -37,7 +37,16 @@
 }
 
 .message .message-text > p {
-  margin: 0 0 1em 0;
+  margin: 0;
+  text-indent: 3em;
+}
+
+.message .message-text > p:last-child {
+  margin: 0;
+}
+
+.message .message-text > p:first-child {
+  text-indent: 0;
 }
 
 .message .message-text ol {
