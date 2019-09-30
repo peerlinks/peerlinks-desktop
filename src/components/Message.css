@@ -46,6 +46,8 @@
 }
 
 .message .message-text > p:first-child {
+  display: inline;
+  
   text-indent: 0;
 }
 
