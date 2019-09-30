@@ -1,5 +1,4 @@
 import { Buffer } from 'buffer';
-import { promises as fs } from 'fs';
 
 import PeerLinks, { Message } from '@peerlinks/protocol';
 import SqliteStorage from '@peerlinks/sqlite-storage';
@@ -346,7 +345,12 @@ export default class Network {
       let channelName = invite.channelName;
       let counter = 0;
       let existing;
-      while (existing = this.peerLinks.getChannel(channelName)) {
+      while (true) {
+        existing = this.peerLinks.getChannel(channelName);
+        if (!existing) {
+          break;
+        }
+
         if (existing.id.equals(invite.channelPubKey)) {
           // Just add the chain, the `channelFromInvite` will not throw
           break;
@@ -597,7 +601,7 @@ export default class Network {
     let unread = 0;
     for (const channel of this.peerLinks.channels) {
       const messageCount = await channel.getMessageCount();
-      const readCount = channel.metadata && channel.metadata.readCount || 0;
+      const readCount = (channel.metadata && channel.metadata.readCount) || 0;
 
       unread += Math.max(messageCount - readCount, 0);
     }
