@@ -120,12 +120,13 @@ function Compose(props) {
       return;
     }
 
+    e.preventDefault();
+
     // [shift]+enter
     if (e.shiftKey) {
+      setMessage(message + '  \n');
       return;
     }
-
-    e.preventDefault();
 
     // Empty message is not allowed
     if (!message) {
