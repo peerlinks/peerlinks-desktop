@@ -124,6 +124,8 @@ function Compose(props) {
 
     // [shift]+enter
     if (e.shiftKey) {
+      // TODO(indutny): find a way for predictable newlines without
+      // changing user input in obscure way
       setMessage(message + '  \n');
       return;
     }
