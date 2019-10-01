@@ -7,7 +7,7 @@ import './UserList.css';
 export default function UserList({ channelName, users }) {
   const renderUser = (user, index) => {
     if (user.displayPath.length === 0) {
-      return <div className='user-list-elem'>#{channelName}</div>;
+      return <div className='user-list-elem' key={index}>#{channelName}</div>;
     }
 
     const { name, color } = prerenderUserName({
@@ -16,7 +16,9 @@ export default function UserList({ channelName, users }) {
     });
 
     const style = { color };
-    return <div className='user-list-elem' style={style}>{name}</div>;
+    return <div className='user-list-elem' style={style} key={index}>
+      {name}
+    </div>;
   };
 
   return <div className='user-list'>

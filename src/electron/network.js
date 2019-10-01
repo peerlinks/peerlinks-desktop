@@ -544,7 +544,9 @@ export default class Network {
   async runChainLoop() {
     for (;;) {
       try {
-        await this.peerLinks.waitForChainMapUpdate();
+        if (!await this.peerLinks.waitForChainMapUpdate()) {
+          continue;
+        }
       } catch (e) {
         log.error(`chain loop error: ${e.stack}`);
         break;
