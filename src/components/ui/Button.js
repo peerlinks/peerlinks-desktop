@@ -29,7 +29,7 @@ Button.propTypes = {
 }
 
 Button.defaultProps ={
-  color: "black"
+  color: 'black'
 }
 
 export default Button;

@@ -212,7 +212,7 @@ function Compose(props) {
       <div className='channel-compose-emoji'>
         <button
           className='channel-compose-upload-button'
-          title="upload"
+          title='upload file'
           onClick={handleUpload}
         />
         <button

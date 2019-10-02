@@ -62,8 +62,14 @@ export function enrichMessage(message) {
   const time = moment(message.timestamp * 1000);
   const enrichedPayload = {};
 
-  if (message.json.files) {
-    enrichedPayload.file = message.json.files[0];
+  if (message.json.files && message.json.files.length >= 1) {
+    const first = message.json.files[0];
+
+    enrichedPayload.file = {
+      name: first.name,
+      'content-type': first['content-type'],
+      data: first.data,
+    };
   } else {
     enrichedPayload.text = remark()
       .use(remarkReact, {
@@ -110,7 +116,7 @@ export function convertFileToBase64 (file) {
 export function getAttachmentsPayload (name, type = 'default', data) {
   return {
     name,
-    "content-type": type,
+    'content-type': type,
     data
   }
 }

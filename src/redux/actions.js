@@ -768,7 +768,7 @@ export function renameIdentityPair({ channelId, newName }) {
   };
 }
 
-export function postFile({ channelId, identityKey, files}) {
+export function postFile({ channelId, identityKey, files }) {
   // this function handle one file upload only
   const post = async (dispatch) => {
     const message = await network.postMessage({

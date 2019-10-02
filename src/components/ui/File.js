@@ -24,9 +24,9 @@ const withDownload = Component => props => {
 }
 
 const Image = withDownload(({ src, alt, handleDownload, ...rest}) => (
-  <div className="image-file">
-    <div className="overlay" >
-      <Icon iconName="downArrow" onClick={handleDownload} />
+  <div className='image-file'>
+    <div className='overlay' >
+      <Icon iconName='downArrow' title='Download' onClick={handleDownload} />
     </div>
     <img src={src} alt={alt} {...rest} />
   </div>
@@ -34,15 +34,15 @@ const Image = withDownload(({ src, alt, handleDownload, ...rest}) => (
 
 const Default = withDownload(({ name, handleDownload, type }) => (
   <div
-    className="default-file"
+    className='default-file'
   >
-    <div className="content">
-      <Icon iconName="download"/>
-      <div className="titles">
+    <div className='content'>
+      <Icon iconName='download' title='Download'/>
+      <div className='titles'>
        <p>{name}</p><p>{type}</p>
       </div>
     </div>
-    <Button onClick={handleDownload} label="download" color="success" />
+    <Button onClick={handleDownload} label='download' color='success' />
   </div>
 ));
 
