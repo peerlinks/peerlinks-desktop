@@ -25,11 +25,12 @@ Button.propTypes = {
   color: PropTypes.oneOf([
     'success',
     'danger'
-  ])
-}
+  ]),
+  label: PropTypes.string.isRequired
+};
 
 Button.defaultProps ={
   color: 'black'
-}
+};
 
 export default Button;
