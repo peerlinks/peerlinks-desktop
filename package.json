@@ -42,7 +42,7 @@
     "sodium-universal": "^2.0.0"
   },
   "scripts": {
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint src public",
     "lint:fix": "npm run lint -- --fix",
     "start": "npm run react:build && ELECTRON_IS_DEV=0 electron .",
     "postinstall": "electron-builder install-app-deps",

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
@@ -65,6 +66,14 @@ function App({ network, checkNetwork, setFocus }) {
     <SignIn/>
   </FullScreen>;
 }
+
+App.propTypes = {
+  network: PropTypes.shape({
+    isReady: PropTypes.bool.isRequired,
+  }),
+  checkNetwork: PropTypes.func.isRequired,
+  setFocus: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {

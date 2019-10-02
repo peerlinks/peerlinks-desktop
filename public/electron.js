@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 // NOTE: we are in ./build
-require = require('esm')(module);
-require('../src/electron/main.js');
+const esmRequire = require('esm')(module);
+esmRequire('../src/electron/main.js');
