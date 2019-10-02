@@ -10,7 +10,7 @@ import {
 
 import './InviteRequest.css';
 
-function InviteRequest({ identities, request, state }) {
+function InviteRequest ({ identities, request, state }) {
   const [ identityKey, setIdentityKey ] = useState(null);
 
   const options = identities.map((identity) => {

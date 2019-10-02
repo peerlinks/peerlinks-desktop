@@ -60,6 +60,7 @@ module.exports = {
     "space-unary-ops": [ "error" ],
     "switch-colon-spacing": [ "error" ],
     "comma-dangle": [ "error", "always-multiline" ],
+    "space-before-function-paren": [ "error" ],
   },
   "settings": {
     "react": {

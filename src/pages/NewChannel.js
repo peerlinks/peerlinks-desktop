@@ -10,7 +10,7 @@ import {
 
 import './NewChannel.css';
 
-function NewChannel({ isFeed, createChannel, state, network }) {
+function NewChannel ({ isFeed, createChannel, state, network }) {
   const [ channelName, setChannelName ] = useState('');
 
   const isValid = /^[^\s#@]+$/.test(channelName);

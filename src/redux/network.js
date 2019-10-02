@@ -1,7 +1,7 @@
 import WaitList from 'promise-waitlist';
 
 export default class Network {
-  constructor() {
+  constructor () {
     window.addEventListener('message', ({ data: message }) => {
       this.onMessage(message);
     });
@@ -13,74 +13,74 @@ export default class Network {
     this.messages = new Map();
   }
 
-  async init({ passphrase }) {
+  async init ({ passphrase }) {
     return await this.request('network:init', { passphrase });
   }
 
-  async erase() {
+  async erase () {
     return await this.request('network:erase');
   }
 
-  async getStatus() {
+  async getStatus () {
     return await this.request('network:getStatus');
   }
 
-  async getChannels() {
+  async getChannels () {
     return await this.request('network:getChannels');
   }
 
-  async getIdentities() {
+  async getIdentities () {
     return await this.request('network:getIdentities');
   }
 
-  async createIdentityPair({ name, isFeed }) {
+  async createIdentityPair ({ name, isFeed }) {
     return await this.request('network:createIdentityPair', { name, isFeed });
   }
 
-  async feedFromPublicKey({ publicKey, name }) {
+  async feedFromPublicKey ({ publicKey, name }) {
     return await this.request('network:feedFromPublicKey',
       { publicKey, name });
   }
 
-  async removeIdentityPair({ channelId, identityKey }) {
+  async removeIdentityPair ({ channelId, identityKey }) {
     return await this.request('network:removeIdentityPair',
       { channelId, identityKey });
   }
 
-  async updateChannelMetadata({ channelId, metadata }) {
+  async updateChannelMetadata ({ channelId, metadata }) {
     return await this.request('network:updateChannelMetadata',
       { channelId, metadata });
   }
 
-  async getMessageCount({ channelId }) {
+  async getMessageCount ({ channelId }) {
     return await this.request('network:getMessageCount', { channelId });
   }
 
-  async getReverseMessagesAtOffset({ channelId, offset, limit }) {
+  async getReverseMessagesAtOffset ({ channelId, offset, limit }) {
     return await this.request('network:getReverseMessagesAtOffset', {
       channelId, offset, limit,
     });
   }
 
-  async waitForIncomingMessage({ channelId, timeout }) {
+  async waitForIncomingMessage ({ channelId, timeout }) {
     return await this.request('network:waitForIncomingMessage',
       { channelId, timeout });
   }
 
-  async postMessage({ channelId, identityKey, json }) {
+  async postMessage ({ channelId, identityKey, json }) {
     return await this.request('network:postMessage',
       { channelId, identityKey, json });
   }
 
-  async requestInvite({ identityKey }) {
+  async requestInvite ({ identityKey }) {
     return await this.request('network:requestInvite', { identityKey });
   }
 
-  async waitForInvite({ identityKey }) {
+  async waitForInvite ({ identityKey }) {
     return await this.request('network:waitForInvite', { identityKey });
   }
 
-  async invite({ identityKey, channelId, inviteeName, request }) {
+  async invite ({ identityKey, channelId, inviteeName, request }) {
     return await this.request('network:invite', {
       identityKey,
       channelId,
@@ -89,31 +89,31 @@ export default class Network {
     });
   }
 
-  async acceptInvite({ requestId, box }) {
+  async acceptInvite ({ requestId, box }) {
     return await this.request('network:acceptInvite', { requestId, box });
   }
 
-  async sendInvite({ encryptedInvite, peerId }) {
+  async sendInvite ({ encryptedInvite, peerId }) {
     return await this.request('network:sendInvite',
       { encryptedInvite, peerId });
   }
 
-  async renameIdentityPair({ channelId, identityKey, newName }) {
+  async renameIdentityPair ({ channelId, identityKey, newName }) {
     return await this.request('network:renameIdentityPair',
       { channelId, identityKey, newName });
   }
 
-  async waitForChainMapUpdate({ timeout } = {}) {
+  async waitForChainMapUpdate ({ timeout } = {}) {
     return await this.request('network:waitForChainMapUpdate', { timeout });
   }
 
-  async computeChainMap() {
+  async computeChainMap () {
     return await this.request('network:computeChainMap', {});
   }
 
   // Internal
 
-  async request(type, payload, timeout) {
+  async request (type, payload, timeout) {
     const seq = this.seq;
     this.seq = (this.seq + 1) >>> 0;
 
@@ -135,7 +135,7 @@ export default class Network {
     return response;
   }
 
-  onMessage({ sender, seq, error, stack, payload }) {
+  onMessage ({ sender, seq, error, stack, payload }) {
     if (sender === 'renderer') {
       return;
     }

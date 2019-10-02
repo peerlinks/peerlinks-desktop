@@ -8,7 +8,7 @@ import './Notifications.css';
 
 const AUTO_DISMISS_DELAY = 15 * 1000; // 15 seconds
 
-function Notifications({ notifications, removeNotification }) {
+function Notifications ({ notifications, removeNotification }) {
   const render = ({ id, kind, content }) => {
     const remove = () => {
       removeNotification({ notificationId: id });

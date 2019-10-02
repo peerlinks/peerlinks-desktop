@@ -3,7 +3,7 @@ import { app, shell } from 'electron';
 
 const isMac = process.platform === 'darwin';
 
-export function createMenu() {
+export function createMenu () {
   const menu = [
     // { role: 'appMenu' }
     ...(isMac ? [ {

@@ -16,7 +16,7 @@ import UserList from '../components/UserList';
 
 import './Channel.css';
 
-function Channel(props) {
+function Channel (props) {
   const {
     match, channel, markRead, loadMessages,
     toggleSilence, updateReadHeight,

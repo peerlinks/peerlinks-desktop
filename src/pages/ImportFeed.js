@@ -8,7 +8,7 @@ import { importFeed } from '../redux/actions';
 
 import './ImportFeed.css';
 
-function ImportFeed({ importFeed }) {
+function ImportFeed ({ importFeed }) {
   const [ link, setLink ] = useState('');
   const [ publicKey, setPublicKey ] = useState('');
   const [ name, setName ] = useState('');

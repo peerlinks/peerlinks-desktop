@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './Message.css';
 import File from '../components/ui/File';
 
-const Message = React.memo(function Message(props) {
+const Message = React.memo(function Message (props) {
   const { channelName, message, isExpanded, setExpandAuthorFor } = props;
   if (message.isRoot) {
     return null;

@@ -5,7 +5,7 @@ import { prerenderUserName } from '../utils';
 
 import './UserList.css';
 
-export default function UserList({ channelName, users }) {
+export default function UserList ({ channelName, users }) {
   const renderUser = (user, index) => {
     if (user.displayPath.length === 0) {
       return <div className='user-list-elem' key={index}>#{channelName}</div>;

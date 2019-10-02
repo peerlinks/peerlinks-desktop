@@ -6,7 +6,7 @@ import Message from './Message';
 
 import './MessageList.css';
 
-const MessageList = React.memo(function MessageList(props) {
+const MessageList = React.memo(function MessageList (props) {
   const { channelName, readHeight, messages, isSticky, setIsSticky } = props;
 
   const [ expandAuthorFor, setExpandAuthorFor ] = useState(null);

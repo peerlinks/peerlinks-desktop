@@ -19,7 +19,7 @@ import DeleteChannel from './pages/DeleteChannel';
 
 import RedirectOnce from './components/RedirectOnce';
 
-function App({ network, checkNetwork, setFocus }) {
+function App ({ network, checkNetwork, setFocus }) {
   // Check if the window as reopened and network is ready
   useEffect(() => {
     checkNetwork();

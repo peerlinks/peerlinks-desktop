@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 
 import { setRedirect } from '../redux/actions';
 
-function RedirectOnce({ redirect, setRedirect }) {
+function RedirectOnce ({ redirect, setRedirect }) {
   if (redirect) {
     setRedirect(null);
     return <Redirect to={redirect}/>;

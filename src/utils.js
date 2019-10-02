@@ -1,4 +1,4 @@
-export function keyToColor(publicKey) {
+export function keyToColor (publicKey) {
   let r = parseInt(publicKey.slice(0, 2), 16);
   let g = parseInt(publicKey.slice(2, 4), 16);
   let b = parseInt(publicKey.slice(4, 6), 16);
@@ -11,7 +11,7 @@ export function keyToColor(publicKey) {
   return `rgb(${r},${g},${b})`;
 }
 
-export function prerenderUserName({ name, publicKey, isInternal = false }) {
+export function prerenderUserName ({ name, publicKey, isInternal = false }) {
   if (!isInternal) {
     name = name.trim().replace(/^[#@]+/, '');
   }
@@ -22,7 +22,7 @@ export function prerenderUserName({ name, publicKey, isInternal = false }) {
   };
 }
 
-export function getFeedURL(feed) {
+export function getFeedURL (feed) {
   return `peerlinks://feed/${feed.publicKeyB58}?` +
     `name=${encodeURIComponent(feed.name)}`;
 }

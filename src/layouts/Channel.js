@@ -6,7 +6,7 @@ import Notifications from '../components/Notifications';
 
 import './Channel.css';
 
-export default function ChannelLayout({ children }) {
+export default function ChannelLayout ({ children }) {
   return <div className='channel-layout'>
     <Notifications/>
 

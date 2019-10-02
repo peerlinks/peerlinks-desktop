@@ -14,7 +14,7 @@ import './Compose.css';
 // TODO(indutny): pull the size limit from `@peerlinks/protocol`
 const SIZE_LIMIT = 2097152;
 
-function Compose(props) {
+function Compose (props) {
   const {
     identities,
     channelId,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './SelectIdentity.css';
 
-export default function SelectIdentity(props) {
+export default function SelectIdentity (props) {
   const { children } = props;
 
   const onChange = (e) => {

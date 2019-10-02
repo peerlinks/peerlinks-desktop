@@ -9,7 +9,7 @@ import remarkEmoji from 'remark-emoji';
 import binarySearch from 'binary-search';
 import { prerenderUserName } from '../utils';
 
-export function compareMessages(a, b) {
+export function compareMessages (a, b) {
   if (a.height < b.height) {
     return -1;
   } else if (a.height > b.height) {
@@ -25,7 +25,7 @@ export function compareMessages(a, b) {
   }
 }
 
-export function appendMessage(messages, message) {
+export function appendMessage (messages, message) {
   let index = binarySearch(messages, message, compareMessages);
   if (index >= 0) {
     // Duplicate
@@ -36,7 +36,7 @@ export function appendMessage(messages, message) {
   messages.splice(index, 0, enrichMessage(message));
 }
 
-export function ExternalLink(props) {
+export function ExternalLink (props) {
   return <a target='blank' href={props.href}>{props.children}</a>;
 }
 
@@ -48,7 +48,7 @@ ExternalLink.propTypes = {
   ]),
 };
 
-export function enrichMessage(message) {
+export function enrichMessage (message) {
   if (message.isRoot) {
     return Object.assign({}, message, { enriched: null });
   }
@@ -104,7 +104,7 @@ export function enrichMessage(message) {
   };
 }
 
-export function computeIdentityFilter(list) {
+export function computeIdentityFilter (list) {
   const sanitized = list.map((name) => {
     // NOTE: We are very conservative
     return name.toLowerCase().replace(/([^a-z0-9])/g, '\\$1');

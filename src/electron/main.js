@@ -65,7 +65,7 @@ log.info(`database file=${DB_FILE}`);
 const network = new Network(ipc, {
   db: DB_FILE,
 
-  setBadgeCount(count) {
+  setBadgeCount (count) {
     app.setBadgeCount(count);
   },
 });
@@ -84,7 +84,7 @@ network.init().then(() => {
 let windowState = null;
 let window = null;
 
-function createWindow() {
+function createWindow () {
   if (window !== null) {
     return;
   }
@@ -141,7 +141,7 @@ app.on('ready', () => {
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
 
-  function checkForUpdates() {
+  function checkForUpdates () {
     autoUpdater.checkForUpdatesAndNotify().catch(() => {
       // Ignore
     });

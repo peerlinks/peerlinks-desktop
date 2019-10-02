@@ -41,11 +41,11 @@ export const CHANNEL_SET_CHAIN_MAP = 'CHANNEL_SET_CHAIN_MAP';
 
 const network = new Network();
 
-export function setRedirect(to) {
+export function setRedirect (to) {
   return { type: SET_REDIRECT, to };
 }
 
-export function setFocus(focus) {
+export function setFocus (focus) {
   return { type: SET_FOCUS, focus };
 }
 
@@ -53,23 +53,23 @@ export function setFocus(focus) {
 // network
 //
 
-export function networkReady({ peerId, isFirstRun }) {
+export function networkReady ({ peerId, isFirstRun }) {
   return { type: NETWORK_READY, peerId, isFirstRun };
 }
 
-export function networkNotReady({ isFirstRun }) {
+export function networkNotReady ({ isFirstRun }) {
   return { type: NETWORK_NOT_READY, isFirstRun };
 }
 
-export function networkLoading() {
+export function networkLoading () {
   return { type: NETWORK_LOADING };
 }
 
-export function networkError(error) {
+export function networkError (error) {
   return { type: NETWORK_ERROR, error };
 }
 
-async function setInitialPage(dispatch, getState) {
+async function setInitialPage (dispatch, getState) {
   const { channels } = getState();
 
   // Select first channel if any are available
@@ -80,7 +80,7 @@ async function setInitialPage(dispatch, getState) {
   }
 }
 
-async function runChainMapLoop(dispatch) {
+async function runChainMapLoop (dispatch) {
   for (;;) {
     const map = await network.computeChainMap();
     dispatch({ type: CHANNEL_SET_CHAIN_MAP, map });
@@ -89,7 +89,7 @@ async function runChainMapLoop(dispatch) {
 }
 
 // Not really an action, but a helper
-async function loadNetwork(dispatch, getState, { peerId, isFirstRun }) {
+async function loadNetwork (dispatch, getState, { peerId, isFirstRun }) {
   const channels = await network.getChannels();
   for (const channel of channels) {
     dispatch(addChannel(channel));
@@ -111,7 +111,7 @@ async function loadNetwork(dispatch, getState, { peerId, isFirstRun }) {
   });
 }
 
-export function checkNetwork() {
+export function checkNetwork () {
   const check = async (dispatch, getState) => {
     const { isReady, isFirstRun, peerId } = await network.getStatus();
 
@@ -131,7 +131,7 @@ export function checkNetwork() {
   };
 }
 
-export function initNetwork({ passphrase }) {
+export function initNetwork ({ passphrase }) {
   const init = async (dispatch, getState) => {
     const { peerId } = await network.init({ passphrase });
     await loadNetwork(dispatch, getState, { peerId });
@@ -145,7 +145,7 @@ export function initNetwork({ passphrase }) {
   };
 }
 
-export function eraseNetwork() {
+export function eraseNetwork () {
   const init = async (dispatch) => {
     await network.erase();
     dispatch(checkNetwork());
@@ -163,15 +163,15 @@ export function eraseNetwork() {
 // new channel
 //
 
-export function newChannelReset() {
+export function newChannelReset () {
   return { type: NEW_CHANNEL_RESET };
 }
 
-export function newChannelSetIsLoading(isLoading) {
+export function newChannelSetIsLoading (isLoading) {
   return { type: NEW_CHANNEL_SET_IS_LOADING, isLoading };
 }
 
-export function createChannel({ channelName, isFeed }) {
+export function createChannel ({ channelName, isFeed }) {
   const createChannel = async (dispatch) => {
     const { identity, channel } = await network.createIdentityPair({
       name: channelName,
@@ -197,7 +197,7 @@ export function createChannel({ channelName, isFeed }) {
   };
 }
 
-export function importFeed({ publicKey, channelName }) {
+export function importFeed ({ publicKey, channelName }) {
   const importFeed = async (dispatch) => {
     const channel = await network.feedFromPublicKey({
       publicKey,
@@ -218,7 +218,7 @@ export function importFeed({ publicKey, channelName }) {
   };
 }
 
-export function requestInvite({ identityKey }) {
+export function requestInvite ({ identityKey }) {
   const generate = async () => {
     return await network.requestInvite({ identityKey });
   };
@@ -241,7 +241,7 @@ export function requestInvite({ identityKey }) {
   };
 }
 
-export function waitForInvite({ identityKey }) {
+export function waitForInvite ({ identityKey }) {
   const wait = async () => {
     return await network.waitForInvite({ identityKey });
   };
@@ -271,11 +271,11 @@ export function waitForInvite({ identityKey }) {
   };
 }
 
-export function inviteRequestReset() {
+export function inviteRequestReset () {
   return { type: INVITE_REQUEST_RESET };
 }
 
-export function updateComposeState({ channelId, state }) {
+export function updateComposeState ({ channelId, state }) {
   return {
     type: COMPOSE_UPDATE,
     channelId,
@@ -287,11 +287,11 @@ export function updateComposeState({ channelId, state }) {
 // notifications
 //
 
-export function addNotification({ kind, content }) {
+export function addNotification ({ kind, content }) {
   return { type: ADD_NOTIFICATION, kind, content };
 }
 
-export function removeNotification({ notificationId }) {
+export function removeNotification ({ notificationId }) {
   return { type: REMOVE_NOTIFICATION, notificationId };
 }
 
@@ -299,11 +299,11 @@ export function removeNotification({ notificationId }) {
 // identities
 //
 
-export function addIdentity(identity) {
+export function addIdentity (identity) {
   return { type: ADD_IDENTITY, identity };
 }
 
-export function removeIdentity({ identity }) {
+export function removeIdentity ({ identity }) {
   return { type: REMOVE_IDENTITY, identity };
 }
 
@@ -314,7 +314,7 @@ export function removeIdentity({ identity }) {
 // Small delay to prevent spins
 const UPDATE_ONCE = 150;
 
-export function addChannel(channel) {
+export function addChannel (channel) {
   const channelId = channel.id;
 
   return (dispatch) => {
@@ -359,11 +359,11 @@ export function addChannel(channel) {
   };
 }
 
-export function removeChannel({ channelId }) {
+export function removeChannel ({ channelId }) {
   return { type: REMOVE_CHANNEL, channelId };
 }
 
-export function removeIdentityPair({ channelId, identityKey }) {
+export function removeIdentityPair ({ channelId, identityKey }) {
   const remove = async (dispatch, getState) => {
     await network.removeIdentityPair({ channelId, identityKey });
 
@@ -386,7 +386,7 @@ export function removeIdentityPair({ channelId, identityKey }) {
   };
 }
 
-export function updateChannelMetadata({ channelId, metadata }) {
+export function updateChannelMetadata ({ channelId, metadata }) {
   const update = async (dispatch) => {
     dispatch({ type: CHANNEL_UPDATE_METADATA, channelId, metadata });
 
@@ -403,11 +403,11 @@ export function updateChannelMetadata({ channelId, metadata }) {
   };
 }
 
-export function appendChannelMessage({ channelId, message, isPosted = false }) {
+export function appendChannelMessage ({ channelId, message, isPosted = false }) {
   return { type: APPEND_CHANNEL_MESSAGE, channelId, message, isPosted };
 }
 
-export function appendInternalMessage({ channelId, text }) {
+export function appendInternalMessage ({ channelId, text }) {
   return (dispatch, getState) => {
     const channel = getState().channels.get(channelId);
     if (!channel) {
@@ -443,15 +443,15 @@ export function appendInternalMessage({ channelId, text }) {
   };
 }
 
-export function appendChannelMessages({ channelId, messages }) {
+export function appendChannelMessages ({ channelId, messages }) {
   return { type: APPEND_CHANNEL_MESSAGES, channelId, messages };
 }
 
-export function trimChannelMessages({ channelId, count }) {
+export function trimChannelMessages ({ channelId, count }) {
   return { type: TRIM_CHANNEL_MESSAGES, channelId, count };
 }
 
-export function updateMessageCount({ channelId }) {
+export function updateMessageCount ({ channelId }) {
   const update = async (dispatch) => {
     const messageCount = await network.getMessageCount({ channelId });
     dispatch({ type: CHANNEL_SET_MESSAGE_COUNT, channelId, messageCount });
@@ -467,7 +467,7 @@ export function updateMessageCount({ channelId }) {
   };
 }
 
-export function channelMarkRead({ channelId }) {
+export function channelMarkRead ({ channelId }) {
   return (dispatch, getState) => {
     const { focus, channels } = getState();
     if (!focus) {
@@ -492,11 +492,11 @@ export function channelMarkRead({ channelId }) {
   };
 }
 
-export function channelUpdateReadHeight({ channelId }) {
+export function channelUpdateReadHeight ({ channelId }) {
   return { type: CHANNEL_UPDATE_READ_HEIGHT, channelId };
 }
 
-export function toggleSilence({ channelId }) {
+export function toggleSilence ({ channelId }) {
   return (dispatch, getState) => {
     const channel = getState().channels.get(channelId);
     if (!channel) {
@@ -512,7 +512,7 @@ export function toggleSilence({ channelId }) {
 }
 
 // Helper, not action
-function displayNotifications(dispatch, { filter, channel, messages }) {
+function displayNotifications (dispatch, { filter, channel, messages }) {
   // NOTE: We track the notification height instead of just last height, because
   // we want to give mentions from the merged branches more chances to become
   // visible.
@@ -567,7 +567,7 @@ function displayNotifications(dispatch, { filter, channel, messages }) {
 
 export const DEFAULT_LOAD_LIMIT = 1024;
 
-export function loadMessages(options) {
+export function loadMessages (options) {
   const { channelId, offset = 0, limit = DEFAULT_LOAD_LIMIT } = options;
 
   const load = async (dispatch, getState) => {
@@ -605,7 +605,7 @@ export function loadMessages(options) {
 const INVITE_FALLBACK_DELAY = 5 * 1000;
 
 // NOTE: Command
-export function invite(params) {
+export function invite (params) {
   const run = async (dispatch) => {
     const { encryptedInvite, peerId } = await network.invite(params);
 
@@ -654,7 +654,7 @@ export function invite(params) {
 }
 
 // NOTE: Command
-export function acceptInvite(params) {
+export function acceptInvite (params) {
   const run = async () => {
     return await network.acceptInvite(params);
   };
@@ -674,7 +674,7 @@ export function acceptInvite(params) {
 }
 
 // NOTE: Command
-export function displayPeerID(params) {
+export function displayPeerID (params) {
   return (dispatch, getState) => {
     const peerId = getState().network.peerId;
     dispatch(appendInternalMessage({
@@ -685,7 +685,7 @@ export function displayPeerID(params) {
 }
 
 // NOTE: Command
-export function displayHelp({ channelId }) {
+export function displayHelp ({ channelId }) {
   return appendInternalMessage({
     channelId,
     text: [
@@ -703,7 +703,7 @@ export function displayHelp({ channelId }) {
 }
 
 // NOTE: Command
-export function displayFeedURL({ channelId }) {
+export function displayFeedURL ({ channelId }) {
   const run = async (dispatch, getState) => {
     const channel = getState().channels.get(channelId);
     if (!channel) {
@@ -739,7 +739,7 @@ export function displayFeedURL({ channelId }) {
 }
 
 // NOTE: Command
-export function renameIdentityPair({ channelId, newName }) {
+export function renameIdentityPair ({ channelId, newName }) {
   const save = async (dispatch, getState) => {
     const state = getState();
     const channel = state.channels.get(channelId);
@@ -768,7 +768,7 @@ export function renameIdentityPair({ channelId, newName }) {
   };
 }
 
-export function postFile({ channelId, identityKey, files }) {
+export function postFile ({ channelId, identityKey, files }) {
   // this function handle one file upload only
   const post = async (dispatch) => {
     const message = await network.postMessage({
@@ -791,9 +791,9 @@ export function postFile({ channelId, identityKey, files }) {
   };
 }
 
-export function postMessage({ channelId, identityKey, text }) {
+export function postMessage ({ channelId, identityKey, text }) {
   // Execute commands
-  async function runCommand(dispatch, { channelId, identityKey, text }) {
+  async function runCommand (dispatch, { channelId, identityKey, text }) {
     const parts = text.trim().split(/\s+/g);
 
     const commandName = parts.shift().slice(1);
