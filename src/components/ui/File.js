@@ -17,11 +17,11 @@ const withDownload = Component => props => {
     const a = document.createElement('a');
     a.href = props.data;
     a.download = props.name;
-    a.click()
-  }
+    a.click();
+  };
 
-  return <Component handleDownload={handleDownload} {...props}/>
-}
+  return <Component handleDownload={handleDownload} {...props}/>;
+};
 
 const Image = withDownload(({ src, alt, handleDownload, ...rest}) => (
   <div className='image-file'>
@@ -39,7 +39,7 @@ const Default = withDownload(({ name, handleDownload, type }) => (
     <div className='content'>
       <Icon iconName='download' title='Download'/>
       <div className='titles'>
-       <p>{name}</p><p>{type}</p>
+        <p>{name}</p><p>{type}</p>
       </div>
     </div>
     <Button onClick={handleDownload} label='download' color='success' />
@@ -58,7 +58,7 @@ const File = props => {
   const ALLOWED_IMAGE_TYPE = ['jpeg', 'png', 'jpg', 'gif', 'heic', 'heif'];
 
   if (ALLOWED_IMAGE_TYPE.find(check => type.includes(check))) {
-    return <Image src={data} alt={name} />
+    return <Image src={data} alt={name} />;
   }
   return <Default data={data} name={name} type={type}/>;
 };
@@ -67,6 +67,6 @@ File.propTypes = {
   name: PropTypes.string.isRequired,
   data: PropTypes.string.isRequired,
   'content-type': PropTypes.string.isRequired
-}
+};
 
 export default File;
