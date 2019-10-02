@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import icons from '../../images/icon';
 
-// todo : add color prop;
+// todo (tony-go) : add color prop;
 
 const Icon = ({ iconName, ...rest }) => <img src={icons[iconName]} alt={`${iconName} icon`} {...rest}/>
 

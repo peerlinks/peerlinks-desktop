@@ -62,8 +62,8 @@ export function enrichMessage(message) {
   const time = moment(message.timestamp * 1000);
   const enrichedPayload = {};
 
-  if (message.json['content-type']) {
-    enrichedPayload.file = message.json;
+  if (message.json.files) {
+    enrichedPayload.file = message.json.files[0];
   } else {
     enrichedPayload.text = remark()
       .use(remarkReact, {
@@ -97,7 +97,6 @@ export function computeIdentityFilter(list) {
 
   return new RegExp(`(\\s|^)(${sanitized.join('|')})([\\s:!.,;]|$)`);
 }
-
 
 export function convertFileToBase64 (file) {
   return new Promise((resolve, reject) => {
