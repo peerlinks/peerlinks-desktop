@@ -8,7 +8,7 @@ import icons from '../../images/icon';
 const Icon = ({ iconName, ...rest }) => <img src={icons[iconName]} alt={`${iconName} icon`} {...rest}/>;
 
 Icon.propTypes = {
-  iconName: PropTypes.oneOf(Object.keys(icons)).isRequired
+  iconName: PropTypes.oneOf(Object.keys(icons)).isRequired,
 };
 
 export default Icon;

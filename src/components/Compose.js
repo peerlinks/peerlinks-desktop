@@ -163,7 +163,7 @@ function Compose(props) {
     if (size > SIZE_LIMIT) {
       addNotification({
         kind: 'error',
-        content: 'This file is to big (2mb max) !'
+        content: 'This file is to big (2mb max) !',
       });
     } else {
       convertFileToBase64(e.target.files[0])
@@ -173,7 +173,7 @@ function Compose(props) {
             channelId,
             identityKey,
             files: [ {
-              ...getAttachmentsPayload(name, type || 'default', data)
+              ...getAttachmentsPayload(name, type || 'default', data),
             } ],
           });
           setMessage('');

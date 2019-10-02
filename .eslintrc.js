@@ -59,6 +59,7 @@ module.exports = {
     "space-infix-ops": [ "error" ],
     "space-unary-ops": [ "error" ],
     "switch-colon-spacing": [ "error" ],
+    "comma-dangle": [ "error", "always-multiline" ],
   },
   "settings": {
     "react": {

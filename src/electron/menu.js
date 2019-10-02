@@ -84,7 +84,7 @@ export function createMenu() {
           { role: 'window' },
         ] : [
           { role: 'close' },
-        ])
+        ]),
       ],
     },
     {

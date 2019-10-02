@@ -9,5 +9,5 @@ export default {
   downArrow,
   download,
   newChannel,
-  newChannelActive
+  newChannelActive,
 };

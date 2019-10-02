@@ -66,7 +66,7 @@ const File = props => {
 File.propTypes = {
   name: PropTypes.string.isRequired,
   data: PropTypes.string.isRequired,
-  'content-type': PropTypes.string.isRequired
+  'content-type': PropTypes.string.isRequired,
 };
 
 export default File;
