@@ -12,7 +12,7 @@ const Button = ({ onClick, color, label, ...rest }) => (
     onClick={onClick}
     className={classNames(
       'button',
-      {[`${color}`]: color}
+      { [`${color}`]: color }
     )}
     {...rest}
   >
@@ -29,7 +29,7 @@ Button.propTypes = {
   label: PropTypes.string.isRequired
 };
 
-Button.defaultProps ={
+Button.defaultProps = {
   color: 'black'
 };
 

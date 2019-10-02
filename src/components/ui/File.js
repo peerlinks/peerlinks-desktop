@@ -23,7 +23,7 @@ const withDownload = Component => props => {
   return <Component handleDownload={handleDownload} {...props}/>;
 };
 
-const Image = withDownload(({ src, alt, handleDownload, ...rest}) => (
+const Image = withDownload(({ src, alt, handleDownload, ...rest }) => (
   <div className='image-file'>
     <div className='overlay' >
       <Icon iconName='downArrow' title='Download' onClick={handleDownload} />
@@ -55,7 +55,7 @@ const Default = withDownload(({ name, handleDownload, type }) => (
 const File = props => {
   const { name, data } = props;
   const type = props['content-type'];
-  const ALLOWED_IMAGE_TYPE = ['jpeg', 'png', 'jpg', 'gif', 'heic', 'heif'];
+  const ALLOWED_IMAGE_TYPE = [ 'jpeg', 'png', 'jpg', 'gif', 'heic', 'heif' ];
 
   if (ALLOWED_IMAGE_TYPE.find(check => type.includes(check))) {
     return <Image src={data} alt={name} />;

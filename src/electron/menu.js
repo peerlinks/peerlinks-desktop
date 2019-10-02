@@ -6,7 +6,7 @@ const isMac = process.platform === 'darwin';
 export function createMenu() {
   const menu = [
     // { role: 'appMenu' }
-    ...(isMac ? [{
+    ...(isMac ? [ {
       label: app.getName(),
       submenu: [
         { role: 'about' },
@@ -19,7 +19,7 @@ export function createMenu() {
         { type: 'separator' },
         { role: 'quit' },
       ],
-    }] : []),
+    } ] : []),
     // { role: 'fileMenu' }
     {
       label: 'File',
