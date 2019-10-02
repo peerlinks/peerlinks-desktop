@@ -172,9 +172,9 @@ function Compose(props) {
           postFile({
             channelId,
             identityKey,
-            files: [{
+            files: [ {
               ...getAttachmentsPayload(name, type || 'default', data)
-            }],
+            } ],
           });
           setMessage('');
         });

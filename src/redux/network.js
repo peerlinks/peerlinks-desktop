@@ -58,7 +58,8 @@ export default class Network {
 
   async getReverseMessagesAtOffset({ channelId, offset, limit }) {
     return await this.request('network:getReverseMessagesAtOffset', {
-      channelId, offset, limit });
+      channelId, offset, limit
+    });
   }
 
   async waitForIncomingMessage({ channelId, timeout }) {

@@ -512,7 +512,7 @@ export function toggleSilence({ channelId }) {
 }
 
 // Helper, not action
-function displayNotifications(dispatch, { filter, channel, messages }){
+function displayNotifications(dispatch, { filter, channel, messages }) {
   // NOTE: We track the notification height instead of just last height, because
   // we want to give mentions from the merged branches more chances to become
   // visible.
@@ -789,7 +789,6 @@ export function postFile({ channelId, identityKey, files }) {
       }));
     });
   };
-
 }
 
 export function postMessage({ channelId, identityKey, text }) {
@@ -827,7 +826,6 @@ export function postMessage({ channelId, identityKey, text }) {
   }
 
   const post = async (dispatch) => {
-
     if (text.startsWith('/')) {
       return await runCommand(dispatch, { channelId, identityKey, text });
     }
