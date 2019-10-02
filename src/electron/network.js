@@ -1,3 +1,4 @@
+/* eslint-env node */
 import { Buffer } from 'buffer';
 
 import PeerLinks, { Message } from '@peerlinks/protocol';
@@ -345,7 +346,7 @@ export default class Network {
       let channelName = invite.channelName;
       let counter = 0;
       let existing;
-      while (true) {
+      for (;;) {
         existing = this.peerLinks.getChannel(channelName);
         if (!existing) {
           break;
@@ -478,12 +479,12 @@ export default class Network {
       // calls.
       if (this.chainMapUpdated) {
         this.chainMapUpdated = false;
-        log.info(`network: waitForChainMapUpdate ... immediate`);
+        log.info('network: waitForChainMapUpdate ... immediate');
         return;
       }
 
       // Otherwise - wait
-      log.info(`network: waitForChainMapUpdate ... wait`);
+      log.info('network: waitForChainMapUpdate ... wait');
       const entry = this.waitList.waitFor('chain-map-update', timeout);
       await entry;
       this.chainMapUpdated = false;

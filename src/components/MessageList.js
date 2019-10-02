@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Message from './Message';
 
 import './MessageList.css';
 
-const MessageList = React.memo((props) => {
+const MessageList = React.memo(function MessageList(props) {
   const { channelName, readHeight, messages, isSticky, setIsSticky } = props;
 
   const [ expandAuthorFor, setExpandAuthorFor ] = useState(null);
@@ -52,6 +53,17 @@ const MessageList = React.memo((props) => {
     {rows}
   </div>;
 });
+
+MessageList.propTypes = {
+  channelName: PropTypes.string.isRequired,
+  readHeight: PropTypes.number.isRequired,
+  messages: PropTypes.arrayOf(PropTypes.shape({
+    hash: PropTypes.string.isRequired,
+    height: PropTypes.number.isRequired,
+  })),
+  isSticky: PropTypes.bool.isRequired,
+  setIsSticky: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {

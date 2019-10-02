@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './SelectIdentity.css';
 
@@ -24,6 +25,21 @@ export default function SelectIdentity(props) {
   </div>;
 }
 
+SelectIdentity.propTypes = {
+  className: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
+
+  children: PropTypes.arrayOf(PropTypes.shape({
+    props: PropTypes.object.isRequired,
+  })),
+};
+
 export const Option = ({ value, label }) => {
   return <option value={value} label={label}/>;
+};
+
+Option.propTypes = {
+  value: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -9,8 +10,7 @@ import { removeIdentityPair } from '../redux/actions';
 import './DeleteChannel.css';
 
 const DeleteChannel = withRouter((props) => {
-  const { match, channels, removeIdentityPair, history } = props;
-  const channel = channels.get(match.params.id);
+  const { channel, removeIdentityPair, history } = props;
   if (!channel) {
     return null;
   }
@@ -24,6 +24,7 @@ const DeleteChannel = withRouter((props) => {
   };
 
   const onBack = (e) => {
+    e.preventDefault();
     history.push(`/channel/${channel.id}/`);
   };
 
@@ -56,9 +57,19 @@ const DeleteChannel = withRouter((props) => {
   </FullScreen>;
 });
 
-const mapStateToProps = (state) => {
+DeleteChannel.propTypes = {
+  channel: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    publicKey: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }),
+  removeIdentityPair: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state, { match }) => {
+  const channel = state.channels.get(match.params.id);
   return {
-    channels: state.channels,
+    channel,
   };
 };
 

@@ -1,3 +1,4 @@
+/* eslint-env node */
 const { ipcRenderer: ipc } = require('electron');
 
 ipc.on('response', (_, { seq, payload, error, stack }) => {

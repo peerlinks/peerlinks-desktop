@@ -190,7 +190,7 @@ export function createChannel({ channelName, isFeed }) {
       dispatch(addNotification({
         kind: 'error',
         content: 'Failed to create new channel: ' + e.message,
-      }))
+      }));
     }).finally(() => {
       dispatch(newChannelSetIsLoading(false));
     });
@@ -213,13 +213,13 @@ export function importFeed({ publicKey, channelName }) {
       dispatch(addNotification({
         kind: 'error',
         content: 'Failed to add new feed: ' + e.message,
-      }))
+      }));
     });
   };
 }
 
 export function requestInvite({ identityKey }) {
-  const generate = async (dispatch) => {
+  const generate = async () => {
     return await network.requestInvite({ identityKey });
   };
 
@@ -242,7 +242,7 @@ export function requestInvite({ identityKey }) {
 }
 
 export function waitForInvite({ identityKey }) {
-  const wait = async (dispatch) => {
+  const wait = async () => {
     return await network.waitForInvite({ identityKey });
   };
 
@@ -539,7 +539,7 @@ function displayNotifications(dispatch, { filter, channel, messages }){
     const displayPath = message.author.displayPath;
     let author;
     if (displayPath.length === 0) {
-      author = `Channel owner`;
+      author = 'Channel owner';
     } else {
       author = `"${displayPath[displayPath.length - 1]}"`;
     }
@@ -655,7 +655,7 @@ export function invite(params) {
 
 // NOTE: Command
 export function acceptInvite(params) {
-  const run = async (dispatch) => {
+  const run = async () => {
     return await network.acceptInvite(params);
   };
 
@@ -667,7 +667,7 @@ export function acceptInvite(params) {
     }).catch((e) => {
       dispatch(addNotification({
         kind: 'error',
-        content: `Failed to accept invite: ` + e.message,
+        content: 'Failed to accept invite: ' + e.message,
       }));
     });
   };
@@ -703,7 +703,7 @@ export function displayHelp({ channelId }) {
 }
 
 // NOTE: Command
-export function displayFeedURL({ channelId, channelName }) {
+export function displayFeedURL({ channelId }) {
   const run = async (dispatch, getState) => {
     const channel = getState().channels.get(channelId);
     if (!channel) {

@@ -1,20 +1,24 @@
-require = require('esm')(module);
+/* eslint-env node */
+import debug from 'debug';
+import path from 'path';
+import fs from 'fs';
+import {
+  app,
+  session,
+  BrowserWindow,
+  ipcMain as ipc,
+  shell,
+} from 'electron';
+import log from 'electron-log';
+import isDev from 'electron-is-dev';
+import { autoUpdater } from 'electron-updater';
+import windowStateKeeper from 'electron-window-state';
+import contextMenu from 'electron-context-menu';
 
-const debug = require('debug');
+import { Menu } from 'electron';
 
-const path = require('path');
-const fs = require('fs');
-const {
-  app, session, BrowserWindow, ipcMain: ipc, shell,
-} = require('electron');
-const log = require('electron-log');
-const isDev = require('electron-is-dev');
-const { autoUpdater } = require('electron-updater');
-const windowStateKeeper = require('electron-window-state');
-const contextMenu = require('electron-context-menu');
-
-const { Menu } = require('electron');
-const { createMenu } = require('./menu');
+import { createMenu } from './menu';
+import Network from './network';
 
 // Request update every 4 hours for those who run it over prolonged periods
 // of time.
@@ -23,7 +27,7 @@ const UPDATE_FREQUENCY = 4 * 3600 * 1000;
 const USER_DATA_DIR = app.getPath('userData');
 const DB_FILE = path.join(
   USER_DATA_DIR,
-    isDev ? (process.env.PEERLINKS_DB || 'db-dev.sqlite') :
+  isDev ? (process.env.PEERLINKS_DB || 'db-dev.sqlite') :
     'db-v2.sqlite');
 
 // Create `userData` folder if it doesn't exist
@@ -56,8 +60,6 @@ contextMenu({});
 //
 // Configure network
 //
-
-const Network = require('./network').default;
 
 log.info(`database file=${DB_FILE}`);
 const network = new Network(ipc, {
@@ -103,7 +105,7 @@ function createWindow() {
 
   window.once('closed', () => window = null);
 
-  windowState.manage(window)
+  windowState.manage(window);
 
   // Development
   if (isDev) {
@@ -158,22 +160,22 @@ app.on('window-all-closed', () => {
 });
 
 app.on('web-contents-created', (event, contents) => {
-  contents.on('will-attach-webview', (event, webPreferences, params) => {
+  contents.on('will-attach-webview', (event, webPreferences) => {
     delete webPreferences.preload;
     delete webPreferences.preloadURL;
 
     // Disable Node.js integration
-    webPreferences.nodeIntegration = false
+    webPreferences.nodeIntegration = false;
   });
 
   // Disable navigation
-  contents.on('will-navigate', (event, navigationUrl) => {
+  contents.on('will-navigate', (event) => {
     event.preventDefault();
   });
 
   // No new windows
   contents.on('new-window', async (event, navigationUrl) => {
-    event.preventDefault()
+    event.preventDefault();
 
     await shell.openExternal(navigationUrl);
   });

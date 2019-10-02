@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import FullScreen from '../layouts/FullScreen';
@@ -15,7 +16,7 @@ function InviteRequest({ identities, request, state }) {
   const options = identities.map((identity) => {
     return <option key={identity.publicKey} value={identity.publicKey}>
       {identity.name}
-    </option>
+    </option>;
   });
 
   // Select first identity
@@ -88,6 +89,21 @@ function InviteRequest({ identities, request, state }) {
     </div>
   </FullScreen>;
 }
+
+InviteRequest.propTypes = {
+  identities: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    publicKey: PropTypes.string.isRequired,
+  })),
+  request: PropTypes.func.isRequired,
+  state: PropTypes.shape({
+    request: PropTypes.shape({
+      request: PropTypes.string,
+    }),
+    identityKey: PropTypes.string,
+    isGenerating: PropTypes.bool,
+  }),
+};
 
 const mapStateToProps = (state) => {
   return {

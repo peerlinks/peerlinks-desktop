@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import FullScreen from '../layouts/FullScreen';
 
 import {
-  createChannel, newChannelReset,
+  createChannel,
 } from '../redux/actions';
 
 import './NewChannel.css';
 
-function NewChannel({ isFeed, createChannel, reset, state, network }) {
+function NewChannel({ isFeed, createChannel, state, network }) {
   const [ channelName, setChannelName ] = useState('');
 
   const isValid = /^[^\s#@]+$/.test(channelName);
@@ -75,6 +76,13 @@ function NewChannel({ isFeed, createChannel, reset, state, network }) {
   </FullScreen>;
 }
 
+NewChannel.propTypes = {
+  isFeed: PropTypes.bool.isRequired,
+  createChannel: PropTypes.func.isRequired,
+  state: PropTypes.shape({ isLoading: PropTypes.bool }),
+  network: PropTypes.shape({ isFirstRun: PropTypes.bool }),
+};
+
 const mapStateToProps = (state) => {
   return {
     network: state.network,
@@ -85,7 +93,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     createChannel: (...args) => dispatch(createChannel(...args)),
-    reset: (...args) => dispatch(newChannelReset(...args)),
   };
 };
 

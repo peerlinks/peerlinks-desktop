@@ -4,7 +4,7 @@
   "author": "Fedor Indutny <fedor@indutny.com>",
   "version": "3.9.0",
   "private": true,
-  "main": "src/electron/main.js",
+  "main": "public/electron.js",
   "repository": "git@github.com:peerlinks/peerlinks-desktop",
   "build": {
     "appId": "com.indutny.peerlinks-electron",
@@ -42,6 +42,8 @@
     "sodium-universal": "^2.0.0"
   },
   "scripts": {
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "npm run lint -- --fix",
     "start": "npm run react:build && ELECTRON_IS_DEV=0 electron .",
     "postinstall": "electron-builder install-app-deps",
     "react:start": "react-scripts start",
@@ -73,6 +75,8 @@
     "electron": "^6.0.11",
     "electron-builder": "^21.2.0",
     "emoji-mart": "^2.11.1",
+    "eslint": "^6.5.1",
+    "eslint-plugin-react": "^7.15.1",
     "moment": "^2.24.0",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",

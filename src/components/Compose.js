@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Picker } from 'emoji-mart'
+import { Picker } from 'emoji-mart';
 
 import { postMessage, updateComposeState, postFile, addNotification } from '../redux/actions';
 import { convertFileToBase64, getAttachmentsPayload } from '../redux/utils';
 import SelectIdentity, { Option } from './SelectIdentity';
 
-import 'emoji-mart/css/emoji-mart.css'
+import 'emoji-mart/css/emoji-mart.css';
 import './Compose.css';
 
 // TODO(indutny): pull the size limit from `@peerlinks/protocol`
@@ -26,7 +27,7 @@ function Compose(props) {
     updateState,
   } = props;
 
-  const { identityKey = null, message = '' } = state[channelId] || {};
+  const { identityKey = null, message = '' } = state;
 
   const setMessage = (newMessage) => {
     if (message === newMessage) {
@@ -61,14 +62,7 @@ function Compose(props) {
     };
   });
 
-  // Filter identities that can post to the channel
-  // TODO(indutny): expiration
-  let availableIdentities = Array.from(identities.values());
-  availableIdentities = availableIdentities.filter((identity) => {
-    return identity.channelIds.includes(channelId);
-  });
-
-  if (availableIdentities.length === 0) {
+  if (identities.length === 0) {
     return <div className='channel-compose-container'>
       <p>
         No write access to channel,&nbsp;
@@ -77,7 +71,7 @@ function Compose(props) {
     </div>;
   }
 
-  const options = availableIdentities.map((identity) => {
+  const options = identities.map((identity) => {
     return <Option
       key={identity.publicKey}
       value={identity.publicKey}
@@ -86,7 +80,7 @@ function Compose(props) {
 
   // Select first identity
   if (!identityKey) {
-    setIdentityKey(availableIdentities[0].publicKey);
+    setIdentityKey(identities[0].publicKey);
   }
 
   const onIdentityChange = (value) => {
@@ -98,6 +92,10 @@ function Compose(props) {
   };
 
   const toggleEmoji = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
     const wasVisible = isPickerVisible;
     setIsPickerVisible(!wasVisible);
 
@@ -114,7 +112,7 @@ function Compose(props) {
     e.preventDefault();
   };
 
-  const onTextFocus = (e) => {
+  const onTextFocus = () => {
     if (isPickerVisible) {
       toggleEmoji();
     }
@@ -156,7 +154,7 @@ function Compose(props) {
     input.type = 'file';
     input.onchange = handleInputChange;
     input.click();
-  }
+  };
 
   const handleInputChange = (e) => {
     e.preventDefault();
@@ -181,7 +179,7 @@ function Compose(props) {
           setMessage('');
         });
     }
-  }
+  };
 
   const lineCount = message.split(/\r\n|\n|\r/g).length;
 
@@ -237,10 +235,31 @@ function Compose(props) {
   </form>;
 }
 
-const mapStateToProps = (state) => {
+Compose.propTypes = {
+  identities: PropTypes.array.isRequired,
+  channelId: PropTypes.string.isRequired,
+
+  state: PropTypes.exact({
+    identityKey: PropTypes.string,
+    message: PropTypes.string,
+  }),
+
+  postMessage: PropTypes.func.isRequired,
+  onBeforePost: PropTypes.func.isRequired,
+  postFile: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
+  updateState: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state, { channelId }) => {
+  // Filter identities that can post to the channel
+  // TODO(indutny): expiration
+  const identities = Array.from(state.identities.values())
+    .filter((identity) => identity.channelIds.includes(channelId));
+
   return {
-    identities: state.identities,
-    state: state.compose,
+    identities,
+    state: state.compose[channelId] || {},
   };
 };
 

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -111,6 +112,19 @@ const ChannelList = withRouter(({ history, identityCount, channelList }) => {
     </section>
   </section>;
 });
+
+ChannelList.propTypes = {
+  identityCount: PropTypes.number.isRequired,
+  channelList: PropTypes.arrayOf(PropTypes.shape({
+    isFeed: PropTypes.bool.isRequired,
+    name: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    messageCount: PropTypes.number.isRequired,
+    metadata: PropTypes.shape({
+      readCount: PropTypes.number,
+    }),
+  })),
+};
 
 const mapStateToProps = (state) => {
   return {

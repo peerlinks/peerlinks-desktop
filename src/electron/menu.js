@@ -1,8 +1,9 @@
-const { app, shell } = require('electron');
+/* eslint-env node */
+import { app, shell } from 'electron';
 
 const isMac = process.platform === 'darwin';
 
-export function createMenu(win) {
+export function createMenu() {
   const menu = [
     // { role: 'appMenu' }
     ...(isMac ? [{
@@ -92,7 +93,7 @@ export function createMenu(win) {
         {
           label: 'Learn More',
           click: async () => {
-            await shell.openExternal('https://peerlinks.io')
+            await shell.openExternal('https://peerlinks.io');
           },
         },
       ],

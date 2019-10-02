@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -17,7 +18,7 @@ import './Channel.css';
 
 function Channel(props) {
   const {
-    match, channels, markRead, loadMessages,
+    match, channel, markRead, loadMessages,
     toggleSilence, updateReadHeight,
     displayFeedURL, displayHelp,
   } = props;
@@ -26,7 +27,6 @@ function Channel(props) {
   const [ isUserListVisible, setIsUserListVisible ] = useState(false);
 
   const channelId = match.params.id;
-  const channel = channels.get(channelId);
   if (!channel) {
     return null;
   }
@@ -173,9 +173,33 @@ function Channel(props) {
   </div>;
 }
 
-const mapStateToProps = (state) => {
+Channel.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({ id: PropTypes.string }),
+  }),
+  channel: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    isFeed: PropTypes.bool.isRequired,
+    readHeight: PropTypes.number.isRequired,
+    metadata: PropTypes.shape({
+      isSilenced: PropTypes.bool,
+    }),
+    messages: PropTypes.arrayOf(PropTypes.object),
+    activeUsers: PropTypes.arrayOf(PropTypes.object),
+  }),
+  markRead: PropTypes.func.isRequired,
+  loadMessages: PropTypes.func.isRequired,
+  toggleSilence: PropTypes.func.isRequired,
+  updateReadHeight: PropTypes.func.isRequired,
+  displayFeedURL: PropTypes.func.isRequired,
+  displayHelp: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state, { match }) => {
+  const channelId = match.params.id;
   return {
-    channels: state.channels,
+    channel: state.channels.get(channelId),
   };
 };
 

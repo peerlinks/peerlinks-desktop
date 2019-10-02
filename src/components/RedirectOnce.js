@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
@@ -11,6 +12,11 @@ function RedirectOnce({ redirect, setRedirect }) {
   }
   return null;
 }
+
+RedirectOnce.propTypes = {
+  redirect: PropTypes.string,
+  setRedirect: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {

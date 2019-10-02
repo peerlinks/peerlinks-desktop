@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import moment from 'moment';
 import remark from 'remark';
@@ -38,6 +39,14 @@ export function appendMessage(messages, message) {
 export function ExternalLink(props) {
   return <a target='blank' href={props.href}>{props.children}</a>;
 }
+
+ExternalLink.propTypes = {
+  href: PropTypes.string.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element.isRequired),
+  ]),
+};
 
 export function enrichMessage(message) {
   if (message.isRoot) {
@@ -118,5 +127,5 @@ export function getAttachmentsPayload (name, type = 'default', data) {
     name,
     'content-type': type,
     data
-  }
+  };
 }

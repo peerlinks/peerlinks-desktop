@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { initNetwork, eraseNetwork, networkError } from '../redux/actions';
@@ -108,7 +109,18 @@ const SignIn = ({ network, initNetwork, eraseNetwork }) => {
   return <div className='sign-in-container'>
     {network.isLoading ? <h3>Decrypting...</h3> : form}
   </div>;
-}
+};
+
+SignIn.propTypes = {
+  network: PropTypes.shape({
+    isFirstRun: PropTypes.bool,
+    error: PropTypes.string,
+    decryptAttempts: PropTypes.number.isRequired,
+    isLoading: PropTypes.bool,
+  }),
+  initNetwork: PropTypes.func.isRequired,
+  eraseNetwork: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {

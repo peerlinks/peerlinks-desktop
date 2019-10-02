@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { prerenderUserName } from '../utils';
 
@@ -28,3 +29,11 @@ export default function UserList({ channelName, users }) {
     {users.map(renderUser)}
   </div>;
 }
+
+UserList.propTypes = {
+  channelName: PropTypes.string.isRequired,
+  users: PropTypes.arrayOf(PropTypes.shape({
+    displayPath: PropTypes.arrayOf(PropTypes.string.isRequired),
+    publicKeys: PropTypes.arrayOf(PropTypes.string.isRequired),
+  })),
+};

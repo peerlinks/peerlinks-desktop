@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { removeNotification } from '../redux/actions';
@@ -37,12 +38,27 @@ function Notifications({ notifications, removeNotification }) {
       </div>
     </div>;
   };
+  render.propTypes = {
+    id: PropTypes.string.isRequired,
+    kind: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+  };
+
   return <div className='notification-container'>
     <div className='notification-list'>
       {notifications.map((notification) => render(notification))}
     </div>
   </div>;
 }
+
+Notifications.propTypes = {
+  notifications: PropTypes.arrayOf(PropTypes.exact({
+    id: PropTypes.string.isRequired,
+    kind: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+  })),
+  removeNotification: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {

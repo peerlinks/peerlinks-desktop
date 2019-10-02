@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './Message.css';
 import File from '../components/ui/File';
 
-export default React.memo(function Message(props) {
+const Message = React.memo(function Message(props) {
   const { channelName, message, isExpanded, setExpandAuthorFor } = props;
   if (message.isRoot) {
     return null;
@@ -63,3 +64,28 @@ export default React.memo(function Message(props) {
     </div>
   </div>;
 });
+
+Message.propTypes = {
+  channelName: PropTypes.string.isRequired,
+  message: PropTypes.shape({
+    isRoot: PropTypes.bool.isRequired,
+    hash: PropTypes.string.isRequired,
+    enriched: PropTypes.shape({
+      displayPath: PropTypes.arrayOf(PropTypes.shape({
+        color: PropTypes.string.isRequired,
+        publicKey: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      })),
+      time: PropTypes.shape({
+        full: PropTypes.string.isRequired,
+        short: PropTypes.string.isRequired,
+      }),
+      file: PropTypes.object,
+      text: PropTypes.string,
+    }),
+  }),
+  isExpanded: PropTypes.bool.isRequired,
+  setExpandAuthorFor: PropTypes.func.isRequired,
+};
+
+export default Message;

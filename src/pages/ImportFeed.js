@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import FullScreen from '../layouts/FullScreen';
@@ -93,7 +94,11 @@ function ImportFeed({ importFeed }) {
   </FullScreen>;
 }
 
-const mapStateToProps = (state) => {
+ImportFeed.propTypes = {
+  importFeed: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = () => {
   return {
   };
 };

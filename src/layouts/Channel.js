@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ChannelList from '../components/ChannelList';
 import Notifications from '../components/Notifications';
@@ -18,3 +19,10 @@ export default function ChannelLayout({ children }) {
     </div>
   </div>;
 }
+
+ChannelLayout.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element.isRequired),
+  ]),
+};
