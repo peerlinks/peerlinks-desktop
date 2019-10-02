@@ -84,7 +84,7 @@ export function enrichMessage(message) {
       .use(remarkReact, {
         remarkReactComponents: {
           a: ExternalLink,
-        }
+        },
       })
       .use(remarkEmoji)
       .processSync(message.json.text || '').contents;
@@ -99,7 +99,7 @@ export function enrichMessage(message) {
         short: time.format('HH:mm:ss'),
         full: time.format('lll'),
       },
-      ...enrichedPayload
+      ...enrichedPayload,
     },
   };
 }
@@ -126,6 +126,6 @@ export function getAttachmentsPayload (name, type = 'default', data) {
   return {
     name,
     'content-type': type,
-    data
+    data,
   };
 }

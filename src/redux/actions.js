@@ -775,7 +775,7 @@ export function postFile({ channelId, identityKey, files }) {
       channelId,
       identityKey,
       json: {
-        files: files
+        files: files,
       },
     });
     dispatch(appendChannelMessage({ channelId, message, isPosted: true }));
@@ -811,7 +811,7 @@ export function postMessage({ channelId, identityKey, text }) {
       return dispatch(appendInternalMessage({
         channelId,
         text: 'Invalid command arguments. ' +
-        `Expected: /${commandName} ${command.args.join(' ')}`
+        `Expected: /${commandName} ${command.args.join(' ')}`,
       }));
     }
 

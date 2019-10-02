@@ -384,7 +384,7 @@ export const channels = (state = new Map(), action) => {
         metadata: {
           ...channel.metadata,
           ...action.metadata,
-        }
+        },
       };
     });
   case CHANNEL_UPDATE_READ_HEIGHT:

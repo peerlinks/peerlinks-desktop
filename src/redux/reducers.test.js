@@ -26,7 +26,7 @@ it('appends messages to the channel', () => {
     message: {
       height: 1,
       hash: 'b',
-    }
+    },
   }));
   state = channels(state, appendChannelMessage({
     channelId: 'a',

@@ -24,13 +24,13 @@ Button.propTypes = {
   onClick: PropTypes.func.isRequired,
   color: PropTypes.oneOf([
     'success',
-    'danger'
+    'danger',
   ]),
-  label: PropTypes.string.isRequired
+  label: PropTypes.string.isRequired,
 };
 
 Button.defaultProps = {
-  color: 'black'
+  color: 'black',
 };
 
 export default Button;
