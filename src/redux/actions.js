@@ -769,17 +769,15 @@ export function renameIdentityPair({ channelId, newName }) {
 }
 
 export function postFile({ channelId, identityKey, files}) {
-
   // this function handle one file upload only
   const post = async (dispatch) => {
-
     const message = await network.postMessage({
       channelId,
       identityKey,
-      json: files[0],
+      json: {
+        files: files
+      },
     });
-
-    console.log('from postFile action', message);
     dispatch(appendChannelMessage({ channelId, message, isPosted: true }));
   };
 

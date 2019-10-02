@@ -55,8 +55,9 @@ const Default = withDownload(({ name, handleDownload, type }) => (
 const File = props => {
   const { name, data } = props;
   const type = props['content-type'];
+  const ALLOWED_IMAGE_TYPE = ['jpeg', 'png', 'jpg', 'gif', 'heic', 'heif'];
 
-  if (['jpeg', 'png', 'jpg', 'gif', 'heic', 'heif'].find(check => type.indexOf(check) !== -1)) {
+  if (ALLOWED_IMAGE_TYPE.includes(type)) {
     return <Image src={data} alt={name} />
   }
   return <Default data={data} name={name} type={type}/>;

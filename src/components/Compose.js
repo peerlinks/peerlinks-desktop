@@ -10,6 +10,8 @@ import SelectIdentity, { Option } from './SelectIdentity';
 import 'emoji-mart/css/emoji-mart.css'
 import './Compose.css';
 
+// TODO(indutny): pull the size limit from `@peerlinks/protocol`
+const SIZE_LIMIT = 2097152;
 
 function Compose(props) {
   const {
@@ -160,10 +162,10 @@ function Compose(props) {
     e.preventDefault();
     const { type, name, size } = e.target.files[0];
 
-    if (size > 2097152) {
+    if (size > SIZE_LIMIT) {
       addNotification({
         kind: 'error',
-        content: 'This file is to big (2mo max) !'
+        content: 'This file is to big (2mb max) !'
       });
     } else {
       convertFileToBase64(e.target.files[0])
@@ -247,7 +249,7 @@ const mapDispatchToProps = (dispatch) => {
     postMessage: (...args) => dispatch(postMessage(...args)),
     updateState: (...args) => dispatch(updateComposeState(...args)),
     postFile: (...args) => dispatch(postFile(...args)),
-    addNotification: (...args) => dispatch(addNotification(...args))
+    addNotification: (...args) => dispatch(addNotification(...args)),
   };
 };
 

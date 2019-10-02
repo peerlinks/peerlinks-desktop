@@ -1,84 +1,97 @@
 .message .message-text > .image-file {
-    position: relative;
-    width: 50%;
+  position: relative;
+  max-width: 400px;
 }
 
-/*.message .message-text > .image-file:hover > img {
-    opacity: 0.3;
-}*/
-
 .message .message-text > .image-file:hover > .overlay {
-    opacity: 0.6;
+  opacity: 0.6;
 }
 
 .message .message-text > .image-file > img {
-    width: 100%;
-    border: 1px solid lightgrey;
-    border-radius: 5px;
-    padding: 5px;
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  padding: 5px;
 
-    opacity: 1;
-    display: block;
-    height: auto;
-    transition: .5s ease;
-    backface-visibility: hidden;
+  opacity: 1;
+  display: block;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
 }
 
 .image-file > .overlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-    opacity: 0;
-    transition: .4s ease;
-    background-color: black;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .4s ease;
+  background-color: black;
 }
 
 .image-file > .overlay > img {
-    opacity: 1;
-    z-index: 2;
-    width: 1.5rem;
-    height: 1.5rem;
-    background-size: contain;
-    border-radius: 50%;
-    cursor: pointer;
-    margin-left: 10px;
-    margin-top: 10px;
+  opacity: 1;
+  z-index: 2;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-size: contain;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 
 .image-file > .overlay > img:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .default-file {
-    width: 70%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid lightgrey;
-    border-radius: 5px;
-    padding: 7px;
+  max-width: 400px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  padding: 7px;
 }
 
 .default-file > div {
-    display: flex;
-    max-height: 1px; /* hack */
-    align-items: center;
+  display: flex;
+  max-height: 1px; /* hack */
+  align-items: center;
 }
 
 .default-file .titles {
-    margin-left: 10px;
+  margin-left: 10px;
+  width: 100%;
 }
 
 .default-file p {
-    margin: 0;
+  margin: 0;
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .default-file img {
-    width: 25px;
-    height: 25px;
+  width: 25px;
+  height: 25px;
+}
+
+@media screen and (max-width: 930px) {
+  .default-file {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .default-file p {
+    width: auto;
+  }
 }

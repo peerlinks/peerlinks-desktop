@@ -1,49 +1,49 @@
 .button {
-    border: 1px solid #4c4c9d;
-    border-radius: 0.25rem;
-    padding: 0.5rem;
-    background: none;
-    text-decoration:none;
-    color: #4c4c9d;
-    font-size: 1rem;
+  border: 1px solid #4c4c9d;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  background: none;
+  text-decoration:none;
+  color: #4c4c9d;
+  font-size: 1rem;
 
-    cursor: pointer;
-    transition: background 0.25s, color 0.25s;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
 }
 
 .button:focus {
-    outline: 0;
+  outline: 0;
 }
 
 .button:disabled {
-    color: #afafaf;
+  color: #afafaf;
 }
 
 .button:hover:not(:disabled), .button:focus:not(:disabled) {
-    background: #4c4c9d;
-    color: #f9f9f9;
+  background: #4c4c9d;
+  color: #f9f9f9;
 }
 
 /* Types : danger, success */
 
 .button.danger {
-    background: none;
-    color: #ff3c38;
-    border-color: #ff3c38;
+  background: none;
+  color: #ff3c38;
+  border-color: #ff3c38;
 }
 
 .button.danger:hover:not(:disabled) {
-    background: #ff3c38;
-    color: #fbf5f3;
+  background: #ff3c38;
+  color: #fbf5f3;
 }
 
 .button.success {
-    background: none;
-    color: forestgreen;
-    border-color: forestgreen;
+  background: none;
+  color: forestgreen;
+  border-color: forestgreen;
 }
 
 .button.success:hover:not(:disabled) {
-    background: forestgreen;
-    color: #fbf5f3;
+  background: forestgreen;
+  color: #fbf5f3;
 }

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-// todo : add iconName Props and render Icon component
-// todo : replace all buttons in the app
+// todo (tony-go) : add iconName Props and render Icon component
+// todo (tony-go) : replace all buttons in the app
 
 import './Button.css';
 
