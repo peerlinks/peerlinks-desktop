@@ -57,7 +57,7 @@ const File = props => {
   const type = props['content-type'];
   const ALLOWED_IMAGE_TYPE = ['jpeg', 'png', 'jpg', 'gif', 'heic', 'heif'];
 
-  if (ALLOWED_IMAGE_TYPE.includes(type)) {
+  if (ALLOWED_IMAGE_TYPE.find(check => type.includes(check))) {
     return <Image src={data} alt={name} />
   }
   return <Default data={data} name={name} type={type}/>;
