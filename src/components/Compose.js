@@ -22,6 +22,7 @@ function Compose(props) {
     onBeforePost,
     postFile,
     addNotification,
+    lastMessageText,
 
     state,
     updateState,
@@ -46,12 +47,16 @@ function Compose(props) {
   const input = useRef();
 
   useEffect(() => {
-    const onKeyDown = (e) => {
+    const onKeyDown = e => {
       if (!e.key || e.metaKey || e.ctrlKey) {
         return;
       }
 
       if (input.current && !isPickerVisible) {
+        // don't overwrite if something already typed
+        if (e.keyCode === 38 && !message) {
+          setMessage(lastMessageText);
+        }
         input.current.focus();
       }
     };
@@ -238,6 +243,7 @@ function Compose(props) {
 Compose.propTypes = {
   identities: PropTypes.array.isRequired,
   channelId: PropTypes.string.isRequired,
+  lastMessageText: PropTypes.string,
 
   state: PropTypes.exact({
     identityKey: PropTypes.string,
