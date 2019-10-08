@@ -47,14 +47,14 @@ function Compose(props) {
   const input = useRef();
 
   useEffect(() => {
-    const onKeyDown = e => {
+    const onKeyDown = (e) => {
       if (!e.key || e.metaKey || e.ctrlKey) {
         return;
       }
 
       if (input.current && !isPickerVisible) {
         // don't overwrite if something already typed
-        if (e.keyCode === 38 && !message) {
+        if (e.code === 'ArrowUp' && !message) {
           setMessage(lastMessageText);
         }
         input.current.focus();
