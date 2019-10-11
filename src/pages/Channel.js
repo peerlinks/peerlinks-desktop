@@ -168,7 +168,7 @@ function Channel(props) {
       </div>
     </div>
     <footer className='channel-compose'>
-      <Compose channelId={channelId} onBeforePost={onBeforePost} />
+      <Compose channelId={channelId} onBeforePost={onBeforePost}/>
     </footer>
   </div>;
 }

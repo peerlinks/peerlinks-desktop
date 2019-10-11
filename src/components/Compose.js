@@ -66,8 +66,16 @@ function Compose(props) {
     const recentIndex = usersRecentMessages.findIndex(urm => urm.json.text === message);
 
     if(message && recentIndex !== -1) {
-      const incrementAmount = { ArrowUp: -1, ArrowDown: 1 };
-      const nextIndex = Math.abs((recentIndex + incrementAmount[code]) % usersRecentMessages.length);
+      let nextIndex = 0;
+      const length = usersRecentMessages.length;
+
+      if(code === 'ArrowUp') {
+        nextIndex = Math.abs((recentIndex - 1 + length) % length);
+      }
+      if(code === 'ArrowDown') {
+        nextIndex = Math.abs((recentIndex + 1) % length);
+      }
+
       const nextMessage = usersRecentMessages[nextIndex].json.text;
 
       return nextMessage;
