@@ -22,13 +22,13 @@ function Compose(props) {
     onBeforePost,
     postFile,
     addNotification,
-    lastMessageText,
+    messages,
 
     state,
     updateState,
   } = props;
 
-  const { identityKey = null, message = '' } = state;
+  const { identityKey = null, message = '', usersRecentMessages = [] } = state;
 
   const setMessage = (newMessage) => {
     if (message === newMessage) {
@@ -36,11 +36,57 @@ function Compose(props) {
     }
     updateState({ channelId, state: { message: newMessage } });
   };
+
+  const getRecentMessages = (identityKey) => {
+    return messages.filter(
+      m =>
+        !m.isRoot &&
+        m.author.publicKeys.some(pubKey => pubKey === identityKey)
+    );
+  };
+
+  const setUsersRecentMessages = (newIdentityKey) => {
+    if (identityKey === newIdentityKey) {
+      return;
+    }
+
+    const usersRecentMessages = getRecentMessages(newIdentityKey);
+
+    updateState({
+      channelId,
+      state: { usersRecentMessages },
+    });
+  };
+
+  const getNextMessage = (code) => {
+    if(!message) {
+      return usersRecentMessages[usersRecentMessages.length - 1].json.text;
+    }
+
+    const recentIndex = usersRecentMessages.findIndex(urm => urm.json.text === message);
+
+    if(message && recentIndex !== -1) {
+      const incrementAmount = { ArrowUp: -1, ArrowDown: 1 };
+      const nextIndex = Math.abs((recentIndex + incrementAmount[code]) % usersRecentMessages.length);
+      const nextMessage = usersRecentMessages[nextIndex].json.text;
+
+      return nextMessage;
+    }
+
+    return null;
+  };
+
   const setIdentityKey = (newIdentityKey) => {
     if (identityKey === newIdentityKey) {
       return;
     }
-    updateState({ channelId, state: { identityKey: newIdentityKey } });
+
+    const usersRecentMessages = getRecentMessages(newIdentityKey);
+
+    updateState({
+      channelId,
+      state: { identityKey: newIdentityKey, usersRecentMessages },
+    });
   };
 
   const [ isPickerVisible, setIsPickerVisible ] = useState(false);
@@ -52,12 +98,28 @@ function Compose(props) {
         return;
       }
 
+      // if the user selects a different identity, the focus will be on the select
+      // this is used to allow up/down to cycle through identities
+      const isSelect = e.target.nodeName === 'SELECT';
+
+      // this is used to preserve non up/down keys to bring focus to textarea
+      const isUpOrDown = e.code === 'ArrowUp' || e.code === 'ArrowDown';
+
       if (input.current && !isPickerVisible) {
-        // don't overwrite if something already typed
-        if (e.code === 'ArrowUp' && !message) {
-          setMessage(lastMessageText);
+        if (!isSelect) {
+          const areMessages = usersRecentMessages.length > 0;
+
+          if (areMessages &&  isUpOrDown && !isSelect) {
+            const nextMessage = getNextMessage(e.code);
+
+            if(nextMessage !== null && nextMessage !== message) {
+              setMessage(nextMessage);
+            }
+          }
+          input.current.focus();
+        } else if(isSelect && !isUpOrDown) {
+          input.current.focus();
         }
-        input.current.focus();
       }
     };
     document.addEventListener('keydown', onKeyDown);
@@ -86,6 +148,10 @@ function Compose(props) {
   // Select first identity
   if (!identityKey) {
     setIdentityKey(identities[0].publicKey);
+  }
+
+  if (messages.length && identityKey) {
+    setUsersRecentMessages(identityKey);
   }
 
   const onIdentityChange = (value) => {
@@ -243,11 +309,12 @@ function Compose(props) {
 Compose.propTypes = {
   identities: PropTypes.array.isRequired,
   channelId: PropTypes.string.isRequired,
-  lastMessageText: PropTypes.string,
+  messages: PropTypes.array,
 
   state: PropTypes.exact({
     identityKey: PropTypes.string,
     message: PropTypes.string,
+    usersRecentMessages: PropTypes.array,
   }),
 
   postMessage: PropTypes.func.isRequired,
@@ -265,6 +332,7 @@ const mapStateToProps = (state, { channelId }) => {
 
   return {
     identities,
+    messages: state.channels.get(channelId).messages || [],
     state: state.compose[channelId] || {},
   };
 };

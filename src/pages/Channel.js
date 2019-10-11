@@ -129,12 +129,6 @@ function Channel(props) {
     </span>;
   }
 
-  let lastMessage = channel.messages[channel.messages.length - 1];
-  let lastMessageText = '';
-  if(lastMessage && lastMessage.json) {
-    lastMessageText = lastMessage.json.text;
-  }
-
   return <div className='channel-container'>
     <header className='channel-info'>
       <div className='channel-info-container'>
@@ -174,7 +168,7 @@ function Channel(props) {
       </div>
     </div>
     <footer className='channel-compose'>
-      <Compose channelId={channelId} onBeforePost={onBeforePost} lastMessageText={lastMessageText}/>
+      <Compose channelId={channelId} onBeforePost={onBeforePost} />
     </footer>
   </div>;
 }
