@@ -107,17 +107,19 @@ function Compose(props) {
       }
 
       // if the user selects a different identity, the focus will be on the select
-      // this is used to allow up/down to cycle through identities
+      // this is used to allow up/down to cycle through identities if the focus is on select
       const isSelect = e.target.nodeName === 'SELECT';
 
-      // this is used to preserve non up/down keys to bring focus to textarea
       const isUpOrDown = e.code === 'ArrowUp' || e.code === 'ArrowDown';
 
       if (input.current && !isPickerVisible) {
         if (!isSelect) {
           const areMessages = usersRecentMessages.length > 0;
 
-          if (areMessages &&  isUpOrDown && !isSelect) {
+          // so only the up key starts the cycle through recent messages
+          const keyDownNoMessage = (!message && e.code === 'ArrowDown');
+
+          if (areMessages &&  isUpOrDown && !isSelect && !keyDownNoMessage) {
             const nextMessage = getNextMessage(e.code);
 
             if(nextMessage !== null && nextMessage !== message) {
@@ -125,7 +127,7 @@ function Compose(props) {
             }
           }
           input.current.focus();
-        } else if(isSelect && !isUpOrDown) {
+        } else if(isSelect && !isUpOrDown) { // so non up/down keys bring focus to textarea
           input.current.focus();
         }
       }
