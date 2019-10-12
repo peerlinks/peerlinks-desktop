@@ -39,7 +39,7 @@ function Compose(props) {
     updateState({ channelId, state: { message: newMessage } });
   };
 
-  const getRecentMessages = (identityKey) => {
+  const getUsersRecentMessages = (identityKey) => {
     const recentMessages = [];
 
     for (let i = messages.length - 1; i >= 0; i--) {
@@ -60,15 +60,18 @@ function Compose(props) {
   };
 
   const setUsersRecentMessages = (newIdentityKey) => {
-    if (identityKey === newIdentityKey) {
+    const newRecentMessages = getUsersRecentMessages(newIdentityKey);
+
+    const recentMessagesUnchanged = usersRecentMessages
+      .every((urm, index) => newRecentMessages[index].json.text === urm.json.text);
+
+    if ((identityKey === newIdentityKey) && recentMessagesUnchanged) {
       return;
     }
 
-    const usersRecentMessages = getRecentMessages(newIdentityKey);
-
     updateState({
       channelId,
-      state: { usersRecentMessages },
+      state: { usersRecentMessages: newRecentMessages },
     });
   };
 
@@ -110,7 +113,7 @@ function Compose(props) {
       return;
     }
 
-    const usersRecentMessages = getRecentMessages(newIdentityKey);
+    const usersRecentMessages = getUsersRecentMessages(newIdentityKey);
 
     updateState({
       channelId,
