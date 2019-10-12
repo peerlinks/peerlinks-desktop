@@ -73,15 +73,22 @@ function Compose(props) {
   };
 
   const getNextMessage = (code) => {
+    // remove duplicates, better for ux, won't look like value is not updating
+    // also simpler logic handling next message
+    const messageTexts = [
+      ...new Set(usersRecentMessages.map(urm => urm.json.text)),
+    ];
+
     if(!message) {
-      return usersRecentMessages[usersRecentMessages.length - 1].json.text;
+      // start with most recent
+      return messageTexts[messageTexts.length - 1];
     }
 
-    const recentIndex = usersRecentMessages.findIndex(urm => urm.json.text === message);
+    const recentIndex = messageTexts.findIndex(mt => mt === message);
 
     if(message && recentIndex !== -1) {
       let nextIndex = 0;
-      const length = usersRecentMessages.length;
+      const length = messageTexts.length;
 
       if(code === 'ArrowUp') {
         nextIndex = Math.abs((recentIndex - 1 + length) % length);
@@ -90,7 +97,7 @@ function Compose(props) {
         nextIndex = Math.abs((recentIndex + 1) % length);
       }
 
-      const nextMessage = usersRecentMessages[nextIndex].json.text;
+      const nextMessage = messageTexts[nextIndex];
 
       return nextMessage;
     }
