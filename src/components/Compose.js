@@ -30,6 +30,8 @@ function Compose(props) {
 
   const { identityKey = null, message = '', usersRecentMessages = [] } = state;
 
+  const RECENT_MESSAGES_LIMIT = 10;
+
   const setMessage = (newMessage) => {
     if (message === newMessage) {
       return;
@@ -38,11 +40,23 @@ function Compose(props) {
   };
 
   const getRecentMessages = (identityKey) => {
-    return messages.filter(
-      m =>
-        !m.isRoot &&
-        m.author.publicKeys.some(pubKey => pubKey === identityKey)
-    );
+    const recentMessages = [];
+
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const message = messages[i];
+
+      if(!message.isRoot && message.author.publicKeys.some(pubKey => pubKey === identityKey)) {
+        const newLength = recentMessages.push(message);
+
+        if(newLength === RECENT_MESSAGES_LIMIT) {
+          break;
+        }
+      }
+    }
+
+    recentMessages.reverse();
+
+    return recentMessages;
   };
 
   const setUsersRecentMessages = (newIdentityKey) => {
