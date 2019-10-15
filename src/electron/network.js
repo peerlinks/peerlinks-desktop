@@ -114,7 +114,7 @@ export default class Network {
     }, false);
 
     handle('getStatus', async () => {
-      const isFirstRun = (await this.storage.getEntityCount()) === 0;
+      const isFirstRun = await this.storage.getEntityCount() === 0;
       return {
         isReady: this.isReady,
         isFirstRun,
@@ -604,7 +604,7 @@ export default class Network {
     let unread = 0;
     for (const channel of this.peerLinks.channels) {
       const messageCount = await channel.getMessageCount();
-      const readCount = (channel.metadata && channel.metadata.readCount) || 0;
+      const readCount = channel.metadata && channel.metadata.readCount || 0;
 
       unread += Math.max(messageCount - readCount, 0);
     }

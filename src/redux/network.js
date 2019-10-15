@@ -115,7 +115,7 @@ export default class Network {
 
   async request(type, payload, timeout) {
     const seq = this.seq;
-    this.seq = (this.seq + 1) >>> 0;
+    this.seq = this.seq + 1 >>> 0;
 
     window.postMessage({
       sender: 'renderer',

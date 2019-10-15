@@ -159,7 +159,7 @@ export const compose = (state = {}, action) => {
     return {
       ...state,
       [action.channelId]: {
-        ...(state[action.channelId] || {}),
+        ...state[action.channelId] || {},
         ...action.state,
       },
     };

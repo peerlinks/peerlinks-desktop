@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 import './Button.css';
 
-const Button = ({ onClick, color, label, ...rest }) => (
+const Button = ({ onClick, color, label, ...rest }) =>
   <button
     onClick={onClick}
     className={classNames(
@@ -17,9 +17,7 @@ const Button = ({ onClick, color, label, ...rest }) => (
     {...rest}
   >
     {label}
-  </button>
-);
-
+  </button>;
 Button.propTypes = {
   onClick: PropTypes.func.isRequired,
   color: PropTypes.oneOf([

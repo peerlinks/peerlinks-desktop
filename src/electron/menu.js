@@ -6,7 +6,7 @@ const isMac = process.platform === 'darwin';
 export function createMenu() {
   const menu = [
     // { role: 'appMenu' }
-    ...(isMac ? [ {
+    ...isMac ? [ {
       label: app.getName(),
       submenu: [
         { role: 'about' },
@@ -19,7 +19,7 @@ export function createMenu() {
         { type: 'separator' },
         { role: 'quit' },
       ],
-    } ] : []),
+    } ] : [],
     // { role: 'fileMenu' }
     {
       label: 'File',
@@ -37,7 +37,7 @@ export function createMenu() {
         { role: 'cut' },
         { role: 'copy' },
         { role: 'paste' },
-        ...(isMac ? [
+        ...isMac ? [
           { role: 'pasteAndMatchStyle' },
           { role: 'delete' },
           { role: 'selectAll' },
@@ -53,7 +53,7 @@ export function createMenu() {
           { role: 'delete' },
           { type: 'separator' },
           { role: 'selectAll' },
-        ]),
+        ],
       ],
     },
     // { role: 'viewMenu' }
@@ -77,14 +77,14 @@ export function createMenu() {
       submenu: [
         { role: 'minimize' },
         { role: 'zoom' },
-        ...(isMac ? [
+        ...isMac ? [
           { type: 'separator' },
           { role: 'front' },
           { type: 'separator' },
           { role: 'window' },
         ] : [
           { role: 'close' },
-        ]),
+        ],
       ],
     },
     {
