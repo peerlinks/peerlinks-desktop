@@ -129,36 +129,43 @@ function Compose(props) {
         return;
       }
 
-      // if the user selects a different identity, the focus will be on the select
-      // this is used to allow up/down to cycle through identities if the focus is on select
-      const isSelect = e.target.nodeName === 'SELECT';
-
-      const isUpOrDown = e.code === 'ArrowUp' || e.code === 'ArrowDown';
-
       if (input.current && !isPickerVisible) {
-        if (!isSelect) {
-          const areMessages = usersRecentMessages.length > 0;
-
-          // so only the up key starts the cycle through recent messages
-          const keyDownNoMessage = (!message && e.code === 'ArrowDown');
-
-          if (areMessages &&  isUpOrDown && !isSelect && !keyDownNoMessage) {
-            const nextMessage = getNextMessage(e.code);
-
-            if(nextMessage !== null && nextMessage !== message) {
-              setMessage(nextMessage);
-            }
-          }
-          input.current.focus();
-        } else if(isSelect && !isUpOrDown) { // so non up/down keys bring focus to textarea
-          input.current.focus();
-        }
+        input.current.focus();
       }
     };
     document.addEventListener('keydown', onKeyDown);
 
     return () => {
       document.removeEventListener('keydown', onKeyDown);
+    };
+  });
+
+  useEffect(() => {
+    const onArrowKeyDown = e => {
+      if (!e.key || e.metaKey || e.ctrlKey) {
+        return;
+      }
+
+      if (input.current && !isPickerVisible) {
+        const areMessages = usersRecentMessages.length > 0;
+
+        // so only the up key/no message starts the cycle through recent messages
+        const keyDownNoMessage = !message && e.code === 'ArrowDown';
+
+        if (areMessages && !keyDownNoMessage) {
+          const nextMessage = getNextMessage(e.code);
+
+          if (nextMessage !== null && nextMessage !== message) {
+            setMessage(nextMessage);
+          }
+        }
+        input.current.focus();
+      }
+    };
+    input.current.addEventListener('keydown', onArrowKeyDown);
+
+    return () => {
+      input.current.removeEventListener('keydown', onArrowKeyDown);
     };
   });
 
