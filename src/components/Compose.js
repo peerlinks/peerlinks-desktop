@@ -22,12 +22,18 @@ function Compose(props) {
     onBeforePost,
     postFile,
     addNotification,
+    history,
 
     state,
     updateState,
   } = props;
 
-  const { identityKey = null, message = '' } = state;
+  const {
+    identityKey = null,
+    message = '',
+    usersRecentMessages = [],
+    recentMessageIndex = -1,
+  } = state;
 
   const setMessage = (newMessage) => {
     if (message === newMessage) {
@@ -35,11 +41,76 @@ function Compose(props) {
     }
     updateState({ channelId, state: { message: newMessage } });
   };
+
+  const setRecentMessageIndex = (newIndex) => {
+    if (recentMessageIndex === newIndex) {
+      return;
+    }
+    updateState({ channelId, state: { recentMessageIndex: newIndex } });
+  };
+
+  const getUsersRecentMessages = (identityKey) => {
+    const recentMessages = history.get(identityKey) || [];
+    return recentMessages;
+  };
+
+  const setUsersRecentMessages = (newIdentityKey) => {
+    const newRecentMessages = getUsersRecentMessages(newIdentityKey);
+
+    const recentMessagesUnchanged =
+      usersRecentMessages.length === newRecentMessages.length &&
+      usersRecentMessages.every(
+        (urm, index) => newRecentMessages[index] === urm
+      );
+
+    if (identityKey === newIdentityKey && recentMessagesUnchanged) {
+      return;
+    }
+
+    updateState({
+      channelId,
+      state: { usersRecentMessages: newRecentMessages },
+    });
+  };
+
+  const getNextMessage = (code) => {
+    const startIndex = usersRecentMessages.length - 1;
+
+    if (!message) {
+      // start with most recent
+      return { message: usersRecentMessages[startIndex], index: startIndex };
+    }
+
+    const indexInHistory = usersRecentMessages.findIndex(urm => urm === message);
+
+    if (message && recentMessageIndex !== -1 && indexInHistory !== -1) {
+      let nextIndex = 0;
+      const length = usersRecentMessages.length;
+
+      if (code === 'ArrowUp') {
+        nextIndex = Math.abs((recentMessageIndex - 1 + length) % length);
+      }
+      if (code === 'ArrowDown') {
+        nextIndex = Math.abs((recentMessageIndex + 1) % length);
+      }
+
+      const nextMessage = usersRecentMessages[nextIndex];
+
+      return { message: nextMessage, index: nextIndex };
+    }
+
+    return null;
+  };
+
   const setIdentityKey = (newIdentityKey) => {
     if (identityKey === newIdentityKey) {
       return;
     }
-    updateState({ channelId, state: { identityKey: newIdentityKey } });
+
+    updateState({
+      channelId,
+      state: { identityKey: newIdentityKey },
+    });
   };
 
   const [ isPickerVisible, setIsPickerVisible ] = useState(false);
@@ -62,6 +133,36 @@ function Compose(props) {
     };
   });
 
+  useEffect(() => {
+    const onArrowKeyDown = (e) => {
+      if (!e.key || e.metaKey || e.ctrlKey) {
+        return;
+      }
+
+      const isUpOrDown = e.code === 'ArrowUp' || e.code === 'ArrowDown';
+
+      if (input.current && !isPickerVisible && isUpOrDown) {
+        const areMessages = usersRecentMessages.length > 0;
+        const keyDownNoMessage = !message && e.code === 'ArrowDown';
+
+        if (areMessages && !keyDownNoMessage) {
+          const nextMessage = getNextMessage(e.code);
+
+          if (nextMessage !== null && nextMessage !== message) {
+            setMessage(nextMessage.message);
+            setRecentMessageIndex(nextMessage.index);
+          }
+        }
+        input.current.focus();
+      }
+    };
+    input.current.addEventListener('keydown', onArrowKeyDown);
+
+    return () => {
+      input.current.removeEventListener('keydown', onArrowKeyDown);
+    };
+  });
+
   if (identities.length === 0) {
     return <div className='channel-compose-container'>
       <p>
@@ -81,6 +182,10 @@ function Compose(props) {
   // Select first identity
   if (!identityKey) {
     setIdentityKey(identities[0].publicKey);
+  }
+
+  if (history.size > 0 && identityKey) {
+    setUsersRecentMessages(identityKey);
   }
 
   const onIdentityChange = (value) => {
@@ -238,10 +343,13 @@ function Compose(props) {
 Compose.propTypes = {
   identities: PropTypes.array.isRequired,
   channelId: PropTypes.string.isRequired,
+  history: PropTypes.array,
 
   state: PropTypes.exact({
     identityKey: PropTypes.string,
     message: PropTypes.string,
+    usersRecentMessages: PropTypes.array,
+    recentMessageIndex: PropTypes.number,
   }),
 
   postMessage: PropTypes.func.isRequired,
@@ -259,6 +367,7 @@ const mapStateToProps = (state, { channelId }) => {
 
   return {
     identities,
+    history: state.channels.get(channelId).history || new Map(),
     state: state.compose[channelId] || {},
   };
 };

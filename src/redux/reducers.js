@@ -23,7 +23,7 @@ import {
 
   ADD_CHANNEL, REMOVE_CHANNEL, APPEND_CHANNEL_MESSAGE, APPEND_CHANNEL_MESSAGES,
   TRIM_CHANNEL_MESSAGES, CHANNEL_SET_MESSAGE_COUNT, CHANNEL_UPDATE_METADATA,
-  CHANNEL_UPDATE_READ_HEIGHT, CHANNEL_SET_CHAIN_MAP,
+  CHANNEL_UPDATE_READ_HEIGHT, CHANNEL_SET_CHAIN_MAP, CHANNEL_PUSH_TO_HISTORY,
 
   RENAME_IDENTITY_PAIR,
 } from './actions';
@@ -336,6 +336,8 @@ export const channels = (state = new Map(), action) => {
           // NOTE: See CHANNEL_SET_CHAIN_MAP below
           activeUsers: [],
 
+          history: channel.history,
+
           // NOTE: Do not update channel messages
           messages: channel.messages,
         };
@@ -348,6 +350,8 @@ export const channels = (state = new Map(), action) => {
 
       // NOTE: See CHANNEL_SET_CHAIN_MAP below
       activeUsers: [],
+
+      history: new Map(),
 
       // Start in all-read state
       messagesRead: action.channel.messageCount,
@@ -464,6 +468,23 @@ export const channels = (state = new Map(), action) => {
     }
 
     return copy;
+  }
+  case CHANNEL_PUSH_TO_HISTORY: {
+    return updateChannel(state, action, (channel) => {
+      const history = new Map(channel.history);
+      const identityMessages = history.get(action.identityKey);
+
+      if (identityMessages) {
+        history.set(action.identityKey, [ ...identityMessages, action.message ]);
+      } else {
+        history.set(action.identityKey, [ action.message ]);
+      }
+
+      return {
+        ...channel,
+        history,
+      };
+    });
   }
   default:
     return state;
