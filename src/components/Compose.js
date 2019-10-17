@@ -22,15 +22,13 @@ function Compose(props) {
     onBeforePost,
     postFile,
     addNotification,
-    messages,
+    history,
 
     state,
     updateState,
   } = props;
 
   const { identityKey = null, message = '', usersRecentMessages = [] } = state;
-
-  const RECENT_MESSAGES_LIMIT = 10;
 
   const setMessage = (newMessage) => {
     if (message === newMessage) {
@@ -40,22 +38,7 @@ function Compose(props) {
   };
 
   const getUsersRecentMessages = (identityKey) => {
-    const recentMessages = [];
-
-    for (let i = messages.length - 1; i >= 0; i--) {
-      const message = messages[i];
-
-      if(!message.isRoot && message.author.publicKeys.some(pubKey => pubKey === identityKey)) {
-        const newLength = recentMessages.push(message);
-
-        if(newLength === RECENT_MESSAGES_LIMIT) {
-          break;
-        }
-      }
-    }
-
-    recentMessages.reverse();
-
+    const recentMessages = history.get(identityKey) || [];
     return recentMessages;
   };
 
@@ -64,7 +47,7 @@ function Compose(props) {
 
     const recentMessagesUnchanged =
       usersRecentMessages.length === newRecentMessages.length &&
-      usersRecentMessages.every((urm, index) => newRecentMessages[index].json.text === urm.json.text);
+      usersRecentMessages.every((urm, index) => newRecentMessages[index] === urm);
 
     if ((identityKey === newIdentityKey) && recentMessagesUnchanged) {
       return;
@@ -77,22 +60,16 @@ function Compose(props) {
   };
 
   const getNextMessage = (code) => {
-    // remove duplicates, better for ux, won't look like value is not updating
-    // also simpler logic handling next message
-    const messageTexts = [
-      ...new Set(usersRecentMessages.map(urm => urm.json.text)),
-    ];
-
     if(!message) {
       // start with most recent
-      return messageTexts[messageTexts.length - 1];
+      return usersRecentMessages[usersRecentMessages.length - 1];
     }
 
-    const recentIndex = messageTexts.findIndex(mt => mt === message);
+    const recentIndex = usersRecentMessages.findIndex(mt => mt === message);
 
     if(message && recentIndex !== -1) {
       let nextIndex = 0;
-      const length = messageTexts.length;
+      const length = usersRecentMessages.length;
 
       if(code === 'ArrowUp') {
         nextIndex = Math.abs((recentIndex - 1 + length) % length);
@@ -101,7 +78,7 @@ function Compose(props) {
         nextIndex = Math.abs((recentIndex + 1) % length);
       }
 
-      const nextMessage = messageTexts[nextIndex];
+      const nextMessage = usersRecentMessages[nextIndex];
 
       return nextMessage;
     }
@@ -146,10 +123,10 @@ function Compose(props) {
         return;
       }
 
-      if (input.current && !isPickerVisible) {
-        const areMessages = usersRecentMessages.length > 0;
+      const isUpOrDown = e.code === 'ArrowUp' || e.code === 'ArrowDown';
 
-        // so only the up key/no message starts the cycle through recent messages
+      if (input.current && !isPickerVisible && isUpOrDown) {
+        const areMessages = usersRecentMessages.length > 0;
         const keyDownNoMessage = !message && e.code === 'ArrowDown';
 
         if (areMessages && !keyDownNoMessage) {
@@ -190,7 +167,7 @@ function Compose(props) {
     setIdentityKey(identities[0].publicKey);
   }
 
-  if (messages.length && identityKey) {
+  if (history.size > 0 && identityKey) {
     setUsersRecentMessages(identityKey);
   }
 
@@ -349,7 +326,7 @@ function Compose(props) {
 Compose.propTypes = {
   identities: PropTypes.array.isRequired,
   channelId: PropTypes.string.isRequired,
-  messages: PropTypes.array,
+  history: PropTypes.array,
 
   state: PropTypes.exact({
     identityKey: PropTypes.string,
@@ -372,7 +349,7 @@ const mapStateToProps = (state, { channelId }) => {
 
   return {
     identities,
-    messages: state.channels.get(channelId).messages || [],
+    history: state.channels.get(channelId).history || new Map(),
     state: state.compose[channelId] || {},
   };
 };

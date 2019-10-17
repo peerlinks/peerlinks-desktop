@@ -38,6 +38,7 @@ export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
 export const CHANNEL_UPDATE_METADATA = 'CHANNEL_UPDATE_METADATA';
 export const CHANNEL_UPDATE_READ_HEIGHT = 'CHANNEL_UPDATE_READ_HEIGHT';
 export const CHANNEL_SET_CHAIN_MAP = 'CHANNEL_SET_CHAIN_MAP';
+export const CHANNEL_PUSH_TO_HISTORY = 'CHANNEL_PUSH_TO_HISTORY';
 
 const network = new Network();
 
@@ -405,6 +406,10 @@ export function updateChannelMetadata({ channelId, metadata }) {
 
 export function appendChannelMessage({ channelId, message, isPosted = false }) {
   return { type: APPEND_CHANNEL_MESSAGE, channelId, message, isPosted };
+}
+
+export function updateChannelHistory({ channelId, identityKey, message }) {
+  return { type: CHANNEL_PUSH_TO_HISTORY, channelId, identityKey, message };
 }
 
 export function appendInternalMessage({ channelId, text }) {
@@ -837,6 +842,13 @@ export function postMessage({ channelId, identityKey, text }) {
     });
 
     dispatch(appendChannelMessage({ channelId, message, isPosted: true }));
+    dispatch(
+      updateChannelHistory({
+        channelId,
+        identityKey,
+        message: message.json.text,
+      })
+    );
   };
 
   return (dispatch) => {
