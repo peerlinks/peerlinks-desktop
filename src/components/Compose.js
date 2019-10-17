@@ -74,14 +74,16 @@ function Compose(props) {
   };
 
   const getNextMessage = (code) => {
-    const index = usersRecentMessages.length - 1;
+    const startIndex = usersRecentMessages.length - 1;
 
     if (!message) {
       // start with most recent
-      return { message: usersRecentMessages[index], index };
+      return { message: usersRecentMessages[startIndex], index: startIndex };
     }
 
-    if (message && recentMessageIndex !== -1) {
+    const indexInHistory = usersRecentMessages.findIndex(urm => urm === message);
+
+    if (message && recentMessageIndex !== -1 && indexInHistory !== -1) {
       let nextIndex = 0;
       const length = usersRecentMessages.length;
 
