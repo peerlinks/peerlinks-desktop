@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "concurrently": "^4.1.2",
-    "electron": "^6.0.11",
+    "electron": "^6.0.12",
     "electron-builder": "^21.2.0",
     "emoji-mart": "^2.11.1",
     "eslint": "^6.5.1",
