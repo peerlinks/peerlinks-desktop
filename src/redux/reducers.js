@@ -474,7 +474,7 @@ export const channels = (state = new Map(), action) => {
       const history = new Map(channel.history);
       const identityMessages = history.get(action.identityKey);
 
-      if(identityMessages) {
+      if (identityMessages) {
         history.set(action.identityKey, [ ...identityMessages, action.message ]);
       } else {
         history.set(action.identityKey, [ action.message ]);

@@ -28,13 +28,25 @@ function Compose(props) {
     updateState,
   } = props;
 
-  const { identityKey = null, message = '', usersRecentMessages = [] } = state;
+  const {
+    identityKey = null,
+    message = '',
+    usersRecentMessages = [],
+    recentMessageIndex = -1,
+  } = state;
 
   const setMessage = (newMessage) => {
     if (message === newMessage) {
       return;
     }
     updateState({ channelId, state: { message: newMessage } });
+  };
+
+  const setRecentMessageIndex = (newIndex) => {
+    if (recentMessageIndex === newIndex) {
+      return;
+    }
+    updateState({ channelId, state: { recentMessageIndex: newIndex } });
   };
 
   const getUsersRecentMessages = (identityKey) => {
@@ -47,9 +59,11 @@ function Compose(props) {
 
     const recentMessagesUnchanged =
       usersRecentMessages.length === newRecentMessages.length &&
-      usersRecentMessages.every((urm, index) => newRecentMessages[index] === urm);
+      usersRecentMessages.every(
+        (urm, index) => newRecentMessages[index] === urm
+      );
 
-    if ((identityKey === newIdentityKey) && recentMessagesUnchanged) {
+    if (identityKey === newIdentityKey && recentMessagesUnchanged) {
       return;
     }
 
@@ -60,27 +74,27 @@ function Compose(props) {
   };
 
   const getNextMessage = (code) => {
-    if(!message) {
+    const index = usersRecentMessages.length - 1;
+
+    if (!message) {
       // start with most recent
-      return usersRecentMessages[usersRecentMessages.length - 1];
+      return { message: usersRecentMessages[index], index };
     }
 
-    const recentIndex = usersRecentMessages.findIndex(mt => mt === message);
-
-    if(message && recentIndex !== -1) {
+    if (message && recentMessageIndex !== -1) {
       let nextIndex = 0;
       const length = usersRecentMessages.length;
 
-      if(code === 'ArrowUp') {
-        nextIndex = Math.abs((recentIndex - 1 + length) % length);
+      if (code === 'ArrowUp') {
+        nextIndex = Math.abs((recentMessageIndex - 1 + length) % length);
       }
-      if(code === 'ArrowDown') {
-        nextIndex = Math.abs((recentIndex + 1) % length);
+      if (code === 'ArrowDown') {
+        nextIndex = Math.abs((recentMessageIndex + 1) % length);
       }
 
       const nextMessage = usersRecentMessages[nextIndex];
 
-      return nextMessage;
+      return { message: nextMessage, index: nextIndex };
     }
 
     return null;
@@ -118,7 +132,7 @@ function Compose(props) {
   });
 
   useEffect(() => {
-    const onArrowKeyDown = e => {
+    const onArrowKeyDown = (e) => {
       if (!e.key || e.metaKey || e.ctrlKey) {
         return;
       }
@@ -133,7 +147,8 @@ function Compose(props) {
           const nextMessage = getNextMessage(e.code);
 
           if (nextMessage !== null && nextMessage !== message) {
-            setMessage(nextMessage);
+            setMessage(nextMessage.message);
+            setRecentMessageIndex(nextMessage.index);
           }
         }
         input.current.focus();
@@ -332,6 +347,7 @@ Compose.propTypes = {
     identityKey: PropTypes.string,
     message: PropTypes.string,
     usersRecentMessages: PropTypes.array,
+    recentMessageIndex: PropTypes.number,
   }),
 
   postMessage: PropTypes.func.isRequired,
