@@ -19,7 +19,10 @@ export const INVITE_REQUEST_WAITING = 'INVITE_REQUEST_WAITING';
 export const INVITE_REQUEST_SET_REQUEST = 'INVITE_REQUEST_SET_REQUEST';
 export const INVITE_REQUEST_RESET = 'INVITE_REQUEST_RESET';
 
-export const COMPOSE_UPDATE = 'COMPOSE_UPDATE';
+export const COMPOSE_UPDATE_IDENTITY_KEY = 'COMPOSE_UPDATE_IDENTITY_KEY';
+export const COMPOSE_UPDATE_MESSAGE = 'COMPOSE_UPDATE_MESSAGE';
+export const COMPOSE_CHANGE_MESSAGE = 'COMPOSE_CHANGE_MESSAGE';
+export const COMPOSE_ADD_MESSAGE = 'COMPOSE_ADD_MESSAGE';
 
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
@@ -38,7 +41,6 @@ export const CHANNEL_SET_MESSAGE_COUNT = 'CHANNEL_SET_MESSAGE_COUNT';
 export const CHANNEL_UPDATE_METADATA = 'CHANNEL_UPDATE_METADATA';
 export const CHANNEL_UPDATE_READ_HEIGHT = 'CHANNEL_UPDATE_READ_HEIGHT';
 export const CHANNEL_SET_CHAIN_MAP = 'CHANNEL_SET_CHAIN_MAP';
-export const CHANNEL_PUSH_TO_HISTORY = 'CHANNEL_PUSH_TO_HISTORY';
 
 const network = new Network();
 
@@ -276,12 +278,32 @@ export function inviteRequestReset() {
   return { type: INVITE_REQUEST_RESET };
 }
 
-export function updateComposeState({ channelId, state }) {
+export function updateComposeIdentity({ channelId, identityKey }) {
   return {
-    type: COMPOSE_UPDATE,
+    type: COMPOSE_UPDATE_IDENTITY_KEY,
     channelId,
-    state,
+    identityKey,
   };
+}
+
+export function updateComposeMessage({ channelId, message }) {
+  return {
+    type: COMPOSE_UPDATE_MESSAGE,
+    channelId,
+    message,
+  };
+}
+
+export function changeComposeMessage({ channelId, isNext }) {
+  return {
+    type: COMPOSE_CHANGE_MESSAGE,
+    channelId,
+    isNext,
+  };
+}
+
+export function addComposeMessage({ channelId }) {
+  return { type: COMPOSE_ADD_MESSAGE, channelId };
 }
 
 //
@@ -406,10 +428,6 @@ export function updateChannelMetadata({ channelId, metadata }) {
 
 export function appendChannelMessage({ channelId, message, isPosted = false }) {
   return { type: APPEND_CHANNEL_MESSAGE, channelId, message, isPosted };
-}
-
-export function updateChannelHistory({ channelId, identityKey, message }) {
-  return { type: CHANNEL_PUSH_TO_HISTORY, channelId, identityKey, message };
 }
 
 export function appendInternalMessage({ channelId, text }) {
@@ -842,13 +860,6 @@ export function postMessage({ channelId, identityKey, text }) {
     });
 
     dispatch(appendChannelMessage({ channelId, message, isPosted: true }));
-    dispatch(
-      updateChannelHistory({
-        channelId,
-        identityKey,
-        message: message.json.text,
-      })
-    );
   };
 
   return (dispatch) => {

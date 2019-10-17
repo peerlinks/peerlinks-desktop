@@ -15,7 +15,10 @@ import {
   INVITE_REQUEST_SET_REQUEST,
   INVITE_REQUEST_RESET,
 
-  COMPOSE_UPDATE,
+  COMPOSE_UPDATE_IDENTITY_KEY,
+  COMPOSE_UPDATE_MESSAGE,
+  COMPOSE_CHANGE_MESSAGE,
+  COMPOSE_ADD_MESSAGE,
 
   ADD_NOTIFICATION, REMOVE_NOTIFICATION,
 
@@ -23,7 +26,7 @@ import {
 
   ADD_CHANNEL, REMOVE_CHANNEL, APPEND_CHANNEL_MESSAGE, APPEND_CHANNEL_MESSAGES,
   TRIM_CHANNEL_MESSAGES, CHANNEL_SET_MESSAGE_COUNT, CHANNEL_UPDATE_METADATA,
-  CHANNEL_UPDATE_READ_HEIGHT, CHANNEL_SET_CHAIN_MAP, CHANNEL_PUSH_TO_HISTORY,
+  CHANNEL_UPDATE_READ_HEIGHT, CHANNEL_SET_CHAIN_MAP,
 
   RENAME_IDENTITY_PAIR,
 } from './actions';
@@ -153,15 +156,61 @@ export const inviteRequest = (state, action) => {
   }
 };
 
+const MAX_COMPOSE_HISTORY_LENGTH = 10;
+
+export const singleCompose = (state, action) => {
+  if (!state) {
+    state = {
+      identityKey: null,
+
+      // TODO(indutny): Make it a Map with identityKey as a key
+      messages: [ '' ],
+      messageIndex: 0,
+    };
+  }
+
+  switch (action.type) {
+  case COMPOSE_UPDATE_IDENTITY_KEY:
+    return { ...state, identityKey: action.identityKey };
+  case COMPOSE_UPDATE_MESSAGE:
+    {
+      const messages = state.messages.slice();
+      messages[state.messageIndex] = action.message;
+      return { ...state, messages };
+    }
+  case COMPOSE_CHANGE_MESSAGE:
+    {
+      const isNext = action.isNext;
+      let messageIndex = state.messageIndex;
+      if (isNext) {
+        messageIndex += 1;
+      } else {
+        messageIndex += state.messages.length - 1;
+      }
+      messageIndex %= state.messages.length;
+      return { ...state, messageIndex };
+    }
+  case COMPOSE_ADD_MESSAGE:
+    {
+      let messages = state.messages.concat([ '' ]);
+      messages = messages.slice(
+        Math.max(0, messages.length - MAX_COMPOSE_HISTORY_LENGTH));
+      return { ...state, messages, messageIndex: messages.length - 1 };
+    }
+  default:
+    return state;
+  }
+};
+
 export const compose = (state = {}, action) => {
   switch (action.type) {
-  case COMPOSE_UPDATE:
+  case COMPOSE_UPDATE_IDENTITY_KEY:
+  case COMPOSE_UPDATE_MESSAGE:
+  case COMPOSE_CHANGE_MESSAGE:
+  case COMPOSE_ADD_MESSAGE:
     return {
       ...state,
-      [action.channelId]: {
-        ...state[action.channelId] || {},
-        ...action.state,
-      },
+      [action.channelId]: singleCompose(state[action.channelId], action),
     };
   case REMOVE_CHANNEL:
   {
@@ -318,7 +367,6 @@ const updateChannel = (state, action, body) => {
   return copy;
 };
 
-
 export const channels = (state = new Map(), action) => {
   switch (action.type) {
   case ADD_CHANNEL:
@@ -336,8 +384,6 @@ export const channels = (state = new Map(), action) => {
           // NOTE: See CHANNEL_SET_CHAIN_MAP below
           activeUsers: [],
 
-          history: channel.history,
-
           // NOTE: Do not update channel messages
           messages: channel.messages,
         };
@@ -350,8 +396,6 @@ export const channels = (state = new Map(), action) => {
 
       // NOTE: See CHANNEL_SET_CHAIN_MAP below
       activeUsers: [],
-
-      history: new Map(),
 
       // Start in all-read state
       messagesRead: action.channel.messageCount,
@@ -468,23 +512,6 @@ export const channels = (state = new Map(), action) => {
     }
 
     return copy;
-  }
-  case CHANNEL_PUSH_TO_HISTORY: {
-    return updateChannel(state, action, (channel) => {
-      const history = new Map(channel.history);
-      const identityMessages = history.get(action.identityKey);
-
-      if (identityMessages) {
-        history.set(action.identityKey, [ ...identityMessages, action.message ]);
-      } else {
-        history.set(action.identityKey, [ action.message ]);
-      }
-
-      return {
-        ...channel,
-        history,
-      };
-    });
   }
   default:
     return state;
