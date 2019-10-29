@@ -90,7 +90,7 @@ function Compose(props) {
   });
 
   const keyFromDeletedIdentity = identities.every(
-    identity => identity.publicKey !== identityKey
+    (identity) => identity.publicKey !== identityKey
   );
 
   // Select first identity
