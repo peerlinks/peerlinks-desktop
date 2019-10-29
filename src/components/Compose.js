@@ -89,8 +89,12 @@ function Compose(props) {
       label={identity.name}/>;
   });
 
+  const keyFromDeletedIdentity = identities.every(
+    identity => identity.publicKey !== identityKey
+  );
+
   // Select first identity
-  if (!identityKey) {
+  if (!identityKey || keyFromDeletedIdentity) {
     setIdentityKey(identities[0].publicKey);
   }
 
