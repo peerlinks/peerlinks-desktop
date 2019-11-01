@@ -89,8 +89,12 @@ function Compose(props) {
       label={identity.name}/>;
   });
 
+  const keyPresent = identities.some(
+    (identity) => identity.publicKey === identityKey
+  );
+
   // Select first identity
-  if (!identityKey) {
+  if (!identityKey || !keyPresent) {
     setIdentityKey(identities[0].publicKey);
   }
 
