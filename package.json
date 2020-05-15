@@ -24,7 +24,7 @@
   },
   "homepage": "./",
   "dependencies": {
-    "@peerlinks/protocol": "^7.4.7",
+    "@peerlinks/protocol": "^7.4.8",
     "@peerlinks/sqlite-storage": "^3.0.3",
     "@peerlinks/swarm": "^3.0.7",
     "binary-search": "^1.3.6",

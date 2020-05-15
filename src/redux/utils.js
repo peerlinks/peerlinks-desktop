@@ -41,7 +41,7 @@ export function ExternalLink(props) {
 }
 
 ExternalLink.propTypes = {
-  href: PropTypes.string.isRequired,
+  href: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element.isRequired),

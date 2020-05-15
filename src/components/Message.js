@@ -81,7 +81,7 @@ Message.propTypes = {
         short: PropTypes.string.isRequired,
       }),
       file: PropTypes.object,
-      text: PropTypes.string,
+      text: PropTypes.object,
     }),
   }),
   isExpanded: PropTypes.bool.isRequired,

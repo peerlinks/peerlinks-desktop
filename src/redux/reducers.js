@@ -5,8 +5,6 @@ import { appendMessage, computeIdentityFilter } from './utils';
 import {
   SET_FOCUS,
 
-  SET_REDIRECT,
-
   NETWORK_READY, NETWORK_NOT_READY, NETWORK_LOADING, NETWORK_ERROR,
 
   NEW_CHANNEL_RESET, NEW_CHANNEL_SET_IS_LOADING,
@@ -35,15 +33,6 @@ export const focus = (state = true, action) => {
   switch (action.type) {
   case SET_FOCUS: return action.focus;
   default: return state;
-  }
-};
-
-export const redirect = (state = null, action) => {
-  switch (action.type) {
-  case SET_REDIRECT:
-    return action.to;
-  default:
-    return state;
   }
 };
 
@@ -520,7 +509,6 @@ export const channels = (state = new Map(), action) => {
 
 export default combineReducers({
   focus,
-  redirect,
   compose,
 
   // Various asynchronous states

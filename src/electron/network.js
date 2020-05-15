@@ -78,7 +78,7 @@ export default class Network {
           log.info(`network: responding to "${type}" seq=${seq}`);
           event.reply('response', { seq, payload: result });
         }).catch((err) => {
-          log.info(`network: error to "${type}" seq=${seq}`);
+          log.info(`network: error to "${type}" seq=${seq} stack=${err.stack}`);
           event.reply('response',
             { seq, error: err.message, stack: err.stack });
         });
@@ -291,6 +291,7 @@ export default class Network {
         };
       }
 
+      console.log(this.peerLinks.id);
       const { requestId, request, decrypt } =
         identity.requestInvite(this.peerLinks.id);
 

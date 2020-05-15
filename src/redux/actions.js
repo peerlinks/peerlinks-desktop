@@ -3,7 +3,6 @@ import { getFeedURL } from '../utils';
 import Network from './network';
 import COMMANDS from './commands';
 
-export const SET_REDIRECT = 'SET_REDIRECT';
 export const SET_FOCUS = 'SET_FOCUS';
 
 export const NETWORK_READY = 'NETWORK_READY';
@@ -45,7 +44,7 @@ export const CHANNEL_SET_CHAIN_MAP = 'CHANNEL_SET_CHAIN_MAP';
 const network = new Network();
 
 export function setRedirect(to) {
-  return { type: SET_REDIRECT, to };
+  console.error('TODO(indutny): implement me');
 }
 
 export function setFocus(focus) {
