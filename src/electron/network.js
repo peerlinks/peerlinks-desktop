@@ -6,7 +6,7 @@ import SqliteStorage from '@peerlinks/sqlite-storage';
 import Swarm from '@peerlinks/swarm';
 
 import log from 'electron-log';
-import * as sodium from 'sodium-universal';
+import * as sodium from 'sodium-native';
 import WaitList from 'promise-waitlist';
 import * as bs58 from 'bs58';
 

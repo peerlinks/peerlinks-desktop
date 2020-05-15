@@ -7,7 +7,7 @@ export function createMenu() {
   const menu = [
     // { role: 'appMenu' }
     ...isMac ? [ {
-      label: app.getName(),
+      label: app.name,
       submenu: [
         { role: 'about' },
         { type: 'separator' },
