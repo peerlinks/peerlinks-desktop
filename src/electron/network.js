@@ -291,7 +291,6 @@ export default class Network {
         };
       }
 
-      console.log(this.peerLinks.id);
       const { requestId, request, decrypt } =
         identity.requestInvite(this.peerLinks.id);
 
@@ -340,6 +339,8 @@ export default class Network {
       } finally {
         entry.waiter = null;
       }
+
+      log.info('network: got invite');
 
       const invite = entry.decrypt(encryptedInvite);
 
