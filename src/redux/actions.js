@@ -1,3 +1,5 @@
+import { push as routerPush } from 'connected-react-router';
+
 import { getFeedURL } from '../utils';
 
 import Network from './network';
@@ -44,7 +46,7 @@ export const CHANNEL_SET_CHAIN_MAP = 'CHANNEL_SET_CHAIN_MAP';
 const network = new Network();
 
 export function setRedirect(to) {
-  console.error('TODO(indutny): implement me');
+  return routerPush(to);
 }
 
 export function setFocus(focus) {

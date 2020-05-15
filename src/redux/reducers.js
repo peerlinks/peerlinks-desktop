@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
 
 import { appendMessage, computeIdentityFilter } from './utils';
 
@@ -507,17 +508,23 @@ export const channels = (state = new Map(), action) => {
   }
 };
 
-export default combineReducers({
-  focus,
-  compose,
+const createRootReducer = (history) => {
+  return combineReducers({
+    router: connectRouter(history),
 
-  // Various asynchronous states
-  network,
-  newChannel,
-  inviteRequest,
-  notifications,
+    focus,
+    compose,
 
-  identities,
-  identityFilter,
-  channels,
-});
+    // Various asynchronous states
+    network,
+    newChannel,
+    inviteRequest,
+    notifications,
+
+    identities,
+    identityFilter,
+    channels,
+  });
+};
+
+export default createRootReducer;

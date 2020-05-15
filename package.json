@@ -72,11 +72,13 @@
   },
   "devDependencies": {
     "concurrently": "^5.2.0",
+    "connected-react-router": "^6.8.0",
     "electron": "^8.3.0",
     "electron-builder": "^22.6.0",
     "emoji-mart": "^3.0.0",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.20.0",
+    "history": "^4.10.1",
     "moment": "^2.25.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
