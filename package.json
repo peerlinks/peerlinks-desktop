@@ -2,7 +2,7 @@
   "name": "PeerLinks",
   "description": "PeerLinks - Secure Distributed IRC",
   "author": "Fedor Indutny <fedor@indutny.com>",
-  "version": "3.10.0",
+  "version": "3.11.0",
   "private": true,
   "main": "public/electron.js",
   "repository": "git@github.com:peerlinks/peerlinks-desktop",
