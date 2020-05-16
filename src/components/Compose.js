@@ -265,6 +265,7 @@ function Compose(props) {
     </div>
     <Picker
       native
+      set='apple'
 
       style={{ display: isPickerVisible ? 'block' : 'none' }}
 

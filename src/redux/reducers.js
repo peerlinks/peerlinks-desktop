@@ -1,11 +1,10 @@
 import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
 
 import { appendMessage, computeIdentityFilter } from './utils';
 
 import {
   SET_FOCUS,
-
-  SET_REDIRECT,
 
   NETWORK_READY, NETWORK_NOT_READY, NETWORK_LOADING, NETWORK_ERROR,
 
@@ -35,15 +34,6 @@ export const focus = (state = true, action) => {
   switch (action.type) {
   case SET_FOCUS: return action.focus;
   default: return state;
-  }
-};
-
-export const redirect = (state = null, action) => {
-  switch (action.type) {
-  case SET_REDIRECT:
-    return action.to;
-  default:
-    return state;
   }
 };
 
@@ -518,18 +508,23 @@ export const channels = (state = new Map(), action) => {
   }
 };
 
-export default combineReducers({
-  focus,
-  redirect,
-  compose,
+const createRootReducer = (history) => {
+  return combineReducers({
+    router: connectRouter(history),
 
-  // Various asynchronous states
-  network,
-  newChannel,
-  inviteRequest,
-  notifications,
+    focus,
+    compose,
 
-  identities,
-  identityFilter,
-  channels,
-});
+    // Various asynchronous states
+    network,
+    newChannel,
+    inviteRequest,
+    notifications,
+
+    identities,
+    identityFilter,
+    channels,
+  });
+};
+
+export default createRootReducer;

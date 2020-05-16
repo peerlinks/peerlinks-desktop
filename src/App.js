@@ -17,8 +17,6 @@ import ImportFeed from './pages/ImportFeed';
 import InviteRequest from './pages/InviteRequest';
 import DeleteChannel from './pages/DeleteChannel';
 
-import RedirectOnce from './components/RedirectOnce';
-
 function App({ network, checkNetwork, setFocus }) {
   // Check if the window as reopened and network is ready
   useEffect(() => {
@@ -47,7 +45,6 @@ function App({ network, checkNetwork, setFocus }) {
   if (network.isReady) {
     return <Router>
       <ChannelLayout>
-        <RedirectOnce/>
         <Route path='/new-channel' exact render={() => {
           return <NewChannel isFeed={false}/>;
         }}/>

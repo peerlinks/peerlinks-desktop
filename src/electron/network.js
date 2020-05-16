@@ -6,7 +6,7 @@ import SqliteStorage from '@peerlinks/sqlite-storage';
 import Swarm from '@peerlinks/swarm';
 
 import log from 'electron-log';
-import * as sodium from 'sodium-universal';
+import * as sodium from 'sodium-native';
 import WaitList from 'promise-waitlist';
 import * as bs58 from 'bs58';
 
@@ -78,7 +78,7 @@ export default class Network {
           log.info(`network: responding to "${type}" seq=${seq}`);
           event.reply('response', { seq, payload: result });
         }).catch((err) => {
-          log.info(`network: error to "${type}" seq=${seq}`);
+          log.info(`network: error to "${type}" seq=${seq} stack=${err.stack}`);
           event.reply('response',
             { seq, error: err.message, stack: err.stack });
         });
@@ -339,6 +339,8 @@ export default class Network {
       } finally {
         entry.waiter = null;
       }
+
+      log.info('network: got invite');
 
       const invite = entry.decrypt(encryptedInvite);
 
