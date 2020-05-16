@@ -42,10 +42,6 @@ export function ExternalLink(props) {
 
 ExternalLink.propTypes = {
   href: PropTypes.string,
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element.isRequired),
-  ]),
 };
 
 export function enrichMessage(message) {

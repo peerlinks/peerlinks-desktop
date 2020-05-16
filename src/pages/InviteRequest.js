@@ -11,7 +11,7 @@ import {
 import './InviteRequest.css';
 
 function InviteRequest({ identities, request, state }) {
-  const [ identityKey, setIdentityKey ] = useState(null);
+  const [ identityKey, setIdentityKey ] = useState(identities[0].publicKey);
 
   const options = identities.map((identity) => {
     return <option key={identity.publicKey} value={identity.publicKey}>
@@ -25,8 +25,6 @@ function InviteRequest({ identities, request, state }) {
     identity = identities.find((identity) => {
       return identity.publicKey === identityKey;
     });
-  } else {
-    setIdentityKey(identities[0].publicKey);
   }
 
   const onIdentityKey = (e) => {
