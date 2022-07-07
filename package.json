@@ -79,7 +79,7 @@
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.20.0",
     "history": "^4.10.1",
-    "moment": "^2.25.3",
+    "moment": "^2.29.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
